@@ -18,9 +18,25 @@
     <input type="submit">
 </form>
 
-    {% for image in images %}
-    {{ image|safe }}
-    {% endfor %}
+   <center>
+    <table border>
+        <tbody>
+            {% for image, name in images %}
+            <tr display="inline">
+                <td align="CENTER">
+                {{ image|safe }}
+                <br>
+                <tt>
+                    {{ name }}
+                </tt>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+   </center>
+
+   
 
 </body>
 

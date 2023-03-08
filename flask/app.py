@@ -46,7 +46,7 @@ def test():
         comp = Chem.MolFromSmiles(smile)
         AllChem.Compute2DCoords(comp)
         svg = show(comp)
-        output.append(svg)
+        output.append([svg, name])
 
     print(output)
     return render_template("index.html", images = output)
