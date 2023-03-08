@@ -9,13 +9,18 @@
 
 <body>
    
-<form action="get_mols">
+<form method="post" action="{{ url_for('test') }}">
     <textarea name="intxt" wrap="OFF" rows="12" cols="60"></textarea>
 
-    <button type="BUTTON" onclick="get_mols(this.form)">
+    <!-- <button type="BUTTON" onclick="test(this.form)">
         <b>Go Depict</b>
-    </button>
+    </button> -->
+    <input type="submit">
 </form>
+
+    {% for image in images %}
+    {{ image|safe }}
+    {% endfor %}
 
 </body>
 

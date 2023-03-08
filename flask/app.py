@@ -8,6 +8,7 @@ from IPython.display import display, SVG
 from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
 import csv
+from flask import request
 
 app = Flask(__name__)
 
@@ -23,11 +24,8 @@ def show(mol,molSize=(475,175),kekulize=True):
     drawer.DrawMolecule(mc)
     drawer.FinishDrawing()
     svg = drawer.GetDrawingText()
-
     image = SVG(svg.replace('svg:', ''))
-    print(type(image), svg)
     return svg.replace('svg:', '')
-    # display(SVG(svg.replace('svg:','')))
 
 @app.route("/")
 def app_start():
@@ -36,8 +34,19 @@ def app_start():
     AllChem.Compute2DCoords(s)
     svg = show(s)
     # AllChem.GenerateDepictionMatching2DStructure(m, s)
-    return render_template("index.html", images = [svg])
+    return render_template("index.html", images = [])
 
-@app.route("/get_mols")
+@app.route("/get_mols", methods = ['POST'])
 def test():
-    print()
+    data = request.form['intxt']
+    datas = data.split("\r\n")
+    output = []
+    for d in datas:
+        smile, name = d.split(" ")
+        comp = Chem.MolFromSmiles(smile)
+        AllChem.Compute2DCoords(comp)
+        svg = show(comp)
+        output.append(svg)
+
+    print(output)
+    return render_template("index.html", images = output)
