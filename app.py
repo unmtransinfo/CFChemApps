@@ -2,39 +2,17 @@ from flask import Flask, render_template
 
 from rdkit import Chem
 from rdkit.Chem import AllChem
-from rdkit import Chem
-from rdkit.Chem import AllChem
-from IPython.display import display, SVG
-from rdkit.Chem.Draw import rdMolDraw2D
 import csv
 from flask import request
 import os
 
-template_dir = os.path.abspath('flask/templates')
-app = Flask(__name__, template_folder = template_dir)
+from flask.utils import show
 
-def show(mol,molSize=(475,175),kekulize=True):
-    mc = Chem.Mol(mol.ToBinary())
-    if kekulize:
-        try:
-            Chem.Kekulize(mc)
-        except:
-            mc = Chem.Mol(mol.ToBinary())
-    assert mc.GetNumConformers() > 0
-    drawer = rdMolDraw2D.MolDraw2DSVG(molSize[0],molSize[1])
-    drawer.DrawMolecule(mc)
-    drawer.FinishDrawing()
-    svg = drawer.GetDrawingText()
-    image = SVG(svg.replace('svg:', ''))
-    return svg.replace('svg:', '')
+template_dir = os.path.abspath('templates')
+app = Flask(__name__, template_folder = template_dir)
 
 @app.route("/")
 def app_start():
-    m = Chem.MolFromSmiles('OCCc1ccn2cnccc12')
-    s = Chem.MolFromSmiles('c1nccc2n1ccc2')
-    AllChem.Compute2DCoords(s)
-    svg = show(s)
-    # AllChem.GenerateDepictionMatching2DStructure(m, s)
     return render_template("index.html", images = [])
 
 @app.route("/get_mols", methods = ['POST'])
@@ -49,9 +27,8 @@ def test():
         svg = show(comp)
         output.append([svg, name])
 
-    print(output)
     return render_template("index.html", images = output)
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(debug=True, host='0.0.0.0', port=port, TEMPLATES_AUTO_RELOAD = True)
