@@ -5,12 +5,13 @@ from rdkit.Chem import AllChem
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from IPython.display import display, SVG
-from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
 import csv
 from flask import request
+import os
 
-app = Flask(__name__)
+template_dir = os.path.abspath('flask/templates')
+app = Flask(__name__, template_folder = template_dir)
 
 def show(mol,molSize=(475,175),kekulize=True):
     mc = Chem.Mol(mol.ToBinary())
