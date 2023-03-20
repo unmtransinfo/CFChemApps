@@ -2,13 +2,16 @@
 
 FROM python:3.8-slim-buster
 
-WORKDIR /cfchem
+WORKDIR /python-docker
+
+RUN apt update && apt install -y libsm6 libxext6
+RUN apt-get install -y libxrender-dev
 
 COPY requirements.txt requirements.txt
-RUN pip3 install --upgrade pip
-# RUN pip3 install wheel setuptools manimce
 RUN pip3 install -r requirements.txt
 
-COPY . /cfchem
+COPY . .
 
-CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0:3000" ]
+EXPOSE 5000:5000
+
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
