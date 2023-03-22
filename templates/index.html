@@ -9,9 +9,9 @@
 
 <body>
 
-    <button>Demo</button>
+    <!-- <button>Demo</button> -->
 
-<form method="post" action="{{ url_for('test') }}">
+<form method="post" action="{{ url_for('get_mols', type='input') }}">
     <textarea name="intxt" wrap="OFF" rows="12" cols="60"></textarea>
 
     <!-- <button type="BUTTON" onclick="test(this.form)">
@@ -20,9 +20,11 @@
     <input type="submit">
 </form>
 
-<p>test</p>
+<button method="post" type="button">
+    <a href="{{ url_for('get_mols', type = 'demo') }}">Demo</a>
+</button>
 
-   <center>
+<center>
     <table border>
         <tbody>
             {% for image, name in images %}

@@ -6,21 +6,24 @@ import csv
 from flask import request
 import os
 
-from flask.utils import show
+from web.utils import show, get_content
 
 template_dir = os.path.abspath('templates')
 app = Flask(__name__, template_folder = template_dir)
 
-@app.route("/test")
+@app.route("/")
 def app_start():
     return render_template("index.html", images = [])
 
-@app.route("/get_mols", methods = ['POST'])
-def test():
-    data = request.form['intxt']
-    datas = data.split("\r\n")
+@app.route("/get_mols/<type>", methods = ['POST', "GET"])
+def get_mols(type):
+    datas = get_content(type, request)
+    # data = request.form.get('intxt') or None
+    # datas = data.split("\r\n")
+    print("size", len(datas))
     output = []
     for d in datas:
+        print("da", d)
         smile, name = d.split(" ")
         comp = Chem.MolFromSmiles(smile)
         AllChem.Compute2DCoords(comp)

@@ -2,6 +2,8 @@ from rdkit import Chem
 from rdkit.Chem.Draw import rdMolDraw2D
 from IPython.display import display, SVG
 
+from .input_types import *
+
 def show(mol,molSize=(475,175),kekulize=True):
     mc = Chem.Mol(mol.ToBinary())
     if kekulize:
@@ -16,3 +18,21 @@ def show(mol,molSize=(475,175),kekulize=True):
     svg = drawer.GetDrawingText()
     image = SVG(svg.replace('svg:', ''))
     return svg.replace('svg:', '')
+
+def get_content(type, request):
+    content = None
+    datas = None
+
+    if type == InputType.INPUT.value:
+        content = request.form.get('intxt')
+        datas = content.split("\r\n")
+
+    if type == InputType.DEMO.value:
+        f = open('web/demo_compounds.txt')
+        content = f.read()
+        datas = content.split("\n")
+
+    
+    print(content, datas)
+
+    return datas
