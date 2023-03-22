@@ -1,11 +1,21 @@
-version: '3.8'
+version: '3'
 
 services:
-  app:
-    build: 
-      context: ./
-    image: cfchem:latest
+  web:
+    build: ./
+    entrypoint: 
+      - flask
+      - run
+      - --host=0.0.0.0
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: ./app.py
+  # app:
+  #   build: 
+  #     context: ./
     ports:
-      - 5000:5000
+      - "5000:5000"
+    # command: python3 app.py 
+    image: cfchem:latest
     volumes:
-      - .:/app
+      - .:/cfchem

@@ -11,7 +11,7 @@ from flask.utils import show
 template_dir = os.path.abspath('templates')
 app = Flask(__name__, template_folder = template_dir)
 
-@app.route("/")
+@app.route("/test")
 def app_start():
     return render_template("index.html", images = [])
 
@@ -24,7 +24,7 @@ def test():
         smile, name = d.split(" ")
         comp = Chem.MolFromSmiles(smile)
         AllChem.Compute2DCoords(comp)
-        svg = show(comp)
+        svg = show(comp) 
         output.append([svg, name])
 
     return render_template("index.html", images = output)
