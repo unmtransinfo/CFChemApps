@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<button>Demo</button>
+
+<form method="post" action="{% url 'get_mols' type='input' %}">
+    <textarea name="intxt" wrap="OFF" rows="12" cols="60"></textarea>
+    <input type="submit">
+    {% csrf_token %}
+</form>
+
+<p>test</p>
+
+   <center>
+    <table border>
+        <tbody>
+            {% for image, name in images %}
+            <tr display="inline">
+                <td align="CENTER">
+                {{ image|safe }}
+                <br>
+                <tt>
+                    {{ name }}
+                </tt>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+   </center>
+   <!-- {% csrf_token %} -->
+
+
+{% endblock %}
