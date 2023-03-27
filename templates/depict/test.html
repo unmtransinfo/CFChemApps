@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<HTML>
+<!-- <HEAD><TITLE>Depict</TITLE>
+<LINK REL="stylesheet" type="text/css" HREF="/tomcat/biocomp/css/biocomp.css" />
+<SCRIPT SRC="/tomcat/biocomp/js/biocomp.js"></SCRIPT>
+<SCRIPT SRC="/tomcat/biocomp/js/ddtip.js"></SCRIPT>
+<SCRIPT>
+function go_init(form){
+  form.file2txt.checked=true;
+  form.smarts.value='';
+  form.intxt.value='';
+  var i;
+  for (i=0;i<form.molfmt.length;++i)
+    if (form.molfmt.options[i].value=='automatic')
+      form.molfmt.options[i].selected=true;
+  for (i=0;i<form.size.length;++i)
+    if (form.size.options[i].value=='m')
+      form.size.options[i].selected=true;
+  for (i=0;i<form.imgfmt.length;++i)
+    if (form.imgfmt[i].value=='png')
+      form.imgfmt[i].checked=true;
+  for (i=0;i<form.mode.length;++i)
+    if (form.mode.options[i].value=='cow')
+      form.mode.options[i].selected=true;
+  form.showh.checked=false;
+  form.showarom.checked=false;
+  form.lonepairs.checked=false;
+  form.use2d.checked=true;
+  form.zoomable.checked=true;
+  form.showprops.checked=false;
+  form.transparent.checked=false;
+  form.verbose.checked=false;
+}
+function checkform(form)
+{
+  if (!form.intxt.value && !form.infile.value) {
+    alert('ERROR: No input specified');
+    return 0;
+  }
+  return 1;
+}
+function go_demo(form)
+{
+  go_init(form);  form.intxt.value='CN1C(=O)N(C)C(=O)C(N(C)C=N2)=C12 caffeine\n';
+  form.intxt.value+='COc1cc2c(ccnc2cc1)C(O)C4CC(CC3)C(C=C)CN34 quinine\n';
+  form.intxt.value+='CC1(C)SC2C(NC(=O)Cc3ccccc3)C(=O)N2C1C(=O)O benzylpenicillin\n';
+  form.intxt.value+='CCC(=C(c1ccc(OCCN(C)C)cc1)c1ccccc1)c1ccccc1 Tamoxifen\n';
+  form.intxt.value+='CNCCC(c1ccccc1)Oc2ccc(cc2)C(F)(F)F.Cl Prozac\n';
+  form.intxt.value+='NC(C)Cc1ccccc1 adderall\n';
+  form.intxt.value+='CNC(=C[N+](=O)[O-])NCCSCC1=CC=C(O1)CN(C)C.Cl Zantac\n';
+  form.intxt.value+='Oc2cc(cc1OC(C3CCC(=CC3c12)C)(C)C)CCCCC THC\n';
+  form.intxt.value+='CN1c2ccc(cc2C(=NCC1=O)c3ccccc3)Cl Valium\n';
+  form.depict.value='TRUE'
+  form.submit()
+}
+function go_depict(form)
+{
+  if (!checkform(form)) return;
+  form.depict.value='TRUE'
+  form.submit()
+}
+
+</SCRIPT>
+</HEAD> -->
+<BODY BGCOLOR="#EEEEEE">
+<DIV ID="ddtooltip"></DIV>
+<SCRIPT TYPE="text/javascript">ddtip_init()</SCRIPT>
+
+<FORM NAME="mainform" method="post" action="{% url 'get_mols' type='input' %}" ENCTYPE="multipart/form-data">
+<INPUT TYPE=HIDDEN NAME="depict">
+<TABLE WIDTH="100%"><TR><TD><H1>Depict</H1></TD>
+<TD ALIGN=RIGHT>
+<BUTTON TYPE=BUTTON onClick="void window.open('depict?help=TRUE','helpwin','width=600,height=400,scrollbars=1,resizable=1')"><B>Help</B></BUTTON>
+<BUTTON TYPE=BUTTON onClick="go_demo(this.form)"><B>Demo</B></BUTTON>
+<BUTTON TYPE=BUTTON onClick="window.location.replace('depict')"><B>Reset</B></BUTTON>
+</TD></TR></TABLE>
+<HR>
+<TABLE WIDTH="100%" CELLPADDING=5 CELLSPACING=5>
+<TR BGCOLOR="#CCCCCC"><TD VALIGN=TOP>
+format:<SELECT NAME="molfmt" SELECTED>
+
+<OPTION VALUE="automatic" SELECTED>
+automatic
+<OPTION VALUE="mrv" SELECTED>
+ChemAxon Marvin Documents / MRV
+<OPTION VALUE="cxsmiles" SELECTED>
+ChemAxon Extended SMILES / cxsmiles
+<OPTION VALUE="cxsmarts" SELECTED>
+ChemAxon Extended SMARTS / cxsmarts
+<OPTION VALUE="abbrevgroup" SELECTED>
+ChemAxon SMILES Abbreviated Groups
+<OPTION VALUE="csmdl" SELECTED>
+ChemAxon Compressed Mol, Rxn or SDfile
+<OPTION VALUE="csmol" SELECTED>
+ChemAxon Compressed Mol, Rxn or SDfile
+<OPTION VALUE="csrxn" SELECTED>
+ChemAxon Compressed Mol, Rxn or SDfile
+<OPTION VALUE="cssdf" SELECTED>
+ChemAxon Compressed Mol, Rxn or SDfile
+<OPTION VALUE="csrdf" SELECTED>
+ChemAxon Compressed RDfile
+<OPTION VALUE="mol" SELECTED>
+MDL Molfile
+<OPTION VALUE="rgf" SELECTED>
+MDL Molfile
+<OPTION VALUE="mol:V3" SELECTED>
+MDL Extended Molfile (v3000)
+<OPTION VALUE="rxn" SELECTED>
+MDL Rxnfile
+<OPTION VALUE="rxn:V3" SELECTED>
+MDL Extended Rxnfile
+<OPTION VALUE="sdf" SELECTED>
+MDL SDfile
+<OPTION VALUE="sdf:V3" SELECTED>
+MDL SDfile
+<OPTION VALUE="rdf" SELECTED>
+MDL RDfile
+<OPTION VALUE="skc" SELECTED>
+SKC File Format
+<OPTION VALUE="cdx" SELECTED>
+CDX File Format
+<OPTION VALUE="cdxml" SELECTED>
+CDXML File Format
+<OPTION VALUE="cml" SELECTED>
+Chemical Markup Language / CML
+<OPTION VALUE="smiles" SELECTED>
+SMILES
+<OPTION VALUE="smarts" SELECTED>
+SMARTS
+<OPTION VALUE="inchi" SELECTED>
+InChI
+<OPTION VALUE="peptide" SELECTED>
+Peptide Sequence
+<OPTION VALUE="peptide:1" SELECTED>
+Peptide Sequence
+<OPTION VALUE="peptide:3" SELECTED>
+Peptide Sequence
+<OPTION VALUE="rna" SELECTED>
+RNA Sequence
+<OPTION VALUE="dna" SELECTED>
+DNA Sequence
+<OPTION VALUE="mol2" SELECTED>
+Tripos Mol2
+<OPTION VALUE="sybyl" SELECTED>
+Tripos SYBYL molfile
+<OPTION VALUE="pdb" SELECTED>
+Protein Data Bank / PDB
+<OPTION VALUE="xyz" SELECTED>
+XYZ
+<OPTION VALUE="cube" SELECTED>
+Gaussian Cube
+<OPTION VALUE="gout" SELECTED>
+Gaussian Output Format
+<OPTION VALUE="gzip" SELECTED>
+GZIPped
+<OPTION VALUE="base64" SELECTED>
+BASE64 encoded
+<OPTION VALUE="pdf" SELECTED>
+Portable Document Format / PDF
+<OPTION VALUE="d2s" SELECTED>
+Text/Office Document (supported by Document to Structure)
+<OPTION VALUE="fasta" SELECTED>
+FASTA File Format (Automatic sequence recognition)
+<OPTION VALUE="fasta:dna" SELECTED>
+FASTA File Format (DNA sequence)
+<OPTION VALUE="fasta:rna" SELECTED>
+FASTA File Format (RNA sequence)
+<OPTION VALUE="fasta:peptide" SELECTED>
+FASTA File Format (peptide sequence)
+<OPTION VALUE="accord" SELECTED>
+Accord file format
+<OPTION VALUE="name" SELECTED>
+Name
+<OPTION VALUE="csv" SELECTED>
+CSV
+</SELECT>
+<INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED" >file2txt<BR>
+upload: <INPUT TYPE="FILE" NAME="infile"> ...or paste:<BR>
+    
+    
+    
+    <TEXTAREA NAME="intxt" WRAP=OFF ROWS=12 COLS=60>{{ input_text }}</TEXTAREA>
+
+
+
+</TD>
+<TD VALIGN=TOP>
+<B>options:</B><BR>
+<TABLE WIDTH=100%><TR><TD VALIGN=TOP>
+<INPUT TYPE=CHECKBOX NAME="showh" VALUE="CHECKED">show Hs<BR>
+<INPUT TYPE=CHECKBOX NAME="lonepairs" VALUE="CHECKED">lonepairs<BR>
+<INPUT TYPE=CHECKBOX NAME="use2d" VALUE="CHECKED">use2d<BR>
+<INPUT TYPE=CHECKBOX NAME="transparent" VALUE="CHECKED" >transparent<BR>
+<INPUT TYPE=CHECKBOX NAME="zoomable" VALUE="CHECKED" >zoomable<BR>
+<INPUT TYPE=CHECKBOX NAME="verbose" VALUE="CHECKED" >verbose<BR>
+</TD><TD VALIGN=TOP>
+<INPUT TYPE=CHECKBOX NAME="showprops" VALUE="CHECKED" >show properties<BR>
+<INPUT TYPE=CHECKBOX NAME="showmaps" VALUE="CHECKED" >show atom maps<BR>
+<INPUT TYPE=CHECKBOX NAME="smilesmatch" VALUE="CHECKED" >smilesmatch<BR>
+<INPUT TYPE=CHECKBOX NAME="parts2mols" VALUE="CHECKED" >parts2mols<BR>
+<INPUT TYPE=CHECKBOX NAME="showarom" VALUE="CHECKED" >showarom<BR>
+<INPUT TYPE=CHECKBOX NAME="align2smarts" VALUE="CHECKED" >align2smarts<BR>
+</TD></TR>
+</TABLE>
+smarts: <INPUT TYPE="text" NAME="smarts" SIZE="48" VALUE="">
+<BR>
+<B>output:</B><BR>
+size:<SELECT NAME="size">
+<OPTION VALUE="xs">xs - 96x96
+<OPTION VALUE="s">s - 160x160
+<OPTION VALUE="m">m - 180x260
+<OPTION VALUE="l">l - 280x380
+<OPTION VALUE="xl">xl - 480x640
+</SELECT>
+ncols:<SELECT NAME="ncols"><OPTION VALUE="auto">auto<OPTION VALUE="1">1<OPTION VALUE="2">2<OPTION VALUE="3">3<OPTION VALUE="4">4<OPTION VALUE="5">5<OPTION VALUE="6">6<OPTION VALUE="7">7<OPTION VALUE="8">8<OPTION VALUE="9">9<OPTION VALUE="10">10</SELECT>
+mode:<SELECT NAME="mode">
+<OPTION VALUE="bow">BOW
+<OPTION VALUE="cob">COB
+<OPTION VALUE="cow">COW
+</SELECT>
+<BR>
+format: <INPUT TYPE=RADIO NAME="imgfmt" VALUE="png" CHECKED>png&nbsp;<INPUT TYPE=RADIO NAME="imgfmt" VALUE="jpeg" >jpeg<BR>
+</TD></TR></TABLE>
+<P>
+<CENTER>
+    <input type="submit" value="Depict">
+<!-- <BUTTON TYPE=BUTTON onClick="go_depict(this.form)"><B>Go Depict</B></BUTTON> -->
+</CENTER>
+</FORM>
+
+<center><table border="">
+    <tbody><tr>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','Cn1cnc2n%28C%29c%28%3DO%29n%28C%29c%28%3DO%29c12','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=Cn1cnc2n%28C%29c%28%3DO%29n%28C%29c%28%3DO%29c12" border="0"></a><br><tt>caffeine</tt></td>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','COc1ccc2nccc%28C%28O%29C3CC4CCN3CC4C%3DC%29c2c1','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=COc1ccc2nccc%28C%28O%29C3CC4CCN3CC4C%3DC%29c2c1" border="0"></a><br><tt>quinine</tt></td>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','CC1%28C%29SC2C%28NC%28%3DO%29Cc3ccccc3%29C%28%3DO%29N2C1C%28O%29%3DO','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=CC1%28C%29SC2C%28NC%28%3DO%29Cc3ccccc3%29C%28%3DO%29N2C1C%28O%29%3DO" border="0"></a><br><tt>benzylpenicillin</tt></td>
+    </tr>
+    <tr>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','CCC%28%3DC%28c1ccccc1%29c1ccc%28OCCN%28C%29C%29cc1%29c1ccccc1','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=CCC%28%3DC%28c1ccccc1%29c1ccc%28OCCN%28C%29C%29cc1%29c1ccccc1" border="0"></a><br><tt>Tamoxifen</tt></td>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','Cl.CNCCC%28Oc1ccc%28cc1%29C%28F%29%28F%29F%29c1ccccc1','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=Cl.CNCCC%28Oc1ccc%28cc1%29C%28F%29%28F%29F%29c1ccccc1" border="0"></a><br><tt>Prozac</tt></td>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','CC%28N%29Cc1ccccc1','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=CC%28N%29Cc1ccccc1" border="0"></a><br><tt>adderall</tt></td>
+    </tr>
+    <tr>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','Cl.CNC%28NCCSCc1ccc%28CN%28C%29C%29o1%29%3DC%5BN%2B%5D%28%5BO-%5D%29%3DO','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=Cl.CNC%28NCCSCc1ccc%28CN%28C%29C%29o1%29%3DC%5BN%2B%5D%28%5BO-%5D%29%3DO" border="0"></a><br><tt>Zantac</tt></td>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','CCCCCc1cc%28O%29c2C3C%3DC%28C%29CCC3C%28C%29%28C%29Oc2c1','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=CCCCCc1cc%28O%29c2C3C%3DC%28C%29CCC3C%28C%29%28C%29Oc2c1" border="0"></a><br><tt>THC</tt></td>
+    <td bgcolor="white" align="CENTER"><a href="javascript:void(0)" onclick="javascript:go_zoom_smi2img('/tomcat/biocomp/mol2img','CN1c2ccc%28Cl%29cc2C%28%3DNCC1%3DO%29c1ccccc1','mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;maxscale=0',1040,720)"><img src="/tomcat/biocomp/mol2img?mode=cow&amp;imgfmt=png&amp;kekule=true&amp;use2d=true&amp;clearqprops=TRUE&amp;maxscale=0&amp;h=180&amp;w=260&amp;smiles=CN1c2ccc%28Cl%29cc2C%28%3DNCC1%3DO%29c1ccccc1" border="0"></a><br><tt>Valium</tt></td>
+    </tr>
+    </tbody></table></center>
+
+<SCRIPT>go_init(window.document.mainform)</SCRIPT>
+<HR>
+<TABLE CELLSPACING=5 CELLPADDING=5><TR><TD><A onMouseOver="dd_tip('Depict web app from UNM Translational Informatics.','white',200)" HREF="https://datascience.unm.edu/" onMouseOut="dd_hidetip()"><IMG BORDER=0 SRC="/tomcat/biocomp/images/biocomp_logo_only.gif"></A></TD><TD><A onMouseOver="dd_tip('JChem from ChemAxon Ltd.','white',200)" HREF="https://www.chemaxon.com" onMouseOut="dd_hidetip()"><IMG BORDER=0 SRC="/tomcat/biocomp/images/chemaxon_powered_100px.png"></A></TD></TR></TABLE><BR>
+</BODY>
+</HTML>
+

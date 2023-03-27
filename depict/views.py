@@ -9,17 +9,14 @@ from rest_framework import status
 from .utils import *
 
 def index(request):
-    return render(request, "depict/index.html")
+    return render(request, "depict/test.html")
 
 @api_view(['GET', 'POST'])
 def get_mols(request, type):
-    datas = get_content(type, request)
+    input_text, datas = get_content(type, request)
 
-    print("datas", datas)
     output = []
-    for d in datas:
-        print("da", d)
-        
+    for d in datas:      
         smile, name = d.split(" ")
         comp = Chem.MolFromSmiles(smile)
         AllChem.Compute2DCoords(comp)
@@ -27,7 +24,8 @@ def get_mols(request, type):
         output.append([svg, name])
     
     context = {
-        "images": output
+        "images": output,
+        "input_text": input_text
     }
 
-    return render(request, "depict/index.html", context = context)
+    return render(request, "depict/test.html", context = context)

@@ -20,20 +20,16 @@ def show(mol, molSize=(475, 175), kekulize=True):
     return svg.replace("svg:", "")
 
 def get_content(type, request):
-    content = None
+    input_text = None
     datas = None
 
     if type == InputType.INPUT.value:
-        print(request)
-        content = request.data.get('intxt')
-        datas = content.split("\r\n")
+        input_text = request.data.get('intxt')
+        datas = input_text.split("\r\n")
 
     if type == InputType.DEMO.value:
-        f = open('web/demo_compounds.txt')
-        content = f.read()
-        datas = content.split("\n")
-
+        f = open('depict/demo_compounds.txt')
+        input_text = f.read()
+        datas = input_text.split("\n")
     
-    print(content, datas)
-
-    return datas
+    return input_text, datas

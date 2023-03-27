@@ -3,15 +3,19 @@
 
 {% block content %}
 
-<button>Demo</button>
+<button>
+    <a href="{% url 'get_mols' type='demo'%}">
+        Demo
+    </a>
+</button>
 
 <form method="post" action="{% url 'get_mols' type='input' %}">
-    <textarea name="intxt" wrap="OFF" rows="12" cols="60"></textarea>
-    <input type="submit">
+    <textarea name="intxt" wrap="OFF" rows="12" cols="60">
+        {{ input_text | default_if_none:'' }}
+    </textarea>
+    <input type="submit" value="Depict">
     {% csrf_token %}
 </form>
-
-<p>test</p>
 
    <center>
     <table border>
