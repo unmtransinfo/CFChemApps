@@ -63,6 +63,8 @@ function go_depict(form)
 
 </SCRIPT>
 </HEAD> -->
+
+
 <BODY BGCOLOR="#EEEEEE">
 <DIV ID="ddtooltip"></DIV>
 <SCRIPT TYPE="text/javascript">ddtip_init()</SCRIPT>
@@ -72,7 +74,8 @@ function go_depict(form)
 <TABLE WIDTH="100%"><TR><TD><H1>Depict</H1></TD>
 <TD ALIGN=RIGHT>
 <BUTTON TYPE=BUTTON onClick="void window.open('depict?help=TRUE','helpwin','width=600,height=400,scrollbars=1,resizable=1')"><B>Help</B></BUTTON>
-<BUTTON TYPE=BUTTON onClick="go_demo(this.form)"><B>Demo</B></BUTTON>
+<BUTTON TYPE=BUTTON onClick="go_demo(this.form)">
+  <a href="{% url 'get_mols' type='demo'%}"><B>Demo</B></a></BUTTON>
 <BUTTON TYPE=BUTTON onClick="window.location.replace('depict')"><B>Reset</B></BUTTON>
 </TD></TR></TABLE>
 <HR>

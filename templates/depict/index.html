@@ -1,9 +1,273 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block content_head %}
+
+<script>
+    function go_demo() {
+        let url = "{% url 'get_mols' type='demo' %}"
+        document.location.href = url
+    }
+
+    function zoom_image(svg) {
+        console.log(svg)
+    }
+</script>
+
+<script>
+
+    function openNewWindow(svg) {
+        var htmlCode = "<html><body><center><div>" + svg + "</div></center></body></html>"
+        var newWindow = window.open("", "newWindow", "width=400,height=400");
+        newWindow.document.write(htmlCode);
+        newWindow.document.close();
+    }
+    
+    function set_listeners() {
+        $(".image-div").click(function(){
+            var value = $(this).data("value");
+				console.log(value);
+                openNewWindow(value);
+            });
+    }
+</script>
+
+<script>
+
+    window.onload = function() {
+        set_listeners();
+      };
+
+</script>
+
+{% endblock %}
+
 {% block content %}
 
-<button>
+<FORM NAME="mainform" method="post" action="{% url 'get_mols' type='input' %}" ENCTYPE="multipart/form-data">
+    <INPUT TYPE=HIDDEN NAME="depict">
+    <TABLE WIDTH="100%"><TR><TD><H1>Depict</H1></TD>
+    <TD ALIGN=RIGHT>
+    <BUTTON TYPE=BUTTON onClick="void window.open('depict?help=TRUE','helpwin','width=600,height=400,scrollbars=1,resizable=1')"><B>Help</B></BUTTON>
+    <BUTTON TYPE=BUTTON onClick="go_demo()"><B>Demo</B></BUTTON>
+    <BUTTON TYPE=BUTTON onClick="window.location.replace('depict')"><B>Reset</B></BUTTON>
+    </TD></TR></TABLE>
+    <HR>
+    <TABLE WIDTH="100%" CELLPADDING=5 CELLSPACING=5>
+    <TR BGCOLOR="#CCCCCC"><TD VALIGN=TOP>
+    format:<SELECT NAME="molfmt" SELECTED>
+    
+    <OPTION VALUE="automatic" SELECTED>
+    automatic
+    <OPTION VALUE="mrv" SELECTED>
+    ChemAxon Marvin Documents / MRV
+    <OPTION VALUE="cxsmiles" SELECTED>
+    ChemAxon Extended SMILES / cxsmiles
+    <OPTION VALUE="cxsmarts" SELECTED>
+    ChemAxon Extended SMARTS / cxsmarts
+    <OPTION VALUE="abbrevgroup" SELECTED>
+    ChemAxon SMILES Abbreviated Groups
+    <OPTION VALUE="csmdl" SELECTED>
+    ChemAxon Compressed Mol, Rxn or SDfile
+    <OPTION VALUE="csmol" SELECTED>
+    ChemAxon Compressed Mol, Rxn or SDfile
+    <OPTION VALUE="csrxn" SELECTED>
+    ChemAxon Compressed Mol, Rxn or SDfile
+    <OPTION VALUE="cssdf" SELECTED>
+    ChemAxon Compressed Mol, Rxn or SDfile
+    <OPTION VALUE="csrdf" SELECTED>
+    ChemAxon Compressed RDfile
+    <OPTION VALUE="mol" SELECTED>
+    MDL Molfile
+    <OPTION VALUE="rgf" SELECTED>
+    MDL Molfile
+    <OPTION VALUE="mol:V3" SELECTED>
+    MDL Extended Molfile (v3000)
+    <OPTION VALUE="rxn" SELECTED>
+    MDL Rxnfile
+    <OPTION VALUE="rxn:V3" SELECTED>
+    MDL Extended Rxnfile
+    <OPTION VALUE="sdf" SELECTED>
+    MDL SDfile
+    <OPTION VALUE="sdf:V3" SELECTED>
+    MDL SDfile
+    <OPTION VALUE="rdf" SELECTED>
+    MDL RDfile
+    <OPTION VALUE="skc" SELECTED>
+    SKC File Format
+    <OPTION VALUE="cdx" SELECTED>
+    CDX File Format
+    <OPTION VALUE="cdxml" SELECTED>
+    CDXML File Format
+    <OPTION VALUE="cml" SELECTED>
+    Chemical Markup Language / CML
+    <OPTION VALUE="smiles" SELECTED>
+    SMILES
+    <OPTION VALUE="smarts" SELECTED>
+    SMARTS
+    <OPTION VALUE="inchi" SELECTED>
+    InChI
+    <OPTION VALUE="peptide" SELECTED>
+    Peptide Sequence
+    <OPTION VALUE="peptide:1" SELECTED>
+    Peptide Sequence
+    <OPTION VALUE="peptide:3" SELECTED>
+    Peptide Sequence
+    <OPTION VALUE="rna" SELECTED>
+    RNA Sequence
+    <OPTION VALUE="dna" SELECTED>
+    DNA Sequence
+    <OPTION VALUE="mol2" SELECTED>
+    Tripos Mol2
+    <OPTION VALUE="sybyl" SELECTED>
+    Tripos SYBYL molfile
+    <OPTION VALUE="pdb" SELECTED>
+    Protein Data Bank / PDB
+    <OPTION VALUE="xyz" SELECTED>
+    XYZ
+    <OPTION VALUE="cube" SELECTED>
+    Gaussian Cube
+    <OPTION VALUE="gout" SELECTED>
+    Gaussian Output Format
+    <OPTION VALUE="gzip" SELECTED>
+    GZIPped
+    <OPTION VALUE="base64" SELECTED>
+    BASE64 encoded
+    <OPTION VALUE="pdf" SELECTED>
+    Portable Document Format / PDF
+    <OPTION VALUE="d2s" SELECTED>
+    Text/Office Document (supported by Document to Structure)
+    <OPTION VALUE="fasta" SELECTED>
+    FASTA File Format (Automatic sequence recognition)
+    <OPTION VALUE="fasta:dna" SELECTED>
+    FASTA File Format (DNA sequence)
+    <OPTION VALUE="fasta:rna" SELECTED>
+    FASTA File Format (RNA sequence)
+    <OPTION VALUE="fasta:peptide" SELECTED>
+    FASTA File Format (peptide sequence)
+    <OPTION VALUE="accord" SELECTED>
+    Accord file format
+    <OPTION VALUE="name" SELECTED>
+    Name
+    <OPTION VALUE="csv" SELECTED>
+    CSV
+    </SELECT>
+    <INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED" >file2txt<BR>
+    upload: <INPUT TYPE="FILE" NAME="infile"> ...or paste:<BR>
+        
+        
+        
+        <TEXTAREA NAME="intxt" WRAP=OFF ROWS=12 COLS=60>{{ input_text }}</TEXTAREA>
+    
+    
+    
+    </TD>
+    <TD VALIGN=TOP>
+    <B>options:</B><BR>
+    <TABLE WIDTH=100%><TR><TD VALIGN=TOP>
+    <INPUT TYPE=CHECKBOX NAME="showh" VALUE="CHECKED">show Hs<BR>
+    <INPUT TYPE=CHECKBOX NAME="lonepairs" VALUE="CHECKED">lonepairs<BR>
+    <INPUT TYPE=CHECKBOX NAME="use2d" VALUE="CHECKED">use2d<BR>
+    <INPUT TYPE=CHECKBOX NAME="transparent" VALUE="CHECKED" >transparent<BR>
+    <INPUT TYPE=CHECKBOX NAME="zoomable" VALUE="CHECKED" >zoomable<BR>
+    <INPUT TYPE=CHECKBOX NAME="verbose" VALUE="CHECKED" >verbose<BR>
+    </TD><TD VALIGN=TOP>
+    <INPUT TYPE=CHECKBOX NAME="showprops" VALUE="CHECKED" >show properties<BR>
+    <INPUT TYPE=CHECKBOX NAME="showmaps" VALUE="CHECKED" >show atom maps<BR>
+    <INPUT TYPE=CHECKBOX NAME="smilesmatch" VALUE="CHECKED" >smilesmatch<BR>
+    <INPUT TYPE=CHECKBOX NAME="parts2mols" VALUE="CHECKED" >parts2mols<BR>
+    <INPUT TYPE=CHECKBOX NAME="showarom" VALUE="CHECKED" >showarom<BR>
+    <INPUT TYPE=CHECKBOX NAME="align2smarts" VALUE="CHECKED" >align2smarts<BR>
+    </TD></TR>
+    </TABLE>
+    smarts: <INPUT TYPE="text" NAME="smarts" SIZE="48" VALUE="">
+    <BR>
+    <B>output:</B><BR>
+    size:<SELECT NAME="size">
+    <OPTION VALUE="xs">xs - 96x96
+    <OPTION VALUE="s">s - 160x160
+    <OPTION VALUE="m">m - 180x260
+    <OPTION VALUE="l">l - 280x380
+    <OPTION VALUE="xl">xl - 480x640
+    </SELECT>
+    ncols:<SELECT NAME="ncols"><OPTION VALUE="auto">auto<OPTION VALUE="1">1<OPTION VALUE="2">2<OPTION VALUE="3">3<OPTION VALUE="4">4<OPTION VALUE="5">5<OPTION VALUE="6">6<OPTION VALUE="7">7<OPTION VALUE="8">8<OPTION VALUE="9">9<OPTION VALUE="10">10</SELECT>
+    mode:<SELECT NAME="mode">
+    <OPTION VALUE="bow">BOW
+    <OPTION VALUE="cob">COB
+    <OPTION VALUE="cow">COW
+    </SELECT>
+    <BR>
+    format: <INPUT TYPE=RADIO NAME="imgfmt" VALUE="png" CHECKED>png&nbsp;<INPUT TYPE=RADIO NAME="imgfmt" VALUE="jpeg" >jpeg<BR>
+    </TD></TR></TABLE>
+    <P>
+    <CENTER>
+        <input type="submit" value="Depict">
+    <!-- <BUTTON TYPE=BUTTON onClick="go_depict(this.form)"><B>Go Depict</B></BUTTON> -->
+    </CENTER>
+    </FORM>
+
+
+    <center>
+        <table border="">
+        <tbody>
+            {% for row_data in images %}
+
+            <tr>
+            {% for image, name in row_data %}
+
+            <td align="CENTER">
+            <div class="image-div" data-value="{{ image|safe }}">
+                {{ image|safe }}
+                <br>
+                <tt>
+                    {{ name }}
+                </tt>
+            </div>
+                </td>
+
+            {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </center>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} <button>
     <a href="{% url 'get_mols' type='demo'%}">
         Demo
     </a>
@@ -34,7 +298,7 @@
         </tbody>
     </table>
    </center>
-   <!-- {% csrf_token %} -->
+   <!-- {% csrf_token %} --> {% endcomment %}
 
 
 {% endblock %}
