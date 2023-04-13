@@ -18,4 +18,11 @@ WORKDIR /cfchem
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
+# copy entrypoint.sh
+COPY ./entrypoint.sh /cfchem/entrypoint.sh
+RUN sed -i 's/\r$//g' /cfchem/entrypoint.sh
+RUN chmod +x /cfchem/entrypoint.sh
+
 COPY . .
+
+# ENTRYPOINT ["/cfchem/entrypoint.dev.sh"]
