@@ -14,8 +14,8 @@ In the depict portal, we can enter SMILE representation of the molecules and can
 ## Deployment on Chiltepin
 The Chiltepin server is hosted on the `http://206.192.180.166/`. To deploy the application on the Chiltepin, add the following lines in ***/etc/apache2/apache2.conf***
 
-    ProxyPass /depict  [http://localhost:5000](http://localhost:5000/)
-    ProxyPassReverse /depict  [http://localhost:5000](http://localhost:5000/)
+    ProxyPass /depict http://localhost:5000/depict
+    ProxyPassReverse /depict http://localhost:5000/depict
 
 Finally, run the docker container using the following command in detached mode
 
