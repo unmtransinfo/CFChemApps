@@ -21,3 +21,13 @@ Finally, run the docker container using the following command in detached mode
 
     docker-compose -f docker-compose.yml up -d --build
 In the above command, we mention the name of the docker compose file that needs to be used while running the container. This way we can separate docker compose files for different environments. 
+
+## Deployment on AWS
+With the current AWS structure, we need to create an EC2 instance to run the docker container, a single RDS instance to store the data in Relational-DBMS, and also Route 53 to use DNS service.
+
+ - With EC2 instance, the Github repository can be connected to AWS to
+   maintain CI/CD. 
+ - RDS instance needs to be connected to the EC2 instance, which is done
+   by adding information about environment variables (will also be
+   handled by CI/CD pipelines).
+ - The Route 53 needs to be connected to the existing (or new?) domain name, and needs some DNS information as input, which is provided by domain name provider (Varies for providers).
