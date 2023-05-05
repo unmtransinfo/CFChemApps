@@ -5,3 +5,12 @@ class InputType(Enum):
     INPUT = "input"
     FILE = "file"
     # WINTER = 4
+
+class FileType(Enum):
+    CSV = "csv"
+    MOL = "mol"
+    SDF = "sdf"
+
+class ImageFormat(Enum):
+    PNG = "png"
+    JPG = "jpg"

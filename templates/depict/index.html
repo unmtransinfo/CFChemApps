@@ -3,16 +3,95 @@
 
 {% block content_head %}
 
+<style>
+    #image-div:hover {opacity: 0.2;}
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 99; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 75%;
+    max-width: 50%;
+    max-height: 75%;
+}
+
+/* Caption of Modal Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(1)}
+    to {-webkit-transform:scale(2)}
+}
+ 
+@keyframes zoom {
+    from {transform:scale(0.4)}
+    to {transform:scale(1)}
+}
+
+@-webkit-keyframes zoom-out {
+    from {transform:scale(1)}
+    to {transform:scale(0)}
+}
+@keyframes zoom-out {
+    from {transform:scale(1)}
+    to {transform:scale(0)}
+}
+
+/* Add Animation */
+.modal-content, #caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+.out {
+    animation-name: zoom-out;
+    animation-duration: 0.6s;
+  }
+
+  /* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+  
+        
+    </script>
+
 <script>
     function go_demo() {
         let url = "{% url 'get_mols' type='demo' %}"
         document.location.href = url
     }
-
-    function zoom_image(svg) {
-        console.log(svg)
-    }
 </script>
+
 
 <script>
 
@@ -24,20 +103,44 @@
     }
     
     function set_listeners() {
-        $(".image-div").click(function(){
-            var value = $(this).data("value");
-				console.log(value);
-                openNewWindow(value);
-            });
+    var modal = document.getElementById('myModal');
+    var modalImg = document.getElementById("img01");
+    const captionText = document.getElementById("caption");
+    var images = document.querySelectorAll(".image-div")
+    for (var i=0; i < images.length; i++){
+        images[i].onclick = function() {
+            modal.style.display = "block";
+            modalImg.src = "/" + this.getAttribute('value');
+            modalImg.alt = this.getAttribute('name');
+            captionText.innerHTML = this.getAttribute('name');
+        }
+    }
+
+    modal.onclick = function() {
+        modalImg.className += " out";
+        setTimeout(function() {
+           modal.style.display = "none";
+           modalImg.className = "modal-content";
+         }, 400);
+        
+     } 
+     
+     window.onkeyup = function (event) {
+  if (event.keyCode == 27) {
+    modalImg.className += " out";
+        setTimeout(function() {
+           modal.style.display = "none";
+           modalImg.className = "modal-content";
+         }, 400);
+  }
+ }
     }
 </script>
 
 <script>
     // window.onload = function() {
         function readFile() {
-            console.log("called")
         document.getElementById('infile').addEventListener('change',function(){
-            console.log("called")
         var file_reader=new FileReader();
         file_reader.onload=function(){
             document.getElementById('textarea').textContent=file_reader.result;
@@ -82,12 +185,12 @@
 
 {% block content %}
 
-<FORM NAME="mainform" method="post" action="{% url 'get_mols' type='input' %}" ENCTYPE="multipart/form-data">
+<FORM NAME="mainform" id="mainform" method="post" action="{% url 'get_mols' type='input' %}" ENCTYPE="multipart/form-data">
     <INPUT TYPE=HIDDEN NAME="depict">
     <TABLE WIDTH="100%"><TR><TD><H1>Depict</H1></TD>
     <TD ALIGN=RIGHT>
     <BUTTON TYPE=BUTTON onClick="void window.open('depict?help=TRUE','helpwin','width=600,height=400,scrollbars=1,resizable=1')"><B>Help</B></BUTTON>
-    <BUTTON TYPE=BUTTON onClick="go_demo()"><B>Demo</B></BUTTON>
+    <BUTTON type="submit" form="mainform" onclick="javascript: form.action='{% url 'get_mols' type='demo' %}';"><B>Demo</B></BUTTON>
     <BUTTON TYPE=BUTTON onClick="window.location.replace('depict')"><B>Reset</B></BUTTON>
     </TD></TR></TABLE>
     <HR>
@@ -218,24 +321,24 @@
     <INPUT TYPE=CHECKBOX NAME="align2smarts" VALUE="CHECKED" >align2smarts<BR>
     </TD></TR>
     </TABLE> -->
-    smarts: <INPUT TYPE="text" NAME="smarts" SIZE="48" VALUE="">
-    <BR>
-    <B>output:</B><BR>
+    <!-- smarts: <INPUT TYPE="text" NAME="smarts" SIZE="48" VALUE=""> -->
+    <!-- <BR> -->
+    <!-- <B>output:</B><BR>
     size:<SELECT NAME="size">
     <OPTION VALUE="xs">xs - 96x96
     <OPTION VALUE="s">s - 160x160
     <OPTION VALUE="m">m - 180x260
     <OPTION VALUE="l">l - 280x380
     <OPTION VALUE="xl">xl - 480x640
-    </SELECT>
-    ncols:<SELECT NAME="ncols"><OPTION VALUE="auto">auto<OPTION VALUE="1">1<OPTION VALUE="2">2<OPTION VALUE="3">3<OPTION VALUE="4">4<OPTION VALUE="5">5<OPTION VALUE="6">6<OPTION VALUE="7">7<OPTION VALUE="8">8<OPTION VALUE="9">9<OPTION VALUE="10">10</SELECT>
+    </SELECT> -->
+    <!-- ncols:<SELECT NAME="ncols"><OPTION VALUE="auto">auto<OPTION VALUE="1">1<OPTION VALUE="2">2<OPTION VALUE="3">3<OPTION VALUE="4">4<OPTION VALUE="5">5<OPTION VALUE="6">6<OPTION VALUE="7">7<OPTION VALUE="8">8<OPTION VALUE="9">9<OPTION VALUE="10">10</SELECT>
     mode:<SELECT NAME="mode">
     <OPTION VALUE="bow">BOW
     <OPTION VALUE="cob">COB
     <OPTION VALUE="cow">COW
-    </SELECT>
+    </SELECT> -->
     <BR>
-    format: <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" CHECKED>png&nbsp;<INPUT TYPE=RADIO NAME="imgfmt" VALUE="jpeg" >jpeg<BR>
+    format: <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" CHECKED>png&nbsp;<INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="jpeg" >jpeg<BR>
     </TD></TR></TABLE>
     <P>
     <CENTER>
@@ -254,14 +357,24 @@
             {% for image, name in row_data %}
 
             <td align="CENTER">
-            <div class="image-div" data-value="{{ image|safe }}">
-                {{ image|safe }}
-                <br>
+                <button type="button" class="btn btn-default delete-image-btn pull-right">
+                    <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
+                </button>
+            <div id="image-div" class="image-div" value="{{ image|safe }}" name="{{ name }}">
+                
+                <img class="molimg" src="{{ static }}/{{ image|safe }}" alt="{{ name }}">
+            </img>
                 <tt>
                     {{ name }}
                 </tt>
             </div>
                 </td>
+
+                <div id="myModal" class="modal">
+                    <img class="modal-content" id="img01">
+                 <div id="caption"></div>
+                 </div>
+                <br>
 
             {% endfor %}
             </tr>
@@ -269,74 +382,6 @@
         </tbody>
         </table>
     </center>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{% comment %} <button>
-    <a href="{% url 'get_mols' type='demo'%}">
-        Demo
-    </a>
-</button>
-
-<form method="post" action="{% url 'get_mols' type='input' %}">
-    <textarea name="intxt" wrap="OFF" rows="12" cols="60">
-        {{ input_text | default_if_none:'' }}
-    </textarea>
-    <input type="submit" value="Depict">
-    {% csrf_token %}
-</form>
-
-   <center>
-    <table border>
-        <tbody>
-            {% for image, name in images %}
-            <tr display="inline">
-                <td align="CENTER">
-                {{ image|safe }}
-                <br>
-                <tt>
-                    {{ name }}
-                </tt>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-   </center>
-   <!-- {% csrf_token %} --> {% endcomment %}
 
 
 {% endblock %}

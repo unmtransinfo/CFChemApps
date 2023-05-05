@@ -1,10 +1,16 @@
 from rdkit import Chem
 from rdkit.Chem.Draw import rdMolDraw2D
 from IPython.display import display, SVG
+from rdkit.Chem import AllChem
+from rdkit.Chem import Draw
+
+from django.core.files.storage import FileSystemStorage
 
 import os
+from PIL import Image
 
-from .enums import InputType
+from .enums import InputType, FileType, ImageFormat
+from cfchem.Constants import *
 
 def show(mol, molSize=(475, 175), kekulize=True):
     mc = Chem.Mol(mol.ToBinary())
@@ -24,28 +30,84 @@ def show(mol, molSize=(475, 175), kekulize=True):
 def get_content(type, request):
     input_text = None
     datas = None
-
     if type == InputType.INPUT.value:
-        input_text = request.data.get('intxt')
+        input_text = request.data.get(IN_TEXT).strip()
         datas = input_text.split("\r\n")
 
     if type == InputType.DEMO.value:
-        f = open('depict/demo_compounds.txt')
+        f = open(DEMO_COMPOUNDS_FILE_NAME)
         input_text = f.read()
         datas = input_text.split("\n")
-    
+    print(type, datas)
     return input_text, datas
 
 def get_content_from_csv(filename):
-    f = open("media/{}".format(filename))
+    f = open(filename)
     csv_text = f.read()
     datas = csv_text.split("\n")
-    print(filename, csv_text, datas)
     return csv_text, datas
 
+def save_file(request):
+    myfile = request.FILES[INFILE]
+    fs = FileSystemStorage()
+    filename = fs.save(myfile.name, myfile)
+    _ = fs.url(filename)
+
+    return filename
+    
 def delete_csv(file):
     os.remove(file)
 
 def get_file_type(filename):
     extension = filename.split(".")[1]
-    return 1 if extension == "csv" else 0
+    return FileType.CSV if extension == FileType.CSV.value else FileType.MOL
+
+def create_media_filename(filename):
+    return "{}/{}".format(MEDIA_FOLDER, filename)
+
+def create_svg(m):
+    AllChem.Compute2DCoords(m)
+    svg = show(m)
+
+    return svg
+
+def create_png_jpeg_image(m, filename, format):
+    extension = ImageFormat.PNG.value if format == ImageFormat.PNG.value else ImageFormat.JPG.value
+    img = Draw.MolToFile(m, filename + ".png")
+    if extension == ImageFormat.PNG.value:
+        img = Draw.MolToFile(m, filename + ".{}".format(extension))
+    else:
+        img = Image.open(filename + ".png")
+        img.convert("RGB").save(filename + ".{}".format(format))
+
+    name = filename + ".{}".format(format)
+
+    return name
+
+def get_svg_from_mol_file(filename, format):
+    m = Chem.MolFromMolFile(filename)
+    name = create_png_jpeg_image(m, filename, format)
+    
+    return name
+
+def get_svgs_from_data(datas, format):
+    output = []
+    row_output = []
+    counter = 0
+    for d in datas:      
+        try:
+            smile, name = d.split(" ")
+        except Exception as e:
+            print(e)
+            smile, name = d.rstrip(), NO_COMPOUND_NAME
+        comp = Chem.MolFromSmiles(smile)
+        image_name = create_png_jpeg_image(comp, create_media_filename(name), format)
+        counter += 1
+        row_output.append([image_name, name])
+        if counter == 3:
+            output.append(row_output)
+            row_output = []
+            counter = 0
+    output.append(row_output)
+
+    return output
