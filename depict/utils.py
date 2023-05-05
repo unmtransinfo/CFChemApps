@@ -2,6 +2,8 @@ from rdkit import Chem
 from rdkit.Chem.Draw import rdMolDraw2D
 from IPython.display import display, SVG
 
+import os
+
 from .enums import InputType
 
 def show(mol, molSize=(475, 175), kekulize=True):
@@ -33,3 +35,17 @@ def get_content(type, request):
         datas = input_text.split("\n")
     
     return input_text, datas
+
+def get_content_from_csv(filename):
+    f = open("media/{}".format(filename))
+    csv_text = f.read()
+    datas = csv_text.split("\n")
+    print(filename, csv_text, datas)
+    return csv_text, datas
+
+def delete_csv(file):
+    os.remove(file)
+
+def get_file_type(filename):
+    extension = filename.split(".")[1]
+    return 1 if extension == "csv" else 0

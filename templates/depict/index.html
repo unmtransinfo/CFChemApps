@@ -33,9 +33,47 @@
 </script>
 
 <script>
+    // window.onload = function() {
+        function readFile() {
+            console.log("called")
+        document.getElementById('infile').addEventListener('change',function(){
+            console.log("called")
+        var file_reader=new FileReader();
+        file_reader.onload=function(){
+            document.getElementById('textarea').textContent=file_reader.result;
+        }
+        file_reader.readAsText(this.files[0]);
+    })
+}
+    // }
+</script>
+
+<script type="text/javascript">
+ 
+    var reader = new FileReader();
+  
+    function readText(that){
+  
+    if(that.files && that.files[0]){
+    var reader = new FileReader();
+    reader.onload = function (e) { 
+    var output=e.target.result;
+  
+    //process text to show only lines with "@": 
+    output=output.split("n").filter(/./.test, /@/).join("n");
+  
+    document.getElementById('main').innerHTML= output;
+    };//end onload()
+    reader.readAsText(that.files[0]);
+    }//end if html5 filelist support
+    } 
+  </script>
+
+<script>
 
     window.onload = function() {
         set_listeners();
+        readFile();
       };
 
 </script>
@@ -153,11 +191,11 @@
     CSV
     </SELECT>
     <INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED" >file2txt<BR>
-    upload: <INPUT accept=".csv, .mol" TYPE="FILE" NAME="infile"> ...or paste:<BR>
+    upload: <INPUT accept=".csv, .mol, .sdf" id="infile" TYPE="FILE" NAME="infile"> ...or paste:<BR>
         
         
         
-        <TEXTAREA NAME="intxt" WRAP=OFF ROWS=12 COLS=60>{{ input_text }}</TEXTAREA>
+        <TEXTAREA NAME="intxt" id="textarea" WRAP=OFF ROWS=12 COLS=60>{{ input_text }}</TEXTAREA>
     
     
     
@@ -197,7 +235,7 @@
     <OPTION VALUE="cow">COW
     </SELECT>
     <BR>
-    format: <INPUT TYPE=RADIO NAME="imgfmt" VALUE="png" CHECKED>png&nbsp;<INPUT TYPE=RADIO NAME="imgfmt" VALUE="jpeg" >jpeg<BR>
+    format: <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" CHECKED>png&nbsp;<INPUT TYPE=RADIO NAME="imgfmt" VALUE="jpeg" >jpeg<BR>
     </TD></TR></TABLE>
     <P>
     <CENTER>
