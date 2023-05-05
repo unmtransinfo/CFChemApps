@@ -57,7 +57,7 @@
     <TR BGCOLOR="#CCCCCC"><TD VALIGN=TOP>
     format:<SELECT NAME="molfmt" SELECTED>
     
-    <OPTION VALUE="automatic" SELECTED>
+    <!-- <OPTION VALUE="automatic" SELECTED>
     automatic
     <OPTION VALUE="mrv" SELECTED>
     ChemAxon Marvin Documents / MRV
@@ -76,10 +76,10 @@
     <OPTION VALUE="cssdf" SELECTED>
     ChemAxon Compressed Mol, Rxn or SDfile
     <OPTION VALUE="csrdf" SELECTED>
-    ChemAxon Compressed RDfile
+    ChemAxon Compressed RDfile -->
     <OPTION VALUE="mol" SELECTED>
     MDL Molfile
-    <OPTION VALUE="rgf" SELECTED>
+    <!-- <OPTION VALUE="rgf" SELECTED>
     MDL Molfile
     <OPTION VALUE="mol:V3" SELECTED>
     MDL Extended Molfile (v3000)
@@ -148,12 +148,12 @@
     <OPTION VALUE="accord" SELECTED>
     Accord file format
     <OPTION VALUE="name" SELECTED>
-    Name
+    Name -->
     <OPTION VALUE="csv" SELECTED>
     CSV
     </SELECT>
     <INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED" >file2txt<BR>
-    upload: <INPUT TYPE="FILE" NAME="infile"> ...or paste:<BR>
+    upload: <INPUT accept=".csv, .mol" TYPE="FILE" NAME="infile"> ...or paste:<BR>
         
         
         
@@ -164,7 +164,7 @@
     </TD>
     <TD VALIGN=TOP>
     <B>options:</B><BR>
-    <TABLE WIDTH=100%><TR><TD VALIGN=TOP>
+    <!-- <TABLE WIDTH=100%><TR><TD VALIGN=TOP>
     <INPUT TYPE=CHECKBOX NAME="showh" VALUE="CHECKED">show Hs<BR>
     <INPUT TYPE=CHECKBOX NAME="lonepairs" VALUE="CHECKED">lonepairs<BR>
     <INPUT TYPE=CHECKBOX NAME="use2d" VALUE="CHECKED">use2d<BR>
@@ -179,7 +179,7 @@
     <INPUT TYPE=CHECKBOX NAME="showarom" VALUE="CHECKED" >showarom<BR>
     <INPUT TYPE=CHECKBOX NAME="align2smarts" VALUE="CHECKED" >align2smarts<BR>
     </TD></TR>
-    </TABLE>
+    </TABLE> -->
     smarts: <INPUT TYPE="text" NAME="smarts" SIZE="48" VALUE="">
     <BR>
     <B>output:</B><BR>

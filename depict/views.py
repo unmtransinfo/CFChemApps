@@ -17,14 +17,16 @@ def get_mols(request, type):
     output = []
     row_output = []
     counter = 0
-    print(input_text)
     for d in datas:      
-        smile, name = d.split(" ")
+        try:
+            smile, name = d.split(" ")
+        except Exception as e:
+            print(e)
+            smile, name = d.rstrip(), "---"
         comp = Chem.MolFromSmiles(smile)
         AllChem.Compute2DCoords(comp)
         svg = show(comp)
         counter += 1
-        print(svg, counter)
         row_output.append([svg, name])
         if counter == 3:
             output.append(row_output)

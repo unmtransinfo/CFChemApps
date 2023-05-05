@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 # PYTHONUNBUFFERED ensures our console output is not buffered by Docker
 
 RUN apt update && apt install -y libsm6 libxext6
-RUN apt-get install -y libxrender-dev
+RUN apt-get install -y gcc libxrender-dev
 
 WORKDIR /cfchem
 
