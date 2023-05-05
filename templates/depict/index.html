@@ -90,6 +90,16 @@
         let url = "{% url 'get_mols' type='demo' %}"
         document.location.href = url
     }
+
+    function reset() {
+        let url = "{% url 'index' %}"
+        document.location.href = url
+    }
+
+    function help() {
+        let url = "{% url 'help' %}"
+        window.open(url)
+    }
 </script>
 
 
@@ -133,6 +143,15 @@
            modalImg.className = "modal-content";
          }, 400);
   }
+ }
+
+ document.getElementById("reset-button").onclick = function() {
+    reset();
+ }
+
+ document.getElementById("help-button").onclick = function() {
+    console.log("caledwaeqd")
+    help();
  }
     }
 </script>
@@ -189,9 +208,9 @@
     <INPUT TYPE=HIDDEN NAME="depict">
     <TABLE WIDTH="100%"><TR><TD><H1>Depict</H1></TD>
     <TD ALIGN=RIGHT>
-    <BUTTON TYPE=BUTTON onClick="void window.open('depict?help=TRUE','helpwin','width=600,height=400,scrollbars=1,resizable=1')"><B>Help</B></BUTTON>
+    <BUTTON TYPE=BUTTON id="help-button"><B>Help</B></BUTTON>
     <BUTTON type="submit" form="mainform" onclick="javascript: form.action='{% url 'get_mols' type='demo' %}';"><B>Demo</B></BUTTON>
-    <BUTTON TYPE=BUTTON onClick="window.location.replace('depict')"><B>Reset</B></BUTTON>
+    <BUTTON TYPE=BUTTON id="reset-button" onClick="reset"><B>Reset</B></BUTTON>
     </TD></TR></TABLE>
     <HR>
     <TABLE WIDTH="100%" CELLPADDING=5 CELLSPACING=5>
@@ -370,10 +389,7 @@
             </div>
                 </td>
 
-                <div id="myModal" class="modal">
-                    <img class="modal-content" id="img01">
-                 <div id="caption"></div>
-                 </div>
+        
                 <br>
 
             {% endfor %}
@@ -381,6 +397,10 @@
             {% endfor %}
         </tbody>
         </table>
+        <div id="myModal" class="modal">
+            <img class="modal-content" id="img01">
+         <div id="caption"></div>
+         </div>
     </center>
 
 

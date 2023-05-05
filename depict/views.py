@@ -42,3 +42,6 @@ def get_mols(request, type):
     }
 
     return render(request, "depict/index.html", context = context)
+
+def help(request):
+    return render(request, "depict/help.html")
