@@ -179,3 +179,5 @@ pyrightconfig.json
 .env**
 
 .DS_Store
+
+media/
