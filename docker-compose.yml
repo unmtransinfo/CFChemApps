@@ -7,8 +7,8 @@ services:
     ports:
     - "5000:5000"
     # command: python3 manage.py runserver 0.0.0.0:5000
-    image: cfchem:latest
+    image: cfchemapps:latest
     volumes:
-      - .:/cfchem
+      - .:/cfchemapps
     env_file:
       - ./.env.dev
