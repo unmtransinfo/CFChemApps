@@ -25,4 +25,4 @@ RUN chmod +x /cfchem/entrypoint.dev.sh
 
 COPY . .
 
-# ENTRYPOINT ["/cfchem/entrypoint.dev.sh"]
+ENTRYPOINT ["/cfchem/entrypoint.dev.sh"]
