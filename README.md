@@ -5,17 +5,17 @@ To run the application on your system, you need docker installed. You can run th
     
 You can leave out `-d` flag if you do not wish to run in detached mode
 
-> On successfully running the server, go to http://127.0.0.1:5000/depict/ to check out the portal.
+> On successfully running the server, go to http://127.0.0.1:8000/depict/ to check out the portal.
 
 ## Depict Portal
 In the depict portal, we can enter SMILE representation of the molecules and can get the structure of the molecules as the output. 
 
 
 ## Deployment on Chiltepin
-The Chiltepin server is hosted on the `http://206.192.180.166/`. To deploy the application on the Chiltepin, add the following lines in ***/etc/apache2/apache2.conf***
+The current Chiltepin server is hosted on the `http://206.192.180.166/`. To deploy the application on the Chiltepin, add the following lines in ***/etc/apache2/apache2.conf***
 
-    ProxyPass /depict http://localhost:5000/depict
-    ProxyPassReverse /depict http://localhost:5000/depict
+    ProxyPass /depict http://localhost:8000/depict
+    ProxyPassReverse /depict http://localhost:8000/depict
 
 Finally, run the docker container using the following command in detached mode
 
