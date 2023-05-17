@@ -62,7 +62,12 @@ def get_file_type(filename):
     extension = filename.split(".")[1]
     return FileType.CSV if extension == FileType.CSV.value else FileType.MOL
 
+def ensure_directory_exists(dir_name):
+    if not os.path.exists(dir_name):
+        os.mkdir(dir_name)
+
 def create_media_filename(filename):
+    ensure_directory_exists(MEDIA_FOLDER)
     return "{}/{}".format(MEDIA_FOLDER, filename)
 
 def create_svg(m):
