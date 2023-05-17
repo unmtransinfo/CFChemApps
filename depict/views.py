@@ -17,7 +17,7 @@ def get_mols(request, type):
     if request.method == 'POST':
         if INFILE in request.FILES:
             filename = save_file(request)
-            filename = create_media_filename(filename)
+            # filename = create_media_filename(filename)
             type = get_file_type(filename)
             if type == FileType.CSV:
                 input_text, datas = get_content_from_csv(filename)
