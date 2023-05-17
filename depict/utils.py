@@ -64,7 +64,7 @@ def get_file_type(filename):
 
 def ensure_directory_exists(dir_name):
     if not os.path.exists(dir_name):
-        os.mkdir(dir_name)
+        os.makedirs(dir_name)
 
 def create_media_filename(filename):
     ensure_directory_exists(MEDIA_FOLDER)
