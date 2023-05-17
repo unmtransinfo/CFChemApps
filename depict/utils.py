@@ -50,6 +50,7 @@ def get_content_from_csv(filename):
 def save_file(request):
     myfile = request.FILES[INFILE]
     fs = FileSystemStorage()
+    print(myfile.name, MEDIA_FOLDER)
     name = "{}/{}".format(myfile.name, MEDIA_FOLDER)
     filename = fs.save(name, myfile)
     _ = fs.url(filename)
