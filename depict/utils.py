@@ -51,7 +51,7 @@ def save_file(request):
     myfile = request.FILES[INFILE]
     fs = FileSystemStorage()
     print(myfile.name, MEDIA_FOLDER)
-    name = "{}/{}".format(myfile.name, MEDIA_FOLDER)
+    name = "{}/{}".format(MEDIA_FOLDER, myfile.name)
     filename = fs.save(name, myfile)
     _ = fs.url(filename)
 
