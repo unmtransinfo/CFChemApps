@@ -55,7 +55,7 @@ def save_file(request):
     name = "{}/{}".format(MEDIA_FOLDER, myfile.name)
     filename = fs.save(name, myfile)
     _ = fs.url(filename)
-
+    print("filename after P{}".format(filename))
     return filename
     
 def delete_csv(file):
