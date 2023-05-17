@@ -53,7 +53,7 @@ def save_file(request):
     ensure_directory_exists(MEDIA_FOLDER)
     fs = FileSystemStorage(MEDIA_FOLDER)
     print(myfile.name, MEDIA_FOLDER)
-    filename = fs.save(name, myfile)
+    filename = fs.save(myfile.name, myfile)
     _ = fs.url(filename)
     print("filename after P{}".format(filename))
     return filename
