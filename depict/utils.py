@@ -49,11 +49,13 @@ def get_content_from_csv(filename):
 
 def save_file(request):
     myfile = request.FILES[INFILE]
+
     ensure_directory_exists(MEDIA_FOLDER)
-    
+
     fs = FileSystemStorage(MEDIA_FOLDER)
     filename = fs.save(myfile.name, myfile)
     _ = fs.url(filename)
+    filename = "{}/{}".format(MEDIA_FOLDER, myfile.name)
 
     return filename
     
