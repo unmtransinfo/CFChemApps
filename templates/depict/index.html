@@ -380,9 +380,9 @@
                 <button type="button" class="btn btn-default delete-image-btn pull-right">
                     <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
                 </button>
-            <div id="image-div" class="image-div" value="{{ image|safe }}" name="{{ name }}">
+            <div id="image-div" class="image-div" value="{{ image|safe }}" name="{{ image|safe }}">
                 
-                <img class="molimg" src="{{ static }}/{{ image|safe }}" alt="{{ name }}">
+                <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
             </img>
                 <tt>
                     {{ name }}
