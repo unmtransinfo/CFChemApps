@@ -7,6 +7,58 @@
 
 {% block content %}
 
-<h3>Help</h3>
-<p>Demo help text</p>
+<!-- <body bgcolor="#EEEEEE"> -->
+    <!-- <div id="ddtooltip"></div> -->
+    <!-- <script type="text/javascript">ddtip_init()</script> -->
+
+    <b>Depict Help</b>
+    <p>
+        This web app consists of a portal which uses basic HTML, CSS and JS
+        for the user interface, and a Python framework (Django) for the backend.
+
+        The Django backend takes in input in the form of
+        (1) - SMILES (CSV format) or
+        (2) - MDL Mol File
+
+        and returns the structures of the different molecules, which is
+        shown to the user using the interface. The images for the structures
+        can be downloaded in JPEG or PNG format (as specified).
+
+        RDKit is being used to convert the different representations
+        of the molecules to their respective structures.
+
+        User can choose the image format (PNG or JPEG) as per
+        their requirements, and upload a Mol File or SMILES (csv)
+        in order to get the structure of the compounds.
+
+        The DEMO button can be used to test run the portal
+        with some pre existing SMILE representations.
+
+        The RESET button can be used to reset any inputs for processing
+    </p>
+    <p>
+        author/developer: <a href="https://github.com/Priyansh-Kedia" target="_blank">Priyansh Kedia</a>
+        <br>
+        support: <a href="https://github.com/jeremyjyang" target="_blank">Jeremy Yang</a>
+    </p>
+    <hr>
+    <table cellspacing="5" cellpadding="5">
+        <tbody>
+            <tr>
+                <td><a onmouseover="dd_tip('Depict web app from UNM Translational Informatics.','white',200)"
+                        href="https://datascience.unm.edu/" onmouseout="dd_hidetip()"><img border="0"
+                        src="{% static 'images/logo.gif' %}"></a></td>
+                <td><a onmouseover="dd_tip('JChem from ChemAxon Ltd.','white',200)" href="https://www.chemaxon.com"
+                        onmouseout="dd_hidetip()"><img border="0"
+                            src="/tomcat/biocomp/images/chemaxon_powered_100px.png"></a></td>
+            </tr>
+        </tbody>
+    </table><br>
+
+
+
+<!-- </body> -->
+
+<!-- <h3>Help</h3>
+<p>Demo help text</p> -->
 {% endblock %}

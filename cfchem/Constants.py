@@ -1,4 +1,4 @@
-MEDIA_FOLDER = "static/media"
+MEDIA_FOLDER = "static/new_media"
 
 IMAGES = "images"
 INPUT_TEXT = "input_text"
