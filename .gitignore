@@ -183,3 +183,5 @@ pyrightconfig.json
 media/
 staticfiles/
 static/
+
+**.csv

@@ -38,7 +38,7 @@ def get_content(type, request):
         f = open(DEMO_COMPOUNDS_FILE_NAME)
         input_text = f.read()
         datas = input_text.split("\n")
-    print(type, datas)
+
     return input_text, datas
 
 def get_content_from_csv(filename):
@@ -82,11 +82,12 @@ def create_svg(m):
 
 def create_png_jpeg_image(m, filename, format):
     extension = ImageFormat.PNG.value if format == ImageFormat.PNG.value else ImageFormat.JPG.value
-    img = Draw.MolToFile(m, filename + ".png")
+    # img = Draw.MolToFile(m, filename + ".png")
+    print(filename, extension)
     if extension == ImageFormat.PNG.value:
         img = Draw.MolToFile(m, filename + ".{}".format(extension))
     else:
-        img = Image.open(filename + ".png")
+        img = Image.open(filename + ".{}".format(extension))
         img.convert("RGB").save(filename + ".{}".format(format))
 
     name = filename + ".{}".format(format)
@@ -103,7 +104,8 @@ def get_svgs_from_data(datas, format):
     output = []
     row_output = []
     counter = 0
-    for d in datas:      
+    for d in datas:     
+        d = d.strip() 
         try:
             smile, name = d.split(" ")
         except Exception as e:

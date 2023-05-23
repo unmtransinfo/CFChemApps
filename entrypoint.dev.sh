@@ -2,7 +2,7 @@
 
 # Collect static files
 echo "Collect static files"
-python manage.py collectstatic --noinput
+python manage.py collectstatic --clear --noinput
 
 python manage.py makemigrations
 # Apply database migrations

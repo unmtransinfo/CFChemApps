@@ -20,6 +20,7 @@ def get_mols(request, type):
             type = get_file_type(filename)
             if type == FileType.CSV:
                 input_text, datas = get_content_from_csv(filename)
+                print(input_text, datas)
                 delete_csv(filename)
             elif type == FileType.MOL or type == FileType.SDF:
                 svg = get_svg_from_mol_file(filename, format)
