@@ -83,7 +83,6 @@ def create_svg(m):
 def create_png_jpeg_image(m, filename, format):
     extension = ImageFormat.PNG.value if format == ImageFormat.PNG.value else ImageFormat.JPG.value
     # img = Draw.MolToFile(m, filename + ".png")
-    print(filename, extension)
     if extension == ImageFormat.PNG.value:
         img = Draw.MolToFile(m, filename + ".{}".format(extension))
     else:
@@ -94,11 +93,34 @@ def create_png_jpeg_image(m, filename, format):
 
     return name
 
-def get_svg_from_mol_file(filename, format):
-    m = Chem.MolFromMolFile(filename)
-    name = create_png_jpeg_image(m, filename, format)
+
+def get_svgs_from_mol_file(filename, format):
+    output = []
+    row_output = []
+    counter = 0
+    suppl = Chem.SDMolSupplier(filename)
+
+    if len(suppl) == 1:
+        mol = Chem.MolFromMolFile(filename)
+        name = create_png_jpeg_image(mol, filename, format)
+
+        output.append([[name, NO_COMPOUND_NAME]])
+
+        return output
     
-    return name
+    for mol in suppl:
+        if mol is None:
+            continue
+        name = mol.GetProp("PUBCHEM_COMPOUND_CID") if mol.HasProp("PUBCHEM_COMPOUND_CID") else mol.GetProp("PubChem CID")
+        image_name = create_png_jpeg_image(mol, create_media_filename(name), format)
+        counter += 1
+        row_output.append([image_name, name])
+        if counter == 3:
+            output.append(row_output)
+            row_output = []
+            counter = 0
+    output.append(row_output)
+    return output
 
 def get_svgs_from_data(datas, format):
     output = []
