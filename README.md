@@ -77,9 +77,9 @@ The server can now be accessed using the public IP of the EC2 instance.
 > The values that are required to be defined in the environment file are 
 		
 
-		DATABASE_ENGINE=<DB_ENGINE>
-    		DATABASE_NAME=<DB_NAME>
-    		DATABASE_USER=<DB_USERNAME>
-    		DATABASE_PASSWORD=<DB_PASSWORD>
-    		DATABASE_HOST=<DB_HOST>
-    		DATABASE_PORT=<DB_PORT>
+	DATABASE_ENGINE=<DB_ENGINE>
+	DATABASE_NAME=<DB_NAME>
+	DATABASE_USER=<DB_USERNAME>
+	DATABASE_PASSWORD=<DB_PASSWORD>
+	DATABASE_HOST=<DB_HOST>
+	DATABASE_PORT=<DB_PORT>
