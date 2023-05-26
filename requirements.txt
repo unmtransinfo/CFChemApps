@@ -10,6 +10,7 @@ ipython==8.12.2
 jedi==0.18.2
 matplotlib-inline==0.1.6
 numpy==1.24.3
+gunicorn==20.1.0
 parso==0.8.3
 pexpect==4.8.0
 pickleshare==0.7.5
@@ -26,3 +27,4 @@ stack-data==0.6.2
 traitlets==5.9.0
 typing_extensions==4.6.2
 wcwidth==0.2.6
+psycopg2-binary

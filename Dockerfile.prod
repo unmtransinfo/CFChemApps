@@ -1,74 +1,28 @@
-###########
-# BUILDER #
-###########
+# syntax=docker/dockerfile:1
 
-# pull official base image
-FROM python:3.8-slim-buster as builder
-
-# set work directory
-WORKDIR /usr/src/app
-
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# install psycopg2 dependencies
-# RUN apt update 
-RUN apt update && apt install -y libsm6 libxext6
-RUN apt-get install -y libxrender-dev
-# all postgresql-dev gcc python3-dev musl-dev
-
-# lint
-RUN pip install --upgrade pip
-RUN pip install flake8==3.9.2
-RUN pip install --upgrade setuptools
-
-COPY . .
-# RUN flake8 --ignore=E501,F401 .
-
-# install dependencies
-COPY ./requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
-
-
-#########
-# FINAL #
-#########
-
-# pull official base image
 FROM python:3.8-slim-buster
 
-# create directory for the app user
-# RUN mkdir -p /home/app
+# Set environment variables
+ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+# PIP_DISABLE_PIP_VERSION_CHECK disables an automatic check for pip updates each time
+# PYTHONDONTWRITEBYTECODE means Python will not try to write .pyc files
+# PYTHONUNBUFFERED ensures our console output is not buffered by Docker
 
-RUN useradd --user-group --system --create-home --no-log-init app
+RUN apt update && apt install -y libsm6 libxext6
+RUN apt-get install -y gcc libxrender-dev
 
-# create the appropriate directories
-# ENV HOME=/home/app
-ENV APP_HOME=/home/app/web
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
+WORKDIR /cfchemapps
 
-# install dependencies
-RUN apt update 
-COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install --no-cache /wheels/*
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
 
-# copy entrypoint.prod.sh
-COPY ./entrypoint.prod.sh .
-RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
-RUN chmod +x  $APP_HOME/entrypoint.prod.sh
+# copy entrypoint.sh
+COPY ./entrypoint.prod.sh /entrypoint.prod.sh
+RUN sed -i 's/\r$//g' /entrypoint.prod.sh
+RUN chmod +x /entrypoint.prod.sh
 
-# copy project
 COPY . .
 
-# chown all the files to the app user
-RUN chown -R app:app $APP_HOME
-
-# change to the app user
-USER app
-
-# run entrypoint.prod.sh
-ENTRYPOINT [$APP_HOME + "/entrypoint.prod.sh"]
+ENTRYPOINT ["/entrypoint.prod.sh"]

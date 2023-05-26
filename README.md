@@ -31,3 +31,18 @@ With the current AWS structure, we need to create an EC2 instance to run the doc
    by adding information about environment variables (will also be
    handled by CI/CD pipelines).
  - The Route 53 needs to be connected to the existing (or new?) domain name, and needs some DNS information as input, which is provided by domain name provider (Varies for providers).
+
+After connecting to the EC2 instance using SSH, install docker, docker-compose and git on the EC2 instance
+sudo yum install docker
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+
+This makes docker auto start
+sudo chkconfig docker on
+
+Install git
+sudo yum install -y git
+
+Install docker compose
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
