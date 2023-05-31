@@ -18,15 +18,13 @@ def get_mols(request, type):
         if INFILE in request.FILES:
             filename = save_file(request)
             type = get_file_type(filename)
-            if type == FileType.CSV:
+            print(type, FileType.SMI)
+            if type == FileType.CSV or type == FileType.SMI:
                 input_text, datas = get_content_from_csv(filename)
+                print(datas)
                 delete_csv(filename)
             elif type == FileType.MOL or type == FileType.SDF:
-                # ot = Mol2MolSupplier(filename)
-                # print(ot)
                 output = get_svgs_from_mol_file(filename, format)
-                # print(svgs)
-                # output = [[[svgs[0], NO_COMPOUND_NAME]]]
                 input_text = ""
                 context = {
                     IMAGES: output,

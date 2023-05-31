@@ -47,6 +47,11 @@ def get_content_from_csv(filename):
     datas = csv_text.split("\n")
     return csv_text, datas
 
+def get_content_from_smi(filename):
+    f = open(filename)
+    text = f.read()
+    datas = text.split("\n")
+
 def save_file(request):
     myfile = request.FILES[INFILE]
 
@@ -63,8 +68,16 @@ def delete_csv(file):
     os.remove(file)
 
 def get_file_type(filename):
-    extension = filename.split(".")[1]
-    return FileType.CSV if extension == FileType.CSV.value else FileType.MOL
+    extension = filename.split(".")[-1]
+    file_types = {
+        FileType.CSV.value: FileType.CSV,
+        FileType.MOL.value: FileType.MOL,
+        FileType.SDF.value: FileType.SDF,
+        FileType.SMI.value: FileType.SMI
+    }
+    
+
+    return file_types[extension]
 
 def ensure_directory_exists(dir_name):
     if not os.path.exists(dir_name):
@@ -100,18 +113,20 @@ def get_svgs_from_mol_file(filename, format):
     counter = 0
     suppl = Chem.SDMolSupplier(filename)
 
-    if len(suppl) == 1:
-        mol = Chem.MolFromMolFile(filename)
-        name = create_png_jpeg_image(mol, filename, format)
+    # mol = Chem.MolFromMolFile(filename, strictParsing = False)
+    # if len(suppl) == 1:
+    #     mol = Chem.MolFromMolFile(filename)
+    #     name = create_png_jpeg_image(mol, filename, format)
 
-        output.append([[name, NO_COMPOUND_NAME]])
+    #     output.append([[name, NO_COMPOUND_NAME]])
 
-        return output
-    
+    #     return output
+    count = 0
     for mol in suppl:
         if mol is None:
             continue
-        name = mol.GetProp("PUBCHEM_COMPOUND_CID") if mol.HasProp("PUBCHEM_COMPOUND_CID") else mol.GetProp("PubChem CID")
+        count += 1
+        name = mol.GetProp("_Name")
         image_name = create_png_jpeg_image(mol, create_media_filename(name), format)
         counter += 1
         row_output.append([image_name, name])
@@ -128,11 +143,19 @@ def get_svgs_from_data(datas, format):
     counter = 0
     for d in datas:     
         d = d.strip() 
+        if not d:
+            continue
+
+        d_split = d.split(maxsplit = 1)
+        
         try:
-            smile, name = d.split(" ")
+            if len(d_split) == 1:
+                smile, name = d_split[0], NO_COMPOUND_NAME
+            else:
+                smile, name = d_split
         except Exception as e:
-            print(e)
-            smile, name = d.rstrip(), NO_COMPOUND_NAME
+            print(e, d)
+            smile, name = d.split("\t") #, NO_COMPOUND_NAME
         comp = Chem.MolFromSmiles(smile)
         image_name = create_png_jpeg_image(comp, create_media_filename(name), format)
         counter += 1

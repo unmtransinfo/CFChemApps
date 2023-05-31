@@ -10,6 +10,7 @@ class FileType(Enum):
     CSV = "csv"
     MOL = "mol"
     SDF = "sdf"
+    SMI = "smi"
 
 class ImageFormat(Enum):
     PNG = "png"
