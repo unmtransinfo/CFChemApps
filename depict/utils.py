@@ -8,9 +8,14 @@ from django.core.files.storage import FileSystemStorage
 
 import os
 from PIL import Image
+import secrets
 
 from .enums import InputType, FileType, ImageFormat
 from cfchem.Constants import *
+
+def generate_random_name():
+    name = secrets.token_hex(16)
+    return name
 
 def show(mol, molSize=(475, 175), kekulize=True):
     mc = Chem.Mol(mol.ToBinary())
@@ -64,7 +69,7 @@ def save_file(request):
 
     return filename
     
-def delete_csv(file):
+def delete_file(file):
     os.remove(file)
 
 def get_file_type(filename):
@@ -113,19 +118,10 @@ def get_svgs_from_mol_file(filename, format):
     counter = 0
     suppl = Chem.SDMolSupplier(filename)
 
-    # mol = Chem.MolFromMolFile(filename, strictParsing = False)
-    # if len(suppl) == 1:
-    #     mol = Chem.MolFromMolFile(filename)
-    #     name = create_png_jpeg_image(mol, filename, format)
-
-    #     output.append([[name, NO_COMPOUND_NAME]])
-
-    #     return output
-    count = 0
     for mol in suppl:
         if mol is None:
             continue
-        count += 1
+
         name = mol.GetProp("_Name")
         image_name = create_png_jpeg_image(mol, create_media_filename(name), format)
         counter += 1
@@ -158,8 +154,10 @@ def get_svgs_from_data(datas, format):
             print(e, d)
             smile, name = d.split("\t") #, NO_COMPOUND_NAME
         comp = Chem.MolFromSmiles(smile)
-        image_name = create_png_jpeg_image(comp, create_media_filename(name), format)
+        filename = name if name != NO_COMPOUND_NAME else generate_random_name()
+        image_name = create_png_jpeg_image(comp, create_media_filename(filename), format) 
         counter += 1
+        print(image_name, name)
         row_output.append([image_name, name])
         if counter == 3:
             output.append(row_output)
