@@ -18,7 +18,7 @@ def get_mols(request, type):
         if INFILE in request.FILES:
             filename = save_file(request)
             type = get_file_type(filename)
-            print(type, FileType.SMI)
+
             if type == FileType.CSV or type == FileType.SMI:
                 input_text, datas = get_content_from_csv(filename)
                 print(datas)

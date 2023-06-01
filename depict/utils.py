@@ -147,12 +147,13 @@ def get_svgs_from_data(datas, format):
             continue
 
         d_split = d.split(maxsplit = 1)
-        
+        print(d_split)
         try:
             if len(d_split) == 1:
                 smile, name = d_split[0], NO_COMPOUND_NAME
             else:
                 smile, name = d_split
+            name = name.split("\t")[0]
         except Exception as e:
             print(e, d)
             smile, name = d.split("\t") #, NO_COMPOUND_NAME
