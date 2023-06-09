@@ -4,86 +4,120 @@
 {% block content_head %}
 
 <style>
-    #image-div:hover {opacity: 0.2;}
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 99; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
-}
-
-/* Modal Content (image) */
-.modal-content {
-    margin: auto;
-    display: block;
-    width: 75%;
-    max-width: 50%;
-    max-height: 75%;
-}
-
-/* Caption of Modal Image */
-#caption {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
-    text-align: center;
-    color: #ccc;
-    padding: 10px 0;
-    height: 150px;
-}
-
-@-webkit-keyframes zoom {
-    from {-webkit-transform:scale(1)}
-    to {-webkit-transform:scale(2)}
-}
- 
-@keyframes zoom {
-    from {transform:scale(0.4)}
-    to {transform:scale(1)}
-}
-
-@-webkit-keyframes zoom-out {
-    from {transform:scale(1)}
-    to {transform:scale(0)}
-}
-@keyframes zoom-out {
-    from {transform:scale(1)}
-    to {transform:scale(0)}
-}
-
-/* Add Animation */
-.modal-content, #caption {
-    -webkit-animation-name: zoom;
-    -webkit-animation-duration: 0.6s;
-    animation-name: zoom;
-    animation-duration: 0.6s;
-}
-
-.out {
-    animation-name: zoom-out;
-    animation-duration: 0.6s;
-  }
-
-  /* 100% Image Width on Smaller Screens */
-@media only screen and (max-width: 700px){
-    .modal-content {
-        width: 100%;
+    #image-div:hover {
+        opacity: 0.2;
     }
-}
+
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 99;
+        /* Sit on top */
+        padding-top: 100px;
+        /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.9);
+        /* Black w/ opacity */
+    }
+
+    /* Modal Content (image) */
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 75%;
+        max-width: 50%;
+        max-height: 75%;
+    }
+
+    /* Caption of Modal Image */
+    #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+    @-webkit-keyframes zoom {
+        from {
+            -webkit-transform: scale(1)
+        }
+
+        to {
+            -webkit-transform: scale(2)
+        }
+    }
+
+    @keyframes zoom {
+        from {
+            transform: scale(0.4)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+    @-webkit-keyframes zoom-out {
+        from {
+            transform: scale(1)
+        }
+
+        to {
+            transform: scale(0)
+        }
+    }
+
+    @keyframes zoom-out {
+        from {
+            transform: scale(1)
+        }
+
+        to {
+            transform: scale(0)
+        }
+    }
+
+    /* Add Animation */
+    .modal-content,
+    #caption {
+        -webkit-animation-name: zoom;
+        -webkit-animation-duration: 0.6s;
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    .out {
+        animation-name: zoom-out;
+        animation-duration: 0.6s;
+    }
+
+    /* 100% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px) {
+        .modal-content {
+            width: 100%;
+        }
+    }
 </style>
 
 <script>
-  
-        
-    </script>
+
+
+</script>
 
 <script>
     function go_demo() {
@@ -111,92 +145,92 @@
         newWindow.document.write(htmlCode);
         newWindow.document.close();
     }
-    
+
     function set_listeners() {
-    var modal = document.getElementById('myModal');
-    var modalImg = document.getElementById("img01");
-    const captionText = document.getElementById("caption");
-    var images = document.querySelectorAll(".image-div")
-    for (var i=0; i < images.length; i++){
-        images[i].onclick = function() {
-            modal.style.display = "block";
-            modalImg.src = "/" + this.getAttribute('value');
-            modalImg.alt = this.getAttribute('name');
-            captionText.innerHTML = this.getAttribute('name');
+        var modal = document.getElementById('myModal');
+        var modalImg = document.getElementById("img01");
+        const captionText = document.getElementById("caption");
+        var images = document.querySelectorAll(".image-div")
+        for (var i = 0; i < images.length; i++) {
+            images[i].onclick = function () {
+                modal.style.display = "block";
+                modalImg.src = "/" + this.getAttribute('value');
+                modalImg.alt = this.getAttribute('name');
+                captionText.innerHTML = this.getAttribute('name');
+            }
         }
-    }
 
-    modal.onclick = function() {
-        modalImg.className += " out";
-        setTimeout(function() {
-           modal.style.display = "none";
-           modalImg.className = "modal-content";
-         }, 400);
-        
-     } 
-     
-     window.onkeyup = function (event) {
-  if (event.keyCode == 27) {
-    modalImg.className += " out";
-        setTimeout(function() {
-           modal.style.display = "none";
-           modalImg.className = "modal-content";
-         }, 400);
-  }
- }
+        modal.onclick = function () {
+            modalImg.className += " out";
+            setTimeout(function () {
+                modal.style.display = "none";
+                modalImg.className = "modal-content";
+            }, 400);
 
- document.getElementById("reset-button").onclick = function() {
-    reset();
- }
+        }
 
- document.getElementById("help-button").onclick = function() {
-    console.log("caledwaeqd")
-    help();
- }
+        window.onkeyup = function (event) {
+            if (event.keyCode == 27) {
+                modalImg.className += " out";
+                setTimeout(function () {
+                    modal.style.display = "none";
+                    modalImg.className = "modal-content";
+                }, 400);
+            }
+        }
+
+        document.getElementById("reset-button").onclick = function () {
+            reset();
+        }
+
+        document.getElementById("help-button").onclick = function () {
+            console.log("caledwaeqd")
+            help();
+        }
     }
 </script>
 
 <script>
     // window.onload = function() {
-        function readFile() {
-        document.getElementById('infile').addEventListener('change',function(){
-        var file_reader=new FileReader();
-        file_reader.onload=function(){
-            document.getElementById('textarea').textContent=file_reader.result;
-        }
-        file_reader.readAsText(this.files[0]);
-    })
-}
+    function readFile() {
+        document.getElementById('infile').addEventListener('change', function () {
+            var file_reader = new FileReader();
+            file_reader.onload = function () {
+                document.getElementById('textarea').textContent = file_reader.result;
+            }
+            file_reader.readAsText(this.files[0]);
+        })
+    }
     // }
 </script>
 
 <script type="text/javascript">
- 
+
     var reader = new FileReader();
-  
-    function readText(that){
-  
-    if(that.files && that.files[0]){
-    var reader = new FileReader();
-    reader.onload = function (e) { 
-    var output=e.target.result;
-  
-    //process text to show only lines with "@": 
-    output=output.split("n").filter(/./.test, /@/).join("n");
-  
-    document.getElementById('main').innerHTML= output;
-    };//end onload()
-    reader.readAsText(that.files[0]);
-    }//end if html5 filelist support
+
+    function readText(that) {
+
+        if (that.files && that.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var output = e.target.result;
+
+                //process text to show only lines with "@": 
+                output = output.split("n").filter(/./.test, /@/).join("n");
+
+                document.getElementById('main').innerHTML = output;
+            };//end onload()
+            reader.readAsText(that.files[0]);
+        }//end if html5 filelist support
     } 
-  </script>
+</script>
 
 <script>
 
-    window.onload = function() {
+    window.onload = function () {
         set_listeners();
         readFile();
-      };
+    };
 
 </script>
 
@@ -204,84 +238,113 @@
 
 {% block content %}
 
-<FORM NAME="mainform" id="mainform" method="post" action="{% url 'get_mols' type='input' %}" ENCTYPE="multipart/form-data">
+<FORM NAME="mainform" id="mainform" method="post" action="{% url 'get_mols' type='input' %}"
+    ENCTYPE="multipart/form-data">
     <INPUT TYPE=HIDDEN NAME="depict">
-    <TABLE WIDTH="100%"><TR><TD><H1>Depict</H1></TD>
-    <TD ALIGN=RIGHT>
-    <BUTTON TYPE=BUTTON id="help-button"><B>Help</B></BUTTON>
-    <BUTTON type="submit" form="mainform" onclick="javascript: form.action='{% url 'get_mols' type='demo' %}';"><B>Demo</B></BUTTON>
-    <BUTTON TYPE=BUTTON id="reset-button" onClick="reset"><B>Reset</B></BUTTON>
-    </TD></TR></TABLE>
+    <TABLE WIDTH="100%">
+        <TR>
+            <TD>
+                <H1>Depict</H1>
+            </TD>
+            <TD ALIGN=RIGHT>
+                <BUTTON TYPE=BUTTON id="help-button"><B>Help</B></BUTTON>
+                <BUTTON type="submit" form="mainform"
+                    onclick="javascript: form.action='{% url 'get_mols' type='demo' %}';"><B>Demo</B></BUTTON>
+                <BUTTON TYPE=BUTTON id="reset-button" onClick="reset"><B>Reset</B></BUTTON>
+            </TD>
+        </TR>
+    </TABLE>
     <HR>
     <TABLE WIDTH="100%" CELLPADDING=5 CELLSPACING=5>
-    <TR BGCOLOR="#CCCCCC"><TD VALIGN=TOP>
-    format:<SELECT NAME="molfmt" SELECTED>
-    
-    <OPTION VALUE="mol" SELECTED>
-    MDL Molfile
-    
-    <OPTION VALUE="csv" SELECTED>
-    SMILES
-    </SELECT>
-    <INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED" >file2txt<BR>
-    upload: <INPUT accept=".csv, .mol, .sdf, .smi" id="infile" TYPE="FILE" NAME="infile"> ...or paste:<BR>
-        
-        
-        
-        <TEXTAREA NAME="intxt" id="textarea" WRAP=OFF ROWS=12 COLS=60>{{ input_text }}</TEXTAREA>
-    
-    
-    
-    </TD>
-    <TD VALIGN=TOP>
-    <B>options:</B><BR>
-    <BR>
-    format: <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" CHECKED>png&nbsp;<INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="jpeg" >jpeg<BR>
-    </TD></TR></TABLE>
-    <P>
-    <CENTER>
-        <input type="submit" value="Depict">
-    <!-- <BUTTON TYPE=BUTTON onClick="go_depict(this.form)"><B>Go Depict</B></BUTTON> -->
-    </CENTER>
-    {% csrf_token %}
-    </FORM>
+        <TR BGCOLOR="#CCCCCC">
+            <TD VALIGN=TOP>
+                format:<SELECT NAME="molfmt" SELECTED>
 
-    <br>
-    <center>
-        <table border="">
+                    <OPTION VALUE="mol" SELECTED>
+                        MDL Molfile
+
+                    <OPTION VALUE="csv" SELECTED>
+                        SMILES
+                </SELECT>
+                <INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED">file2txt<BR>
+                upload: <INPUT accept=".csv, .mol, .sdf, .smi" id="infile" TYPE="FILE" NAME="infile"> ...or paste:<BR>
+
+
+
+                <TEXTAREA NAME="intxt" id="textarea" WRAP=OFF ROWS=12 COLS=60>{{ input_text }}</TEXTAREA>
+
+
+
+            </TD>
+            <TD VALIGN=TOP>
+                <B>options:</B><BR>
+                <BR>
+                format: <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" CHECKED>png&nbsp;<INPUT
+                    TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="jpeg">jpeg<BR>
+            </TD>
+            <td valign="top">
+                <b>size: </b><br><br>
+                <select name="size">
+                    <option value="xs">xs - 96x96
+                    </option>
+                    <option value="s">s - 160x160
+                    </option>
+                    <option value="m" selected="">
+                        m - 180x260
+                    </option>
+                    <option value="l">l - 280x380
+                    </option>
+                    <option value="xl">xl - 480x640
+                    </option>
+                </select>
+
+            </td>
+        </TR>
+    </TABLE>
+    <P>
+        <CENTER>
+            <input type="submit" value="Depict">
+            <!-- <BUTTON TYPE=BUTTON onClick="go_depict(this.form)"><B>Go Depict</B></BUTTON> -->
+        </CENTER>
+        {% csrf_token %}
+</FORM>
+
+<br>
+<center>
+    <table border="">
         <tbody>
             {% for row_data in images %}
 
             <tr>
-            {% for image, name in row_data %}
+                {% for image, name in row_data %}
 
-            <td align="CENTER">
-                <button type="button" class="btn btn-default delete-image-btn pull-right">
-                    <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
-                </button>
-            <div id="image-div" class="image-div" value="{{ image|safe }}" name="{{ name }}">
-                
-                <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
-            </img>
-                <tt>
-                    {{ name }}
-                </tt>
-            </div>
+                <td align="CENTER">
+                    <button type="button" class="btn btn-default delete-image-btn pull-right">
+                        <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
+                    </button>
+                    <div id="image-div" class="image-div" value="{{ image|safe }}" name="{{ name }}">
+
+                        <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
+                        </img>
+                        <tt>
+                            {{ name }}
+                        </tt>
+                    </div>
                 </td>
 
-        
+
                 <!-- <br> -->
 
-            {% endfor %}
+                {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
-        </table>
-        <div id="myModal" class="modal">
-            <img class="modal-content" id="img01">
-         <div id="caption"></div>
-         </div>
-    </center>
+    </table>
+    <div id="myModal" class="modal">
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
+</center>
 
 
 {% endblock %}

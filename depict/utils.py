@@ -10,7 +10,7 @@ import os
 from PIL import Image
 import secrets
 
-from .enums import InputType, FileType, ImageFormat
+from .enums import InputType, FileType, ImageFormat, ImageSize
 from cfchem.Constants import *
 
 def generate_random_name():
@@ -52,6 +52,12 @@ def get_content_from_csv(filename):
     datas = csv_text.split("\n")
     return csv_text, datas
 
+def get_content_from_file(filename):
+    f = open(filename)
+    text = f.read()
+
+    return text
+
 def get_content_from_smi(filename):
     f = open(filename)
     text = f.read()
@@ -84,6 +90,18 @@ def get_file_type(filename):
 
     return file_types[extension]
 
+def get_image_size(size):
+    
+    image_sizes = {
+        ImageSize.xs.name: ImageSize.xs.value,
+        ImageSize.s.name: ImageSize.s.value,
+        ImageSize.m.name: ImageSize.m.value,
+        ImageSize.l.name: ImageSize.l.value,
+        ImageSize.xl.name: ImageSize.xl.value 
+    }
+
+    return image_sizes[size]
+
 def ensure_directory_exists(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
@@ -98,21 +116,18 @@ def create_svg(m):
 
     return svg
 
-def create_png_jpeg_image(m, filename, format):
-    extension = ImageFormat.PNG.value if format == ImageFormat.PNG.value else ImageFormat.JPG.value
-    # img = Draw.MolToFile(m, filename + ".png")
-    if extension == ImageFormat.PNG.value:
-        img = Draw.MolToFile(m, filename + ".{}".format(extension))
-    else:
-        img = Image.open(filename + ".{}".format(extension))
-        img.convert("RGB").save(filename + ".{}".format(format))
+def create_png_jpeg_image(m, filename, format, size):
+    # extension = ImageFormat.PNG.value if format == ImageFormat.PNG.value else ImageFormat.JPG.value
+
+    pil_image = Draw.MolToImage(m, size= size)
+    pil_image.save("{}.{}".format(filename, format))
 
     name = filename + ".{}".format(format)
 
     return name
 
 
-def get_svgs_from_mol_file(filename, format):
+def get_svgs_from_mol_file(filename, format, size):
     output = []
     row_output = []
     counter = 0
@@ -123,7 +138,7 @@ def get_svgs_from_mol_file(filename, format):
             continue
 
         name = mol.GetProp("_Name")
-        image_name = create_png_jpeg_image(mol, create_media_filename(name), format)
+        image_name = create_png_jpeg_image(mol, create_media_filename(name), format, size)
         counter += 1
         row_output.append([image_name, name])
         if counter == 3:
@@ -133,7 +148,7 @@ def get_svgs_from_mol_file(filename, format):
     output.append(row_output)
     return output
 
-def get_svgs_from_data(datas, format):
+def get_svgs_from_data(datas, format, size):
     output = []
     row_output = []
     counter = 0
@@ -155,7 +170,7 @@ def get_svgs_from_data(datas, format):
             smile, name = d.split("\t") #, NO_COMPOUND_NAME
         comp = Chem.MolFromSmiles(smile)
         filename = name if name != NO_COMPOUND_NAME else generate_random_name()
-        image_name = create_png_jpeg_image(comp, create_media_filename(filename), format) 
+        image_name = create_png_jpeg_image(comp, create_media_filename(filename), format, size) 
         counter += 1
         print(image_name, name)
         row_output.append([image_name, name])

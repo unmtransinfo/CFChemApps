@@ -14,6 +14,9 @@ def index(request):
 @api_view(['GET', 'POST'])
 def get_mols(request, type):
     format = request.POST.get("imgfmt")
+    size = request.POST.get("size")
+    size = get_image_size(size)
+
     if request.method == 'POST':
         if INFILE in request.FILES:
             filename = save_file(request)
@@ -23,8 +26,8 @@ def get_mols(request, type):
                 input_text, datas = get_content_from_csv(filename)
                 delete_file(filename)
             elif type == FileType.MOL or type == FileType.SDF:
-                output = get_svgs_from_mol_file(filename, format)
-                input_text = ""
+                output = get_svgs_from_mol_file(filename, format, size)
+                input_text = get_content_from_file(filename)
                 context = {
                     IMAGES: output,
                     INPUT_TEXT: input_text
@@ -35,7 +38,7 @@ def get_mols(request, type):
         else:
             input_text, datas = get_content(type, request)
 
-    output = get_svgs_from_data(datas, format)
+    output = get_svgs_from_data(datas, format, size)
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text

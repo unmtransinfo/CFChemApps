@@ -14,4 +14,11 @@ class FileType(Enum):
 
 class ImageFormat(Enum):
     PNG = "png"
-    JPG = "jpg"
+    JPG = "jpeg"
+
+class ImageSize(Enum):
+    xs = (96, 96)
+    s = (160, 160)
+    m = (180, 260)
+    l = (280, 380)
+    xl = (480, 640)
