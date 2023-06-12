@@ -266,7 +266,8 @@
                     <OPTION VALUE="csv" SELECTED>
                         SMILES
                 </SELECT>
-                <INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED">file2txt<BR>
+                <!-- <INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED">file2txt -->
+                    <BR>
                 upload: <INPUT accept=".csv, .mol, .sdf, .smi" id="infile" TYPE="FILE" NAME="infile"> ...or paste:<BR>
 
 
@@ -298,6 +299,10 @@
                     </option>
                 </select>
 
+            </td>
+            <td valign="top">
+                <b>smarts: </b><br><br>
+                <input type="text" name="smarts" size="48" value="">
             </td>
         </TR>
     </TABLE>

@@ -116,10 +116,12 @@ def create_svg(m):
 
     return svg
 
-def create_png_jpeg_image(m, filename, format, size):
+def create_png_jpeg_image(m, filename, format, size, smarts):
     # extension = ImageFormat.PNG.value if format == ImageFormat.PNG.value else ImageFormat.JPG.value
-
-    pil_image = Draw.MolToImage(m, size= size)
+    smart = Chem.MolFromSmarts(smarts)
+    highlight = m.GetSubstructMatch(smart)
+    print(highlight)
+    pil_image = Draw.MolToImage(m, size= size, highlightAtoms = highlight)
     pil_image.save("{}.{}".format(filename, format))
 
     name = filename + ".{}".format(format)
@@ -127,7 +129,7 @@ def create_png_jpeg_image(m, filename, format, size):
     return name
 
 
-def get_svgs_from_mol_file(filename, format, size):
+def get_svgs_from_mol_file(filename, format, size, smarts):
     output = []
     row_output = []
     counter = 0
@@ -138,7 +140,7 @@ def get_svgs_from_mol_file(filename, format, size):
             continue
 
         name = mol.GetProp("_Name")
-        image_name = create_png_jpeg_image(mol, create_media_filename(name), format, size)
+        image_name = create_png_jpeg_image(mol, create_media_filename(name), format, size, smarts)
         counter += 1
         row_output.append([image_name, name])
         if counter == 3:
@@ -148,7 +150,7 @@ def get_svgs_from_mol_file(filename, format, size):
     output.append(row_output)
     return output
 
-def get_svgs_from_data(datas, format, size):
+def get_svgs_from_data(datas, format, size, smarts):
     output = []
     row_output = []
     counter = 0
@@ -169,8 +171,9 @@ def get_svgs_from_data(datas, format, size):
             print(e, d)
             smile, name = d.split("\t") #, NO_COMPOUND_NAME
         comp = Chem.MolFromSmiles(smile)
+
         filename = name if name != NO_COMPOUND_NAME else generate_random_name()
-        image_name = create_png_jpeg_image(comp, create_media_filename(filename), format, size) 
+        image_name = create_png_jpeg_image(comp, create_media_filename(filename), format, size, smarts) 
         counter += 1
         print(image_name, name)
         row_output.append([image_name, name])
