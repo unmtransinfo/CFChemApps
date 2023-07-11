@@ -35,6 +35,8 @@ With the current AWS structure, we need to create an EC2 instance to run the doc
 After the EC2 is created, connect using the SSH client option in the AWS console
 On successful connection, install docker, docker-compose and git on the instance using the following commands
 
+> Note: If you want to allow traffic over HTTP and HTTPS, make sure to check the options under **Network Settings** while creating EC2 instance.
+
 ### Installing Docker
 
     sudo yum install docker 
@@ -51,12 +53,13 @@ Use the command below to auto start docker
 
 ### Installing Docker Compose
 
-    sudo curl -L [https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname](https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname) -s)-$(uname -m) -o /usr/local/bin/docker-compose
+    sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
 
 Finally, after the required installations, reboot the instance by using
 
     sudo reboot
+    
 This will reboot the EC2 instance, thereby closing the SSH connection that was established. 
 In order to perform the further steps, connect to the instance again using SSH.
 
