@@ -118,10 +118,15 @@ def create_svg(m):
 
 def create_png_jpeg_image(m, filename, format, size, smarts):
     # extension = ImageFormat.PNG.value if format == ImageFormat.PNG.value else ImageFormat.JPG.value
-    smart = Chem.MolFromSmarts(smarts)
-    highlight = m.GetSubstructMatch(smart)
-    print(highlight)
-    pil_image = Draw.MolToImage(m, size= size, highlightAtoms = highlight)
+    substructure = Chem.MolFromSmarts(smarts)
+    all_atom_matches = m.GetSubstructMatches(substructure)
+    bond_matches = []
+    for atom_matches in all_atom_matches:
+        for bond in substructure.GetBonds():
+            idx1, idx2 = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+            bond_matches.append(m.GetBondBetweenAtoms(atom_matches[idx1], atom_matches[idx2]).GetIdx())
+    all_atom_matches = sum(all_atom_matches, ()) # this just combines the tuple of tuples into a single tuple
+    pil_image = Draw.MolToImage(m, size=size, highlightAtoms=all_atom_matches, highlightBonds=bond_matches)
     pil_image.save("{}.{}".format(filename, format))
 
     name = filename + ".{}".format(format)
