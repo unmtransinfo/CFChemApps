@@ -15,6 +15,7 @@ class FileType(Enum):
 class ImageFormat(Enum):
     PNG = "png"
     JPG = "jpeg"
+    SVG = "svg"
 
 class ImageSize(Enum):
     xs = (96, 96)

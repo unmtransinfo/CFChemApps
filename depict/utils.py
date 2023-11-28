@@ -126,12 +126,21 @@ def create_png_jpeg_image(m, filename, format, size, smarts):
             idx1, idx2 = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
             bond_matches.append(m.GetBondBetweenAtoms(atom_matches[idx1], atom_matches[idx2]).GetIdx())
     all_atom_matches = sum(all_atom_matches, ()) # this just combines the tuple of tuples into a single tuple
-    pil_image = Draw.MolToImage(m, size=size, highlightAtoms=all_atom_matches, highlightBonds=bond_matches)
-    pil_image.save("{}.{}".format(filename, format))
-
-    name = filename + ".{}".format(format)
-
-    return name
+    img_name = "{}.{}".format(filename, format)
+    if format in [ImageFormat.JPG.value, ImageFormat.PNG.value]:
+        pil_image = Draw.MolToImage(m, size=size, highlightAtoms=all_atom_matches, highlightBonds=bond_matches)
+        pil_image.save(img_name)
+    elif format == ImageFormat.SVG.value:
+        m = Draw.rdMolDraw2D.PrepareMolForDrawing(m)
+        drawer = Draw.rdMolDraw2D.MolDraw2DSVG(size[0], size[1])
+        drawer.DrawMolecule(m, highlightAtoms=all_atom_matches, highlightBonds=bond_matches)
+        drawer.FinishDrawing()
+        svg = drawer.GetDrawingText()
+        with open(img_name, 'w') as f:
+            f.write(svg)
+    else:
+        raise ValueError("Unsupported image format: {}".format(format))
+    return img_name
 
 
 def get_svgs_from_mol_file(filename, format, size, smarts):
