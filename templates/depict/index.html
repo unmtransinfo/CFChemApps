@@ -281,28 +281,66 @@
                 <B>options:</B><BR>
                 <BR>
                 format: 
-                    <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png">png&nbsp
-                    <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="jpeg">jpeg
-                    <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="svg" CHECKED>svg
+                <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png">png&nbsp
+                <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="jpeg">jpeg
+                <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="svg" id="svgRadio" CHECKED>svg
                 <BR>
             </TD>
+            <script>
+                // add listener to persist user's choice for image format
+                // Get the radio buttons and the default checked radio button
+                var radioButtons = document.getElementsByName("imgfmt");
+                var defaultCheckedRadioButton = document.getElementById("svgRadio");
+            
+                // Check if there is a saved value in local storage
+                var savedImgFormat = localStorage.getItem("selectedImgFormat");
+            
+                // Set the checked radio button based on the saved value or default to "svg"
+                defaultCheckedRadioButton.checked = true;  // Ensure one is always checked
+                if (savedImgFormat) {
+                    // Find the radio button with the saved value and check it
+                    var selectedRadioButton = Array.from(radioButtons).find(button => button.value === savedImgFormat);
+                    if (selectedRadioButton) {
+                        selectedRadioButton.checked = true;
+                    }
+                }
+            
+                // Add an event listener to save the selected image format when it changes
+                radioButtons.forEach(function (radioButton) {
+                    radioButton.addEventListener("change", function () {
+                        localStorage.setItem("selectedImgFormat", radioButton.value);
+                    });
+                });
+            </script>
             <td valign="top">
                 <b>size: </b><br><br>
-                <select name="size">
-                    <option value="xs">xs - 96x96
-                    </option>
-                    <option value="s">s - 160x160
-                    </option>
-                    <option value="m" selected="">
-                        m - 180x260
-                    </option>
-                    <option value="l">l - 280x380
-                    </option>
-                    <option value="xl">xl - 480x640
-                    </option>
+                <select name="size" id="sizeSelector">
+                    <option value="xs">xs - 96x96</option>
+                    <option value="s">s - 160x160</option>
+                    <option value="m">m - 180x260</option>
+                    <option value="l">l - 280x380</option>
+                    <option value="xl">xl - 480x640</option>
                 </select>
-
             </td>
+            
+            <script>
+                // add listener to persist user's choice for image size
+
+                // Get the select element
+                var sizeSelector = document.getElementById("sizeSelector");
+            
+                // Check if there is a saved value in local storage
+                var savedSize = localStorage.getItem("selectedSize");
+            
+                // Set the selected option based on the saved value or default to "m"
+                sizeSelector.value = savedSize || "m";
+            
+                // Add an event listener to save the selected option when it changes
+                sizeSelector.addEventListener("change", function () {
+                    localStorage.setItem("selectedSize", sizeSelector.value);
+                });
+            </script>
+            
             <td valign="top">
                 <b>smarts: </b><br><br>
                 <input type="text" name="smarts" size="48" value="">
