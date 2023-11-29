@@ -116,8 +116,7 @@ def create_svg(m):
 
     return svg
 
-def create_png_jpeg_image(m, filename, format, size, smarts):
-    # extension = ImageFormat.PNG.value if format == ImageFormat.PNG.value else ImageFormat.JPG.value
+def create_image(m, filename, format, size, smarts):
     substructure = Chem.MolFromSmarts(smarts)
     all_atom_matches = m.GetSubstructMatches(substructure)
     bond_matches = []
@@ -154,7 +153,7 @@ def get_svgs_from_mol_file(filename, format, size, smarts):
             continue
 
         name = mol.GetProp("_Name")
-        image_name = create_png_jpeg_image(mol, create_media_filename(name), format, size, smarts)
+        image_name = create_image(mol, create_media_filename(name), format, size, smarts)
         counter += 1
         row_output.append([image_name, name])
         if counter == 3:
@@ -187,7 +186,7 @@ def get_svgs_from_data(datas, format, size, smarts):
         comp = Chem.MolFromSmiles(smile)
 
         filename = name if name != NO_COMPOUND_NAME else generate_random_name()
-        image_name = create_png_jpeg_image(comp, create_media_filename(filename), format, size, smarts) 
+        image_name = create_image(comp, create_media_filename(filename), format, size, smarts) 
         counter += 1
         print(image_name, name)
         row_output.append([image_name, name])
