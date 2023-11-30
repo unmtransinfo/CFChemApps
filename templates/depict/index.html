@@ -292,8 +292,8 @@
                 var radioButtons = document.getElementsByName("imgfmt");
                 var defaultCheckedRadioButton = document.getElementById("pngRadio");
             
-                // Check if there is a saved value in local storage
-                var savedImgFormat = localStorage.getItem("selectedImgFormat");
+                // Check if there is a saved value in storage
+                var savedImgFormat = sessionStorage.getItem("selectedImgFormat");
             
                 // Set the checked radio button based on the saved value or default to "svg"
                 defaultCheckedRadioButton.checked = true;  // Ensure one is always checked
@@ -308,7 +308,7 @@
                 // Add an event listener to save the selected image format when it changes
                 radioButtons.forEach(function (radioButton) {
                     radioButton.addEventListener("change", function () {
-                        localStorage.setItem("selectedImgFormat", radioButton.value);
+                        sessionStorage.setItem("selectedImgFormat", radioButton.value);
                     });
                 });
             </script>
@@ -328,8 +328,8 @@
                 var sizeSelector = document.getElementById("sizeSelector");
                 var defaultOption = document.getElementById("mOption");
             
-                // Check if there is a saved value in local storage
-                var savedSize = localStorage.getItem("selectedSize");
+                // Check if there is a saved value in storage
+                var savedSize = sessionStorage.getItem("selectedSize");
             
                 // Set the selected option based on the saved value or default to "m"
                 defaultOption.selected = true;  // Ensure one is always selected
@@ -343,7 +343,7 @@
             
                 // Add an event listener to save the selected size when it changes
                 sizeSelector.addEventListener("change", function () {
-                    localStorage.setItem("selectedSize", sizeSelector.value);
+                    sessionStorage.setItem("selectedSize", sizeSelector.value);
                 });
             </script>
             
