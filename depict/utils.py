@@ -102,6 +102,24 @@ def get_image_size(size):
 
     return image_sizes[size]
 
+
+def get_images_per_row(size) -> int:
+    """
+    Return the number of images to display per row based on the size of each image.
+    :param Tuple[int,int] size: size of each image
+    :return int: images to display per row on web page
+    """
+    # TODO: try to account for screen size/width, will be useful for more devices
+    row_dict = {
+        ImageSize.xs.value : 8,
+        ImageSize.s.value : 5,
+        ImageSize.m.value: 5,
+        ImageSize.l.value: 3,
+        ImageSize.xl.value: 2
+    }
+    return row_dict[size]
+
+
 def ensure_directory_exists(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
@@ -147,7 +165,7 @@ def get_svgs_from_mol_file(filename, format, size, smarts):
     row_output = []
     counter = 0
     suppl = Chem.SDMolSupplier(filename)
-
+    images_per_row = get_images_per_row(size)
     for mol in suppl:
         if mol is None:
             continue
@@ -156,7 +174,7 @@ def get_svgs_from_mol_file(filename, format, size, smarts):
         image_name = create_image(mol, create_media_filename(name), format, size, smarts)
         counter += 1
         row_output.append([image_name, name])
-        if counter == 3:
+        if counter == images_per_row:
             output.append(row_output)
             row_output = []
             counter = 0
@@ -167,6 +185,7 @@ def get_svgs_from_data(datas, format, size, smarts):
     output = []
     row_output = []
     counter = 0
+    images_per_row = get_images_per_row(size)
     for d in datas:     
         d = d.strip() 
         if not d:
@@ -190,7 +209,7 @@ def get_svgs_from_data(datas, format, size, smarts):
         counter += 1
         print(image_name, name)
         row_output.append([image_name, name])
-        if counter == 3:
+        if counter == images_per_row:
             output.append(row_output)
             row_output = []
             counter = 0
