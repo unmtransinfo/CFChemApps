@@ -1,42 +1,40 @@
 /* styles.css */
-/* TODO: fix grid spacing, especially for larger image sizes*/
 .image-grid {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around; /* Center items on the row */
-}
-
-.grid::after {
-  content: "";
-  flex: auto;
+    justify-content: left;
 }
 
 
-.image-item {
-    flex: 0 0 calc(30% - 10px);
-    margin: 0 5px 10px 0; /* Adjust right margin to create space between items and add bottom margin */
+/* show last row with same spacing */
+.image-grid::after {
+    content: "";
+    flex: auto;
 }
+
 
 .image-item img {
     max-width: 100%;
     height: auto;
 }
 
+
 .image-content {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin:10px
 }
 
+
+/* include small margin around text (name of each compound */
 .tt {
-    margin-top: 5px;
+    margin: 5px;
 }
 
-.delete-image-btn {
-    margin-top: 5px;
-}
 
+/* make it so image has changed opacity to indicate it is clickable (for zoom-in) */
 .image-link:hover {
     opacity: 0.2;
 }
