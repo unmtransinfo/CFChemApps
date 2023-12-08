@@ -162,10 +162,8 @@ def create_image(m, filename, format, size, smarts):
 
 def get_svgs_from_mol_file(filename, format, size, smarts):
     output = []
-    row_output = []
     counter = 0
     suppl = Chem.SDMolSupplier(filename)
-    images_per_row = get_images_per_row(size)
     for mol in suppl:
         if mol is None:
             continue
@@ -173,19 +171,12 @@ def get_svgs_from_mol_file(filename, format, size, smarts):
         name = mol.GetProp("_Name")
         image_name = create_image(mol, create_media_filename(name), format, size, smarts)
         counter += 1
-        row_output.append([image_name, name])
-        if counter == images_per_row:
-            output.append(row_output)
-            row_output = []
-            counter = 0
-    output.append(row_output)
+        output.append([image_name, name])
     return output
 
 def get_svgs_from_data(datas, format, size, smarts):
     output = []
-    row_output = []
     counter = 0
-    images_per_row = get_images_per_row(size)
     for d in datas:     
         d = d.strip() 
         if not d:
@@ -208,11 +199,5 @@ def get_svgs_from_data(datas, format, size, smarts):
         image_name = create_image(comp, create_media_filename(filename), format, size, smarts) 
         counter += 1
         print(image_name, name)
-        row_output.append([image_name, name])
-        if counter == images_per_row:
-            output.append(row_output)
-            row_output = []
-            counter = 0
-    output.append(row_output)
-
+        output.append([image_name, name])
     return output

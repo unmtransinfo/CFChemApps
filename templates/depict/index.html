@@ -363,40 +363,24 @@
 
 <br>
 <center>
-    <table border="">
-        <tbody>
-            {% for row_data in images %}
-
-            <tr>
-                {% for image, name in row_data %}
-
-                <td align="CENTER">
-                    <button type="button" class="btn btn-default delete-image-btn pull-right">
-                        <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
-                    </button>
-                    <div id="image-div" class="image-div" value="{{ image|safe }}" name="{{ name }}">
-
-                        <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
-                        </img>
-                        <tt>
-                            {{ name }}
-                        </tt>
-                    </div>
-                </td>
-
-
-                <!-- <br> -->
-
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="image-grid">
+        {% for image, name in images %}
+            <div class="image-content">
+                <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
+                    <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
+                    </img>
+                </a>
+                <tt>{{ name }}</tt>
+                <button type="button" class="btn btn-default delete-image-btn">
+                    <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
     <div id="myModal" class="modal">
         <img class="modal-content" id="img01">
         <div id="caption"></div>
     </div>
 </center>
-
 
 {% endblock %}
