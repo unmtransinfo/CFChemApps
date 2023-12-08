@@ -1,13 +1,9 @@
 from rdkit import Chem
-from rdkit.Chem.Draw import rdMolDraw2D
-from IPython.display import display, SVG
-from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 
 from django.core.files.storage import FileSystemStorage
 
 import os
-from PIL import Image
 import secrets
 
 from .enums import InputType, FileType, ImageFormat, ImageSize
@@ -17,20 +13,6 @@ def generate_random_name():
     name = secrets.token_hex(16)
     return name
 
-def show(mol, molSize=(475, 175), kekulize=True):
-    mc = Chem.Mol(mol.ToBinary())
-    if kekulize:
-        try:
-            Chem.Kekulize(mc)
-        except:
-            mc = Chem.Mol(mol.ToBinary())
-    assert mc.GetNumConformers() > 0
-    drawer = rdMolDraw2D.MolDraw2DSVG(molSize[0], molSize[1])
-    drawer.DrawMolecule(mc)
-    drawer.FinishDrawing()
-    svg = drawer.GetDrawingText()
-    image = SVG(svg.replace("svg:", ""))
-    return svg.replace("svg:", "")
 
 def get_content(type, request):
     input_text = None
@@ -58,10 +40,6 @@ def get_content_from_file(filename):
 
     return text
 
-def get_content_from_smi(filename):
-    f = open(filename)
-    text = f.read()
-    datas = text.split("\n")
 
 def save_file(request):
     myfile = request.FILES[INFILE]
@@ -103,23 +81,6 @@ def get_image_size(size):
     return image_sizes[size]
 
 
-def get_images_per_row(size) -> int:
-    """
-    Return the number of images to display per row based on the size of each image.
-    :param Tuple[int,int] size: size of each image
-    :return int: images to display per row on web page
-    """
-    # TODO: try to account for screen size/width, will be useful for more devices
-    row_dict = {
-        ImageSize.xs.value : 8,
-        ImageSize.s.value : 5,
-        ImageSize.m.value: 5,
-        ImageSize.l.value: 3,
-        ImageSize.xl.value: 2
-    }
-    return row_dict[size]
-
-
 def ensure_directory_exists(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
@@ -128,11 +89,6 @@ def create_media_filename(filename):
     ensure_directory_exists(MEDIA_FOLDER)
     return "{}/{}".format(MEDIA_FOLDER, filename)
 
-def create_svg(m):
-    AllChem.Compute2DCoords(m)
-    svg = show(m)
-
-    return svg
 
 def create_image(m, filename, format, size, smarts):
     substructure = Chem.MolFromSmarts(smarts)
