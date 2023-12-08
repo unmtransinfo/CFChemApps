@@ -41,34 +41,6 @@
         </tbody>
     </table><br>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <script>
-    $(document).ready(function () {
-        // Trigger modal on image link click
-        $('.image-link').on('click', function (e) {
-            e.preventDefault();
-
-            // Get image source and name from data attributes
-            var imageUrl = $(this).data('image');
-            var imageName = $(this).data('name');
-
-            // Set modal content
-            $('#img01').attr('src', imageUrl);
-            $('#caption').text(imageName);
-
-            // Display the modal
-            $('#myModal').css('display', 'block');
-        });
-
-        // Close modal on modal container click
-        $('#myModal').on('click', function () {
-            $(this).css('display', 'none');
-        });
-    });
-    </script>
-
-    
-
 </body>
 
 </html>

@@ -3,6 +3,33 @@
 
 {% block content_head %}
 <script>
+    // script for displaying modal (zoomed-in image on click)
+    $(document).ready(function () {
+        // Trigger modal on image link click
+        $('.image-link').on('click', function (e) {
+            e.preventDefault();
+
+            // Get image source and name from data attributes
+            var imageUrl = $(this).data('image');
+            var imageName = $(this).data('name');
+
+            // Set modal content
+            $('#img01').attr('src', imageUrl);
+            $('#caption').text(imageName);
+
+            // Display the modal
+            $('#myModal').css('display', 'block');
+        });
+
+        // Close modal on modal container click
+        $('#myModal').on('click', function () {
+            $(this).css('display', 'none');
+        });
+    });
+    </script>
+
+
+<script>
     function go_demo() {
         let url = "{% url 'get_mols' type='demo' %}"
         document.location.href = url
