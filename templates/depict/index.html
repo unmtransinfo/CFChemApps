@@ -140,6 +140,7 @@
     window.onload = function () {
         set_listeners();
         readFile();
+        adjustImageGrid();
     };
 
 </script>
@@ -273,7 +274,7 @@
 
 <br>
 <center>
-    <div class="image-grid">
+    <div class="image-grid" id="imageGrid">
         {% for image, name in images %}
             <div class="image-content">
                 <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
@@ -291,6 +292,23 @@
         <img class="modal-content" id="img01">
         <div id="caption"></div>
     </div>
+    <script>
+        function adjustImageGrid() {
+            // this function is used to center the image grid if there's only one row of images
+            // Get the image grid element
+            var imageGrid = document.getElementById("imageGrid");
+    
+            // Get the height of the image grid and the height of a single image
+            var gridHeight = imageGrid.offsetHeight;
+            var imageHeight = imageGrid.querySelector('.image-content').offsetHeight;
+    
+            // If the height of the image grid is less than or equal to the height of a single image (plus margins), it means there's only one row
+            if (gridHeight <= imageHeight + 2) { // assuming 1px margin
+                imageGrid.style.justifyContent = 'center';
+            } else {
+                imageGrid.style.justifyContent = 'flex-start';
+            }
+        }
+    </script>
 </center>
-
 {% endblock %}

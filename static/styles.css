@@ -3,13 +3,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: left;
-}
-
-
-/* show last row with same spacing */
-.image-grid::after {
-    content: "";
-    flex: auto;
+    margin: 0 200px;
 }
 
 
