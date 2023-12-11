@@ -7,6 +7,14 @@
 }
 
 
+/* Adjust the margin for screens smaller than 600px */
+@media (max-width: 600px) {
+    .image-grid {
+        margin: 0 20px;
+    }
+}
+
+
 .image-content {
     text-align: center;
     display: flex;
