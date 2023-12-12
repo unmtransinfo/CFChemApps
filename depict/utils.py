@@ -1,13 +1,9 @@
 from rdkit import Chem
-from rdkit.Chem.Draw import rdMolDraw2D
-from IPython.display import display, SVG
-from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 
 from django.core.files.storage import FileSystemStorage
 
 import os
-from PIL import Image
 import secrets
 
 from .enums import InputType, FileType, ImageFormat, ImageSize
@@ -17,20 +13,6 @@ def generate_random_name():
     name = secrets.token_hex(16)
     return name
 
-def show(mol, molSize=(475, 175), kekulize=True):
-    mc = Chem.Mol(mol.ToBinary())
-    if kekulize:
-        try:
-            Chem.Kekulize(mc)
-        except:
-            mc = Chem.Mol(mol.ToBinary())
-    assert mc.GetNumConformers() > 0
-    drawer = rdMolDraw2D.MolDraw2DSVG(molSize[0], molSize[1])
-    drawer.DrawMolecule(mc)
-    drawer.FinishDrawing()
-    svg = drawer.GetDrawingText()
-    image = SVG(svg.replace("svg:", ""))
-    return svg.replace("svg:", "")
 
 def get_content(type, request):
     input_text = None
@@ -58,10 +40,6 @@ def get_content_from_file(filename):
 
     return text
 
-def get_content_from_smi(filename):
-    f = open(filename)
-    text = f.read()
-    datas = text.split("\n")
 
 def save_file(request):
     myfile = request.FILES[INFILE]
@@ -102,6 +80,7 @@ def get_image_size(size):
 
     return image_sizes[size]
 
+
 def ensure_directory_exists(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
@@ -110,11 +89,6 @@ def create_media_filename(filename):
     ensure_directory_exists(MEDIA_FOLDER)
     return "{}/{}".format(MEDIA_FOLDER, filename)
 
-def create_svg(m):
-    AllChem.Compute2DCoords(m)
-    svg = show(m)
-
-    return svg
 
 def create_image(m, filename, format, size, smarts):
     substructure = Chem.MolFromSmarts(smarts)
@@ -144,10 +118,8 @@ def create_image(m, filename, format, size, smarts):
 
 def get_svgs_from_mol_file(filename, format, size, smarts):
     output = []
-    row_output = []
     counter = 0
     suppl = Chem.SDMolSupplier(filename)
-
     for mol in suppl:
         if mol is None:
             continue
@@ -155,17 +127,11 @@ def get_svgs_from_mol_file(filename, format, size, smarts):
         name = mol.GetProp("_Name")
         image_name = create_image(mol, create_media_filename(name), format, size, smarts)
         counter += 1
-        row_output.append([image_name, name])
-        if counter == 3:
-            output.append(row_output)
-            row_output = []
-            counter = 0
-    output.append(row_output)
+        output.append([image_name, name])
     return output
 
 def get_svgs_from_data(datas, format, size, smarts):
     output = []
-    row_output = []
     counter = 0
     for d in datas:     
         d = d.strip() 
@@ -189,11 +155,5 @@ def get_svgs_from_data(datas, format, size, smarts):
         image_name = create_image(comp, create_media_filename(filename), format, size, smarts) 
         counter += 1
         print(image_name, name)
-        row_output.append([image_name, name])
-        if counter == 3:
-            output.append(row_output)
-            row_output = []
-            counter = 0
-    output.append(row_output)
-
+        output.append([image_name, name])
     return output

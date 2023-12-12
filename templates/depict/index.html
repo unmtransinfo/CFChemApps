@@ -2,122 +2,32 @@
 {% load static %}
 
 {% block content_head %}
-
-<style>
-    #image-div:hover {
-        opacity: 0.2;
-    }
-
-    .modal {
-        display: none;
-        /* Hidden by default */
-        position: fixed;
-        /* Stay in place */
-        z-index: 99;
-        /* Sit on top */
-        padding-top: 100px;
-        /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%;
-        /* Full width */
-        height: 100%;
-        /* Full height */
-        overflow: auto;
-        /* Enable scroll if needed */
-        background-color: rgb(0, 0, 0);
-        /* Fallback color */
-        background-color: rgba(0, 0, 0, 0.9);
-        /* Black w/ opacity */
-    }
-
-    /* Modal Content (image) */
-    .modal-content {
-        margin: auto;
-        display: block;
-        width: 75%;
-        max-width: 50%;
-        max-height: 75%;
-    }
-
-    /* Caption of Modal Image */
-    #caption {
-        margin: auto;
-        display: block;
-        width: 80%;
-        max-width: 700px;
-        text-align: center;
-        color: #ccc;
-        padding: 10px 0;
-        height: 150px;
-    }
-
-    @-webkit-keyframes zoom {
-        from {
-            -webkit-transform: scale(1)
-        }
-
-        to {
-            -webkit-transform: scale(2)
-        }
-    }
-
-    @keyframes zoom {
-        from {
-            transform: scale(0.4)
-        }
-
-        to {
-            transform: scale(1)
-        }
-    }
-
-    @-webkit-keyframes zoom-out {
-        from {
-            transform: scale(1)
-        }
-
-        to {
-            transform: scale(0)
-        }
-    }
-
-    @keyframes zoom-out {
-        from {
-            transform: scale(1)
-        }
-
-        to {
-            transform: scale(0)
-        }
-    }
-
-    /* Add Animation */
-    .modal-content,
-    #caption {
-        -webkit-animation-name: zoom;
-        -webkit-animation-duration: 0.6s;
-        animation-name: zoom;
-        animation-duration: 0.6s;
-    }
-
-    .out {
-        animation-name: zoom-out;
-        animation-duration: 0.6s;
-    }
-
-    /* 100% Image Width on Smaller Screens */
-    @media only screen and (max-width: 700px) {
-        .modal-content {
-            width: 100%;
-        }
-    }
-</style>
-
 <script>
+    // script for displaying modal (zoomed-in image on click)
+    $(document).ready(function () {
+        // Trigger modal on image link click
+        $('.image-link').on('click', function (e) {
+            e.preventDefault();
 
+            // Get image source and name from data attributes
+            var imageUrl = $(this).data('image');
+            var imageName = $(this).data('name');
 
-</script>
+            // Set modal content
+            $('#img01').attr('src', imageUrl);
+            $('#caption').text(imageName);
+
+            // Display the modal
+            $('#myModal').css('display', 'block');
+        });
+
+        // Close modal on modal container click
+        $('#myModal').on('click', function () {
+            $(this).css('display', 'none');
+        });
+    });
+    </script>
+
 
 <script>
     function go_demo() {
@@ -230,6 +140,8 @@
     window.onload = function () {
         set_listeners();
         readFile();
+        adjustImageGrid();
+        adjustImageContentWidths();
     };
 
 </script>
@@ -363,40 +275,51 @@
 
 <br>
 <center>
-    <table border="">
-        <tbody>
-            {% for row_data in images %}
-
-            <tr>
-                {% for image, name in row_data %}
-
-                <td align="CENTER">
-                    <button type="button" class="btn btn-default delete-image-btn pull-right">
-                        <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
-                    </button>
-                    <div id="image-div" class="image-div" value="{{ image|safe }}" name="{{ name }}">
-
-                        <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
-                        </img>
-                        <tt>
-                            {{ name }}
-                        </tt>
-                    </div>
-                </td>
-
-
-                <!-- <br> -->
-
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="image-grid" id="imageGrid">
+        {% for image, name in images %}
+            <div class="image-content">
+                <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
+                    <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
+                    </img>
+                </a>
+                <div class="textbox">{{ name }}</div>
+                <button type="button" class="btn btn-default delete-image-btn">
+                    <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
     <div id="myModal" class="modal">
         <img class="modal-content" id="img01">
         <div id="caption"></div>
     </div>
+    <script>
+        function adjustImageGrid() {
+            // this function is used to center the image grid if there's only one row of images
+            // Get the image grid element
+            var imageGrid = document.getElementById("imageGrid");
+    
+            // Get the height of the image grid and the height of a single image
+            var gridHeight = imageGrid.offsetHeight;
+            var imageHeight = imageGrid.querySelector('.image-content').offsetHeight;
+    
+            // If the height of the image grid is less than or equal to the height of a single image (plus margins), it means there's only one row
+            if (gridHeight <= imageHeight + 2) { // assuming 1px margin
+                imageGrid.style.justifyContent = 'center';
+            } else {
+                imageGrid.style.justifyContent = 'flex-start';
+            }
+        }
+        function adjustImageContentWidths() {
+            // adjust the width of image-content to match the width of the images
+            var imageContents = document.getElementsByClassName("image-content");
+            for (var i = 0; i < imageContents.length; i++) {
+                var image = imageContents[i].getElementsByTagName("img")[0];
+                var padding = 12;
+                var width = image.offsetWidth + padding;
+                imageContents[i].style.maxWidth = width + 'px';
+            }
+        }
+    </script>
 </center>
-
-
 {% endblock %}
