@@ -32,8 +32,12 @@
 
 
 /* include small margin around text (name of each compound */
-.tt {
+.textbox {
     margin: 5px;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 

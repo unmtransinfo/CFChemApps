@@ -141,6 +141,7 @@
         set_listeners();
         readFile();
         adjustImageGrid();
+        adjustImageContentWidths();
     };
 
 </script>
@@ -281,7 +282,7 @@
                     <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
                     </img>
                 </a>
-                <tt>{{ name }}</tt>
+                <div class="textbox">{{ name }}</div>
                 <button type="button" class="btn btn-default delete-image-btn">
                     <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
                 </button>
@@ -307,6 +308,16 @@
                 imageGrid.style.justifyContent = 'center';
             } else {
                 imageGrid.style.justifyContent = 'flex-start';
+            }
+        }
+        function adjustImageContentWidths() {
+            // adjust the width of image-content to match the width of the images
+            var imageContents = document.getElementsByClassName("image-content");
+            for (var i = 0; i < imageContents.length; i++) {
+                var image = imageContents[i].getElementsByTagName("img")[0];
+                var padding = 12;
+                var width = image.offsetWidth + padding;
+                imageContents[i].style.maxWidth = width + 'px';
             }
         }
     </script>
