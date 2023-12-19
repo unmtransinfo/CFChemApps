@@ -32,6 +32,7 @@ services:
     volumes:
       - static_vol:/cfchemapps/static
       - media_vol:/cfchemapps/media
+      - css_vol:/cfchemapps/static/css
     ports:
       - "8000:8000"
     env_file:
@@ -42,6 +43,7 @@ services:
     volumes:
       - static_vol:/cfchemapps/static
       - media_vol:/cfchemapps/media
+      - css_vol:/cfchemapps/static/css
     ports:
       - "80:80"
     depends_on:
@@ -50,3 +52,4 @@ services:
 volumes:
   static_vol:
   media_vol:
+  css_vol:
