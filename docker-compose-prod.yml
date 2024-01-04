@@ -30,8 +30,8 @@ services:
       context: ./
       dockerfile: Dockerfile.prod
     volumes:
-      # - static_vol:/cfchemapps/static
-      - media_vol:/cfchemapps/media
+      - static_vol:/cfchemapps/static
+      # - media_vol:/cfchemapps/media
       # - css_vol:/cfchemapps/static/css
     ports:
       - "8000:8000"
@@ -41,8 +41,8 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      # - static_vol:/cfchemapps/static
-      - media_vol:/cfchemapps/media
+      - static_vol:/cfchemapps/static
+      # - media_vol:/cfchemapps/media
       # - css_vol:/cfchemapps/static/css
     ports:
       - "80:80"
@@ -50,6 +50,6 @@ services:
       - cfchemapps
 
 volumes:
-  # static_vol:
-  media_vol:
+  static_vol:
+  # media_vol:
   # css_vol:
