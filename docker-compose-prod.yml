@@ -30,7 +30,7 @@ services:
       context: ./
       dockerfile: Dockerfile.prod
     volumes:
-      - static_vol:/cfchemapps/static
+      - static:/cfchemapps/static
       # - media_vol:/cfchemapps/media
       # - css_vol:/cfchemapps/static/css
     ports:
@@ -41,7 +41,7 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - static_vol:/cfchemapps/static
+      - static:/cfchemapps/static
       # - media_vol:/cfchemapps/media
       # - css_vol:/cfchemapps/static/css
     ports:
@@ -50,6 +50,6 @@ services:
       - cfchemapps
 
 volumes:
-  static_vol:
+  static:
   # media_vol:
   # css_vol:
