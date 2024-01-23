@@ -1,4 +1,5 @@
 from rdkit import Chem
+from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 
 from django.core.files.storage import FileSystemStorage
@@ -99,11 +100,14 @@ def get_atom_bond_matches(m, smarts):
             idx1, idx2 = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
             bond_matches.append(m.GetBondBetweenAtoms(atom_matches[idx1], atom_matches[idx2]).GetIdx())
     all_atom_matches = sum(all_atom_matches, ()) # this just combines the tuple of tuples into a single tuple
-    return all_atom_matches, bond_matches
+    return all_atom_matches, bond_matches, substructure
 
 
 def create_image(m, filename, format, size, smarts):
-    all_atom_matches, bond_matches = get_atom_bond_matches(m, smarts)
+    all_atom_matches, bond_matches, substructure = get_atom_bond_matches(m, smarts)
+    if len(all_atom_matches) > 0 or len(bond_matches) > 0:
+        AllChem.Compute2DCoords(substructure)
+        AllChem.GenerateDepictionMatching2DStructure(m, substructure)
     img_name = "{}.{}".format(filename, format)
     if format in [ImageFormat.JPG.value, ImageFormat.PNG.value]:
         pil_image = Draw.MolToImage(m, size=size, highlightAtoms=all_atom_matches, highlightBonds=bond_matches)
