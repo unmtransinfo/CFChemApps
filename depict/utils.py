@@ -90,7 +90,7 @@ def create_media_filename(filename):
     return "{}/{}".format(MEDIA_FOLDER, filename)
 
 
-def create_image(m, filename, format, size, smarts):
+def get_atom_bond_matches(m, smarts):
     substructure = Chem.MolFromSmarts(smarts)
     all_atom_matches = m.GetSubstructMatches(substructure)
     bond_matches = []
@@ -99,6 +99,11 @@ def create_image(m, filename, format, size, smarts):
             idx1, idx2 = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
             bond_matches.append(m.GetBondBetweenAtoms(atom_matches[idx1], atom_matches[idx2]).GetIdx())
     all_atom_matches = sum(all_atom_matches, ()) # this just combines the tuple of tuples into a single tuple
+    return all_atom_matches, bond_matches
+
+
+def create_image(m, filename, format, size, smarts):
+    all_atom_matches, bond_matches = get_atom_bond_matches(m, smarts)
     img_name = "{}.{}".format(filename, format)
     if format in [ImageFormat.JPG.value, ImageFormat.PNG.value]:
         pil_image = Draw.MolToImage(m, size=size, highlightAtoms=all_atom_matches, highlightBonds=bond_matches)
