@@ -36,6 +36,7 @@
     }
 
     function reset() {
+        sessionStorage.clear(); // reset options to defaults
         let url = "{% url 'index' %}"
         document.location.href = url
     }
