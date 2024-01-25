@@ -31,7 +31,7 @@ def get_mols(request, type):
                 input_text, datas = get_content_from_csv(filename)
                 delete_file(filename)
             elif type == FileType.MOL or type == FileType.SDF:
-                output = get_svgs_from_mol_file(filename, format, size, smarts)
+                output = get_svgs_from_mol_file(filename, format, size, smarts, align_smarts)
                 input_text = get_content_from_file(filename)
                 context = {
                     IMAGES: output,

@@ -136,16 +136,18 @@ def create_image(m, filename, format, size, smarts, first_match_coords=None, ali
     return img_name, first_match_coords
 
 
-def get_svgs_from_mol_file(filename, format, size, smarts):
+def get_svgs_from_mol_file(filename, format, size, smarts, align_smarts: bool):
     output = []
     counter = 0
     suppl = Chem.SDMolSupplier(filename)
+    print(filename)
+    first_match_coords = None
     for mol in suppl:
         if mol is None:
             continue
 
         name = mol.GetProp("_Name")
-        image_name = create_image(mol, create_media_filename(name), format, size, smarts)
+        image_name, first_match_coords = create_image(mol, create_media_filename(name), format, size, smarts, first_match_coords, align_smarts)
         counter += 1
         output.append([image_name, name])
     return output
