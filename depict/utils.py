@@ -1,5 +1,5 @@
-from rdkit import Chem
-from rdkit.Chem import AllChem
+from rdkit import Chem, Geometry
+from rdkit.Chem import rdDepictor
 from rdkit.Chem import Draw
 
 from django.core.files.storage import FileSystemStorage
@@ -103,11 +103,22 @@ def get_atom_bond_matches(m, smarts):
     return all_atom_matches, bond_matches, substructure
 
 
-def create_image(m, filename, format, size, smarts):
+def create_image(m, filename, format, size, smarts, first_match_coords=None):
     all_atom_matches, bond_matches, substructure = get_atom_bond_matches(m, smarts)
     if len(all_atom_matches) > 0 or len(bond_matches) > 0:
-        AllChem.Compute2DCoords(substructure)
-        AllChem.GenerateDepictionMatching2DStructure(m, substructure)
+        # have match to smarts
+        match = m.GetSubstructMatch(substructure)
+        if first_match_coords is not None:
+            # align coordinates to first match
+            coord_dict={}
+            for i, coord in enumerate(first_match_coords):
+                coord_dict[match[i]] = coord
+            rdDepictor.Compute2DCoords(m, coordMap=coord_dict)
+        else:
+            # is first match, so compute coordinates
+            rdDepictor.Compute2DCoords(m)
+            coords = [m.GetConformer().GetAtomPosition(x) for x in match]
+            first_match_coords = [Geometry.Point2D(pt.x,pt.y) for pt in coords] 
     img_name = "{}.{}".format(filename, format)
     if format in [ImageFormat.JPG.value, ImageFormat.PNG.value]:
         pil_image = Draw.MolToImage(m, size=size, highlightAtoms=all_atom_matches, highlightBonds=bond_matches)
@@ -122,7 +133,7 @@ def create_image(m, filename, format, size, smarts):
             f.write(svg)
     else:
         raise ValueError("Unsupported image format: {}".format(format))
-    return img_name
+    return img_name, first_match_coords
 
 
 def get_svgs_from_mol_file(filename, format, size, smarts):
@@ -142,6 +153,8 @@ def get_svgs_from_mol_file(filename, format, size, smarts):
 def get_svgs_from_data(datas, format, size, smarts):
     output = []
     counter = 0
+    # track coordinates of first smarts match to use for subsequent matches
+    first_match_coords = None
     for d in datas:     
         d = d.strip() 
         if not d:
@@ -161,7 +174,7 @@ def get_svgs_from_data(datas, format, size, smarts):
         comp = Chem.MolFromSmiles(smile)
 
         filename = name if name != NO_COMPOUND_NAME else generate_random_name()
-        image_name = create_image(comp, create_media_filename(filename), format, size, smarts) 
+        image_name, first_match_coords = create_image(comp, create_media_filename(filename), format, size, smarts, first_match_coords) 
         counter += 1
         print(image_name, name)
         output.append([image_name, name])
