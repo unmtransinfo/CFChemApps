@@ -103,9 +103,9 @@ def get_atom_bond_matches(m, smarts):
     return all_atom_matches, bond_matches, substructure
 
 
-def create_image(m, filename, format, size, smarts, first_match_coords=None):
+def create_image(m, filename, format, size, smarts, first_match_coords=None, align_smarts: bool = False):
     all_atom_matches, bond_matches, substructure = get_atom_bond_matches(m, smarts)
-    if len(all_atom_matches) > 0 or len(bond_matches) > 0:
+    if align_smarts and (len(all_atom_matches) > 0 or len(bond_matches) > 0):
         # have match to smarts
         match = m.GetSubstructMatch(substructure)
         if first_match_coords is not None:
@@ -150,10 +150,11 @@ def get_svgs_from_mol_file(filename, format, size, smarts):
         output.append([image_name, name])
     return output
 
-def get_svgs_from_data(datas, format, size, smarts):
+def get_svgs_from_data(datas, format, size, smarts, align_smarts: bool):
     output = []
     counter = 0
     # track coordinates of first smarts match to use for subsequent matches
+    # no effect if align_smarts == False
     first_match_coords = None
     for d in datas:     
         d = d.strip() 
@@ -174,7 +175,7 @@ def get_svgs_from_data(datas, format, size, smarts):
         comp = Chem.MolFromSmiles(smile)
 
         filename = name if name != NO_COMPOUND_NAME else generate_random_name()
-        image_name, first_match_coords = create_image(comp, create_media_filename(filename), format, size, smarts, first_match_coords) 
+        image_name, first_match_coords = create_image(comp, create_media_filename(filename), format, size, smarts, first_match_coords, align_smarts) 
         counter += 1
         print(image_name, name)
         output.append([image_name, name])

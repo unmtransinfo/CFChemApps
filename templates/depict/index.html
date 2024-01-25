@@ -261,8 +261,10 @@
             <td valign="top">
                 <b>smarts: </b><br><br>
                 <input type="text" name="smarts" id="smartsEntry" size="48" value="">
+                <br>
+                <label for="alignSmarts">Align SMARTS</label>
+                <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
             </td>
-
             <script>
                 // set smarts query if it was previously set
                 var smartsValue = sessionStorage.getItem("smarts");
@@ -276,6 +278,20 @@
                 smartsElement.addEventListener("change", function() {
                     var smarts = smartsElement.value;
                     sessionStorage.setItem("smarts", smarts);
+                });
+            </script>
+            <script>
+                // set alignSmarts checkbox if it was previously set
+                var alignSmartsValue = sessionStorage.getItem("alignSmarts");
+                var alignSmartsElement = document.getElementById("alignSmarts");
+            
+                if (alignSmartsValue !== null) {
+                    alignSmartsElement.checked = alignSmartsValue === "true";
+                }
+            
+                // add event listener to persist alignSmarts checkbox
+                alignSmartsElement.addEventListener("change", function() {
+                    sessionStorage.setItem("alignSmarts", alignSmartsElement.checked);
                 });
             </script>
         </TR>

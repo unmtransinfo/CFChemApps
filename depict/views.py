@@ -16,6 +16,8 @@ def get_mols(request, type):
     format = request.POST.get("imgfmt")
     size = request.POST.get("size")
     smarts = request.POST.get("smarts")
+    align_smarts = request.POST.get('alignSmarts', 'off') == 'on'
+
 
     size = get_image_size(size)
 
@@ -41,7 +43,7 @@ def get_mols(request, type):
         else:
             input_text, datas = get_content(type, request)
 
-    output = get_svgs_from_data(datas, format, size, smarts)
+    output = get_svgs_from_data(datas, format, size, smarts, align_smarts)
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text
