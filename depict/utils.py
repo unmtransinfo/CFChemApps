@@ -140,7 +140,6 @@ def get_svgs_from_mol_file(filename, format, size, smarts, align_smarts: bool):
     output = []
     counter = 0
     suppl = Chem.SDMolSupplier(filename)
-    print(filename)
     first_match_coords = None
     for mol in suppl:
         if mol is None:
