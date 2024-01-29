@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# Collect static files
-echo "Collect static files"
-python manage.py collectstatic -i media --clear --noinput
+# static file collection not needed in development with whitenoise
 
 python manage.py makemigrations
 # Apply database migrations

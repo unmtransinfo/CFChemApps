@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ["206.192.180.166", "127.0.0.1", "chiltepin.health.unm.edu", "lo
 # Application definition
 
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic", # for development
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

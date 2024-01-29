@@ -36,6 +36,7 @@
     }
 
     function reset() {
+        sessionStorage.clear(); // reset options to defaults
         let url = "{% url 'index' %}"
         document.location.href = url
     }
@@ -56,7 +57,7 @@
         newWindow.document.close();
     }
 
-    function set_listeners() {
+    function setListeners() {
         var modal = document.getElementById('myModal');
         var modalImg = document.getElementById("img01");
         const captionText = document.getElementById("caption");
@@ -101,7 +102,6 @@
 </script>
 
 <script>
-    // window.onload = function() {
     function readFile() {
         document.getElementById('infile').addEventListener('change', function () {
             var file_reader = new FileReader();
@@ -111,7 +111,6 @@
             file_reader.readAsText(this.files[0]);
         })
     }
-    // }
 </script>
 
 <script type="text/javascript">
@@ -138,7 +137,7 @@
 <script>
 
     window.onload = function () {
-        set_listeners();
+        setListeners();
         readFile();
         adjustImageGrid();
         adjustImageContentWidths();
@@ -261,8 +260,40 @@
             
             <td valign="top">
                 <b>smarts: </b><br><br>
-                <input type="text" name="smarts" size="48" value="">
+                <input type="text" name="smarts" id="smartsEntry" size="48" value="">
+                <br>
+                <label for="alignSmarts">Align SMARTS</label>
+                <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
             </td>
+            <script>
+                // set smarts query if it was previously set
+                var smartsValue = sessionStorage.getItem("smarts");
+                var smartsElement = document.getElementById("smartsEntry");
+
+                if (smartsValue !== null) {
+                    smartsElement.value = smartsValue;
+                }
+
+                // add event listener to persist smarts query
+                smartsElement.addEventListener("change", function() {
+                    var smarts = smartsElement.value;
+                    sessionStorage.setItem("smarts", smarts);
+                });
+            </script>
+            <script>
+                // set alignSmarts checkbox if it was previously set
+                var alignSmartsValue = sessionStorage.getItem("alignSmarts");
+                var alignSmartsElement = document.getElementById("alignSmarts");
+            
+                if (alignSmartsValue !== null) {
+                    alignSmartsElement.checked = alignSmartsValue === "true";
+                }
+            
+                // add event listener to persist alignSmarts checkbox
+                alignSmartsElement.addEventListener("change", function() {
+                    sessionStorage.setItem("alignSmarts", alignSmartsElement.checked);
+                });
+            </script>
         </TR>
     </TABLE>
     <P>
