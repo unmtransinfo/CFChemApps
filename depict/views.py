@@ -8,7 +8,7 @@ def index(request):
     return render(request, "depict/index.html")
 
 @api_view(['GET', 'POST'])
-def get_mols(request, type):
+def get_mols(request, request_type):
     format = request.POST.get("imgfmt")
     size = request.POST.get("size")
     smarts = request.POST.get("smarts")
@@ -21,12 +21,16 @@ def get_mols(request, type):
         if INFILE in request.FILES:
             print("call ")
             filename = save_file(request)
-            type = get_file_type(filename)
+            file_type = get_file_type(filename)
 
-            if type == FileType.CSV or type == FileType.SMI:
+            # store current file type in case of using input_text later on
+            # (else statement below)
+            request.session['file_type'] = file_type
+
+            if file_type == FileType.CSV or file_type == FileType.SMI:
                 input_text, datas = get_content_from_csv(filename)
                 delete_file(filename)
-            elif type == FileType.MOL or type == FileType.SDF:
+            elif file_type == FileType.MOL or file_type == FileType.SDF:
                 output = get_svgs_from_mol_file(filename, format, size, smarts, align_smarts)
                 input_text = get_content_from_file(filename)
                 context = {
@@ -37,7 +41,9 @@ def get_mols(request, type):
 
                 return render(request, "depict/index.html", context = context)
         else:
-            input_text, datas = get_content(type, request)
+            # TODO: add handling of sdf file
+            file_type = request.session.get('file_type')
+            input_text, datas = get_content(request_type, request)
 
     output = get_svgs_from_data(datas, format, size, smarts, align_smarts)
     context = {
