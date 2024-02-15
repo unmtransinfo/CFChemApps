@@ -11,6 +11,7 @@ class FileType(Enum):
     SDF = "sdf"
     SMI = "smi"
     TSV = "tsv"
+    TXT = "txt"
 
 class ImageFormat(Enum):
     PNG = "png"
