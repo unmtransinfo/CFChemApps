@@ -4,13 +4,13 @@ class InputType(Enum):
     DEMO = "demo"
     INPUT = "input"
     FILE = "file"
-    # WINTER = 4
 
 class FileType(Enum):
     CSV = "csv"
     MOL = "mol"
     SDF = "sdf"
     SMI = "smi"
+    TSV = "tsv"
 
 class ImageFormat(Enum):
     PNG = "png"
