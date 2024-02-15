@@ -20,7 +20,7 @@ def get_delimiter(
     # determine the delimiter of an input csv/txt/tsv/smi file
     # from: https://stackoverflow.com/a/69796836
     sniffer = csv.Sniffer()
-    delimiters = [",", "\t"]  # allowed delimiters
+    delimiters = [",", "\t", " "]  # allowed delimiters
     if data is None:
         data = open(file_path, "r").read(bytes)
     delimiter = sniffer.sniff(data, delimiters=delimiters).delimiter
@@ -34,22 +34,22 @@ def get_mol_supplier(file_type: str, file_path=None, file_data=None):
 
     suppl = None
     if file_type == FileType.SDF.value or file_type == FileType.MOL.value:
-        if file_path is not None:
-            suppl = Chem.SDMolSupplier(file_path, sanitize=False)
+        if file_path is not None and os.path.exists(file_path):
+            suppl = Chem.SDMolSupplier(file_path, sanitize=True, removeHs=True)
         else:
-            suppl = Chem.SDMolSupplier(sanitize=False)
+            suppl = Chem.SDMolSupplier()
             suppl.SetData(file_data)
     elif file_type in [ft.value for ft in FileType]:
         # file is one of tsv, csv, smi, or txt
-        delimiter = get_delimiter(file_path, file_data)
-        if file_path is not None:
+        delimiter = get_delimiter(file_path, data=file_data)
+        if file_path is not None and os.path.exists(file_path):
             suppl = Chem.SmilesMolSupplier(
                 file_path,
                 delimiter=delimiter,
                 smilesColumn=0,
                 nameColumn=1,
                 titleLine=False,
-                sanitize=False,
+                sanitize=True,
             )
         else:
             suppl = Chem.SmilesMolSupplierFromText(
@@ -58,9 +58,8 @@ def get_mol_supplier(file_type: str, file_path=None, file_data=None):
                 smilesColumn=0,
                 nameColumn=1,
                 titleLine=False,
-                sanitize=False,
+                sanitize=True,
             )
-        suppl = csv.reader(open(file_path), delimiter=delimiter)
     else:
         raise ValueError("Unsupported file type: {}".format(file_type))
     return suppl
@@ -214,6 +213,28 @@ def get_svgs_from_mol_file(filename, format, size, smarts, align_smarts: bool, f
         counter += 1
         output.append([image_name, name])
     return output
+
+
+def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts: bool):
+    output = []
+    first_match_coords = None
+    for mol in mol_supplier:
+        if mol is None:
+            continue
+
+        name = mol.GetProp("_Name")
+        image_name, first_match_coords = create_image(
+            mol,
+            create_media_filename(name),
+            format,
+            size,
+            smarts,
+            first_match_coords,
+            align_smarts,
+        )
+        output.append([image_name, name])
+    return output
+
 
 def get_svgs_from_data(datas, format, size, smarts, align_smarts: bool):
     output = []
