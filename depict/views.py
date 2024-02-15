@@ -19,13 +19,12 @@ def get_mols(request, request_type):
 
     if request.method == 'POST':
         if INFILE in request.FILES:
-            print("call ")
             filename = save_file(request)
             file_type = get_file_type(filename)
 
             # store current file type in case of using input_text later on
             # (else statement below)
-            request.session['file_type'] = file_type
+            request.session['file_type'] = file_type.value
 
             if file_type == FileType.CSV or file_type == FileType.SMI:
                 input_text, datas = get_content_from_csv(filename)
@@ -41,9 +40,22 @@ def get_mols(request, request_type):
 
                 return render(request, "depict/index.html", context = context)
         else:
-            # TODO: add handling of sdf file
+            if request_type == InputType.DEMO.value:
+                # in case earlier file was sdf/mol
+                request.session['file_type'] = FileType.CSV.value
             file_type = request.session.get('file_type')
-            input_text, datas = get_content(request_type, request)
+
+            if file_type != FileType.SDF.value and file_type != FileType.MOL.value:
+                input_text, datas = get_content(request_type, request)
+            else:
+                # text is from sdf/mol file
+                input_text = request.data.get(IN_TEXT).strip()
+                output = get_svgs_from_mol_file("", format, size, smarts, align_smarts, input_text)
+                context = {
+                    IMAGES: output,
+                    INPUT_TEXT: input_text
+                }
+                return render(request, "depict/index.html", context = context)
 
     output = get_svgs_from_data(datas, format, size, smarts, align_smarts)
     context = {

@@ -136,10 +136,18 @@ def create_image(m, filename, format, size, smarts, first_match_coords=None, ali
     return img_name, first_match_coords
 
 
-def get_svgs_from_mol_file(filename, format, size, smarts, align_smarts: bool):
+def get_svgs_from_mol_file(filename, format, size, smarts, align_smarts: bool, file_text: str = None):
     output = []
     counter = 0
-    suppl = Chem.SDMolSupplier(filename)
+    suppl = None
+    if os.path.exists(filename):
+        suppl = Chem.SDMolSupplier(filename)
+    elif file_text is not None:
+        suppl = Chem.SDMolSupplier()
+        suppl.SetData(file_text)
+    else:
+        # this should be unreachable
+        raise ValueError("No file or file text provided")
     first_match_coords = None
     for mol in suppl:
         if mol is None:
