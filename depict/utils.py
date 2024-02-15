@@ -114,13 +114,7 @@ def delete_file(file):
 
 def get_file_type(filename):
     extension = filename.split(".")[-1]
-    file_types = {
-        FileType.CSV.value: FileType.CSV,
-        FileType.MOL.value: FileType.MOL,
-        FileType.SDF.value: FileType.SDF,
-        FileType.SMI.value: FileType.SMI
-    }
-    
+    file_types = {ft.value: ft for ft in FileType}
 
     return file_types[extension]
 
