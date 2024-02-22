@@ -38,6 +38,10 @@ def get_mols(request, request_type):
             request.session["file_type"] = file_type
             mol_supplier = get_mol_supplier(file_type, file_path=filename)
             input_text = get_content_from_file(filename)
+            if input_text[0] == "\n":
+                # this covers an edge case, middleware removes "\n" otherwise
+                # which leads to error in processing certain SDF/MOL files
+                input_text = " " + input_text
             delete_file(filename)
         else:
             if request_type == InputType.DEMO.value:
@@ -46,7 +50,7 @@ def get_mols(request, request_type):
             file_type = request.session.get("file_type")
             if file_type == FileType.MOL.value or file_type == FileType.SDF.value:
                 # text is from sdf/mol file
-                input_text = request.data.get(IN_TEXT).strip()
+                input_text = request.data.get(IN_TEXT)
             else:
                 input_text, _ = get_content(request_type, request)
             mol_supplier = get_mol_supplier(file_type, file_data=input_text)

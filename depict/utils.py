@@ -28,6 +28,7 @@ def get_delimiter(
 
 
 def get_mol_supplier(file_type: str, file_path=None, file_data=None):
+    print("MOL SUPPLIER:", file_type, file_path, file_data)
     if file_path is None and file_data is None:
         # must provide at least one
         raise ValueError("No file_path or file_data provided")
@@ -43,6 +44,7 @@ def get_mol_supplier(file_type: str, file_path=None, file_data=None):
         # file is one of tsv, csv, smi, or txt
         delimiter = get_delimiter(file_path, data=file_data)
         if file_path is not None and os.path.exists(file_path):
+            # TODO: make this dynamic
             suppl = Chem.SmilesMolSupplier(
                 file_path,
                 delimiter=delimiter,
@@ -212,14 +214,16 @@ def get_svgs_from_mol_file(filename, format, size, smarts, align_smarts: bool, f
 def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts: bool):
     output = []
     first_match_coords = None
-    for mol in mol_supplier:
+    for i, mol in enumerate(mol_supplier):
         if mol is None:
+            # TODO: raise some kind of error here?
             continue
 
         name = mol.GetProp("_Name")
+        fname = name if name else f"mol_{i}"
         image_name, first_match_coords = create_image(
             mol,
-            create_media_filename(name),
+            create_media_filename(fname),
             format,
             size,
             smarts,
