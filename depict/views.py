@@ -4,9 +4,17 @@ from rest_framework.decorators import api_view
 
 from .utils import *
 
+accepted_filetypes = [f".{filetype.value}" for filetype in FileType]
+
 
 def index(request):
-    return render(request, "depict/index.html")
+    return render(
+        request,
+        "depict/index.html",
+        context={
+            ACCEPTABLE_FILETYPES: accepted_filetypes,
+        },
+    )
 
 
 @api_view(["GET", "POST"])
@@ -50,7 +58,11 @@ def get_mols(request, request_type):
     output = get_svgs_from_mol_supplier(
         mol_supplier, format, size, smarts, align_smarts
     )
-    context = {IMAGES: output, INPUT_TEXT: input_text}
+    context = {
+        IMAGES: output,
+        INPUT_TEXT: input_text,
+        ACCEPTABLE_FILETYPES: accepted_filetypes,
+    }
 
     return render(request, "depict/index.html", context=context)
 

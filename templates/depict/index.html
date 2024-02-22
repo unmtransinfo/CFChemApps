@@ -169,13 +169,9 @@
     <TABLE WIDTH="100%" CELLPADDING=5 CELLSPACING=5>
         <TR BGCOLOR="#CCCCCC">
             <TD VALIGN=TOP>
-                Upload: <INPUT accept=".tsv, .csv, .txt, .mol, .sdf, .smi" id="infile" TYPE="FILE" NAME="infile"> ...or paste:<BR>
-
-
+                Upload: <input accept="{{ acceptable_filetypes|join:', ' }}" id="infile" type="file" name="infile"> ...or paste:<br>
 
                 <TEXTAREA NAME="intxt" id="textarea" WRAP=OFF ROWS=12 COLS=60>{{ input_text }}</TEXTAREA>
-
-
 
             </TD>
             <TD VALIGN=TOP>

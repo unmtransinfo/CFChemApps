@@ -2,6 +2,7 @@ MEDIA_FOLDER = "static/media"
 
 IMAGES = "images"
 INPUT_TEXT = "input_text"
+ACCEPTABLE_FILETYPES = "acceptable_filetypes"
 
 INFILE = "infile"
 IN_TEXT = "intxt"
