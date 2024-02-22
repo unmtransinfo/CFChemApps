@@ -37,27 +37,24 @@ def get_mols(request, request_type):
             # (else statement below)
             request.session["file_type"] = file_type
             mol_supplier = get_mol_supplier(file_type, file_path=filename)
-            if file_type == FileType.CSV.value or file_type == FileType.SMI.value:
-                input_text, _ = get_content_from_csv(filename)
-            elif file_type == FileType.MOL.value or file_type == FileType.SDF.value:
-                input_text = get_content_from_file(filename)
+            input_text = get_content_from_file(filename)
             delete_file(filename)
         else:
             if request_type == InputType.DEMO.value:
                 # in case earlier file was sdf/mol
                 request.session["file_type"] = FileType.CSV.value
             file_type = request.session.get("file_type")
-            if file_type != FileType.SDF.value and file_type != FileType.MOL.value:
-                input_text, _ = get_content(request_type, request)
-            else:
+            if file_type == FileType.MOL.value or file_type == FileType.SDF.value:
                 # text is from sdf/mol file
                 input_text = request.data.get(IN_TEXT).strip()
-            print("input_text", input_text)
+            else:
+                input_text, _ = get_content(request_type, request)
             mol_supplier = get_mol_supplier(file_type, file_data=input_text)
 
     output = get_svgs_from_mol_supplier(
         mol_supplier, format, size, smarts, align_smarts
     )
+    print("input_txt:", input_text)
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text,
