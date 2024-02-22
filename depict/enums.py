@@ -10,6 +10,7 @@ class FileType(Enum):
     MOL = "mol"
     SDF = "sdf"
     SMI = "smi"
+    SMILES = "smiles"
     TSV = "tsv"
     TXT = "txt"
 
