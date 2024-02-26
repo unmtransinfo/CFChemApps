@@ -219,6 +219,14 @@
                     <label for="alignSmarts">Align SMARTS</label>
                     <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
                 </div>
+                <br><br>
+                <b>Failures: </b><br>
+                <!-- box for logging info -->
+                <textarea readonly WRAP=OFF ROWS=6 COLS=50>
+                {% for mol_err_msg in failures %}
+                {{ mol_err_msg }}
+                {% endfor %}
+                </textarea>
             </td>
             <!-- 
             <script>
@@ -272,7 +280,6 @@
         </CENTER>
         {% csrf_token %}
 </FORM>
-
 <br>
 <center>
     <div class="image-grid" id="imageGrid">

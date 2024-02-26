@@ -3,6 +3,7 @@ MEDIA_FOLDER = "static/media"
 IMAGES = "images"
 INPUT_TEXT = "input_text"
 ACCEPTABLE_FILETYPES = "acceptable_filetypes"
+FAILURES = "failures" # molecules that RDKit failed to process
 
 INFILE = "infile"
 IN_TEXT = "intxt"

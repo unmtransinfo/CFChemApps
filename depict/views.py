@@ -83,21 +83,14 @@ def get_mols(request, request_type):
                 except Exception as e:
                     msg = f"Error reading data: {str(e)}"
                     messages.error(request, msg)
-
-    output, failed_mols = get_svgs_from_mol_supplier(
+    output, failures = get_svgs_from_mol_supplier(
         mol_supplier, format, size, smarts, align_smarts
     )
-    if len(failed_mols) > 0:
-        msg = f"Failed to depict {len(failed_mols)} molecules from input."
-        msg += f"\nFailed Molecule rows: {failed_mols}"
-        messages.warning(
-            request,
-            msg,
-        )
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text,
         ACCEPTABLE_FILETYPES: accepted_filetypes,
+        FAILURES: failures,
     }
 
     return render(request, "depict/index.html", context=context)

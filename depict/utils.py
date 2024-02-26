@@ -1,6 +1,10 @@
-from rdkit import Chem, Geometry
+from rdkit import Chem, Geometry, rdBase
 from rdkit.Chem import rdDepictor
 from rdkit.Chem import Draw
+
+
+from io import StringIO
+import sys
 
 from django.core.files.storage import FileSystemStorage
 
@@ -10,6 +14,8 @@ import secrets
 
 from .enums import InputType, FileType, ImageFormat, ImageSize
 from cfchem.Constants import *
+
+rdBase.WrapLogs()  # log rdkit errors to stderr
 
 
 def get_delimiter(
@@ -215,12 +221,15 @@ def get_svgs_from_mol_file(filename, format, size, smarts, align_smarts: bool, f
 def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts: bool):
     output = []
     first_match_coords = None
-    failed_mols = [] # mols which rdkit could not interpret
+    failures = [] # mols which rdkit could not interpret
+    sio = sys.stderr = StringIO() # redirect error messages to string
     if mol_supplier is None:
-        return output, failed_mols
+        return output, failures
     for i, mol in enumerate(mol_supplier):
         if mol is None:
-            failed_mols.append(i)
+            failures.append(sio.getvalue().strip())
+            print(failures)
+            sio = sys.stderr = StringIO() # reset the error logger
             continue
         name = NO_COMPOUND_NAME
         if mol.HasProp("_Name"):
@@ -239,7 +248,7 @@ def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts:
             align_smarts,
         )
         output.append([image_name, fname, name])
-    return output, failed_mols
+    return output, failures
 
 
 def get_svgs_from_data(datas, format, size, smarts, align_smarts: bool):
