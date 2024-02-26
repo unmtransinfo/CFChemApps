@@ -9,7 +9,6 @@ import sys
 from django.core.files.storage import FileSystemStorage
 
 import os
-import csv
 import secrets
 
 from .enums import InputType, FileType, ImageFormat, ImageSize
@@ -18,23 +17,8 @@ from cfchem.Constants import *
 rdBase.WrapLogs()  # log rdkit errors to stderr
 
 
-def get_delimiter(
-    file_path=None,
-    data=None,
-    bytes=4096,
-):
-    # determine the delimiter of an input csv/txt/tsv/smi file
-    # from: https://stackoverflow.com/a/69796836
-    sniffer = csv.Sniffer()
-    delimiters = [",", "\t", " "]  # allowed delimiters
-    if data is None:
-        data = open(file_path, "r").read(bytes)
-    delimiter = sniffer.sniff(data, delimiters=delimiters).delimiter
-    return delimiter
-
-
 def get_mol_supplier(file_type: str, file_path=None, file_data=None,
-                     has_header=False, smiles_col=0, names_col=1, sanitize_mols=True):
+                     has_header=False, smiles_col=0, names_col=1, sanitize_mols=True, delimiter="\t"):
     print("MOL SUPPLIER:", file_type, file_path, file_data)
     if file_path is None and file_data is None:
         # must provide at least one
@@ -49,8 +33,6 @@ def get_mol_supplier(file_type: str, file_path=None, file_data=None,
             suppl.SetData(file_data, sanitize=sanitize_mols, removeHs=True)
     elif file_type in [ft.value for ft in FileType]:
         # file is one of tsv, csv, smi, or txt
-        delimiter = get_delimiter(file_path, data=file_data)
-        # TODO: handle error if delimiter could not be determined
         if file_path is not None and os.path.exists(file_path):
             suppl = Chem.SmilesMolSupplier(
                 file_path,

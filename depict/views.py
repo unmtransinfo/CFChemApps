@@ -25,6 +25,8 @@ def get_mols(request, request_type):
     smarts = request.POST.get("smarts")
     align_smarts = request.POST.get("alignSmarts", "off") == "on"
     # options for tsv/csv/smiles file
+    delimiter = request.POST.get("delimiter")
+    delimiter = "\t" if delimiter == "\\t" else delimiter
     smiles_col = int(request.POST.get("smiles_col"))
     names_col = int(request.POST.get("name_col"))
     has_header = request.POST.get("has_header", "off") == "on"
@@ -50,12 +52,13 @@ def get_mols(request, request_type):
                     smiles_col=smiles_col,
                     names_col=names_col,
                     sanitize_mols=sanitize_mols,
+                    delimiter=delimiter,
                 )
                 input_text = get_content_from_file(filename)
             except Exception as e:
                 msg = f"Error reading file: {str(e)}"
                 messages.error(request, str(e))
-            if input_text[0] == "\n":
+            if input_text and input_text[0] == "\n":
                 # this covers an edge case, middleware removes "\n" otherwise
                 # which leads to error in processing certain SDF/MOL files
                 input_text = " " + input_text
@@ -79,6 +82,7 @@ def get_mols(request, request_type):
                         smiles_col=smiles_col,
                         names_col=names_col,
                         sanitize_mols=sanitize_mols,
+                        delimiter=delimiter,
                     )
                 except Exception as e:
                     msg = f"Error reading data: {str(e)}"

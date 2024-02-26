@@ -1,5 +1,11 @@
 <div id="input-options-container">
     <B>Input Options:</B><BR>
+    <label for="delimeter">Delimiter</label>
+    <select name="delimiter" id="delimChoice">
+        <option value=" " id="delimChoiceDefault" selected>" " - space</option>
+        <option value=",">"," - comma</option>
+        <option value="\t">"\t" - tab</option>
+    </select><br>
     <label for="has_header">SMILES Col</label>
     <INPUT TYPE="number" NAME="smiles_col" id="smiles_column" min=0 SIZE=2 VALUE="0"><BR>
     <label for="has_header">Name Col</label>

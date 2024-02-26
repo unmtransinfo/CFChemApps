@@ -89,6 +89,31 @@
         });
     }
 
+    function makePersistentSelect(item, id) {
+        var defOption = id + "Default";
+        // Get the select element and the default selected option
+        var element = document.getElementById(id);
+        var defaultOption = document.getElementById(defOption);
+
+        // Check if there is a saved value in storage
+        var savedSize = sessionStorage.getItem(item);
+
+        // Set the selected option based on the saved value or default
+        defaultOption.selected = true;  // Ensure one is always selected
+        if (savedSize) {
+            // Find the option with the saved value and select it
+            var selectedOption = Array.from(element.options).find(option => option.value === savedSize);
+            if (selectedOption) {
+                selectedOption.selected = true;
+            }
+        }
+
+        // Add an event listener to save the selected option when it changes
+        element.addEventListener("change", function () {
+            sessionStorage.setItem(item, element.value);
+        });
+    }
+
     function setListeners() {
         var modal = document.getElementById('myModal');
         var modalImg = document.getElementById("img01");
@@ -261,7 +286,7 @@
             -->
             <script>
                 var inputs = document.querySelectorAll('#input-options-container input:not([type="button"])');
-
+                var selects = document.querySelectorAll('#input-options-container select');
                 // Apply makePersistent to input options
                 inputs.forEach(function(input) {
                     if (input.type === 'checkbox') {
@@ -269,6 +294,9 @@
                     } else {
                         makePersistent(input.name, input.id);
                     }
+                });
+                selects.forEach(function(select) {
+                    makePersistentSelect(select.name, select.id);
                 });
             </script>
         </TR>
