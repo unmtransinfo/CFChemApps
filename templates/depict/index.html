@@ -31,8 +31,10 @@
 
 <script>
     function go_demo() {
-        let url = "{% url 'get_mols' request_type='demo' %}"
-        document.location.href = url
+        var form = document.getElementById('mainform');
+        sessionStorage.clear(); // reset options to defaults
+        form.reset();
+        form.action='{% url 'get_mols' request_type='demo' %}';
     }
 
     function reset() {
@@ -242,9 +244,8 @@
             </TD>
             <TD ALIGN=RIGHT>
                 <BUTTON TYPE=BUTTON id="help-button"><B>Help</B></BUTTON>
-                <BUTTON type="submit" form="mainform"
-                    onclick="javascript:  sessionStorage.clear();form.action='{% url 'get_mols' request_type='demo' %}';"><B>Demo</B></BUTTON>
-                <BUTTON TYPE=BUTTON id="reset-button" onClick="reset"><B>Reset</B></BUTTON>
+                <BUTTON type="submit" form="mainform" onclick="go_demo()"><B>Demo</B></BUTTON>
+                <BUTTON TYPE=BUTTON id="reset-button" onClick="reset()"><B>Reset</B></BUTTON>
             </TD>
         </TR>
     </TABLE>
