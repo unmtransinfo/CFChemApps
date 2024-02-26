@@ -29,7 +29,8 @@ def get_delimiter(
     return delimiter
 
 
-def get_mol_supplier(file_type: str, file_path=None, file_data=None):
+def get_mol_supplier(file_type: str, file_path=None, file_data=None,
+                     has_header=False, smiles_col=0, names_col=1, sanitize_mols=True):
     print("MOL SUPPLIER:", file_type, file_path, file_data)
     if file_path is None and file_data is None:
         # must provide at least one
@@ -38,32 +39,31 @@ def get_mol_supplier(file_type: str, file_path=None, file_data=None):
     suppl = None
     if file_type == FileType.SDF.value or file_type == FileType.MOL.value:
         if file_path is not None and os.path.exists(file_path):
-            suppl = Chem.SDMolSupplier(file_path, sanitize=True, removeHs=True)
+            suppl = Chem.SDMolSupplier(file_path, sanitize=sanitize_mols, removeHs=True)
         else:
             suppl = Chem.SDMolSupplier()
-            suppl.SetData(file_data)
+            suppl.SetData(file_data, sanitize=sanitize_mols, removeHs=True)
     elif file_type in [ft.value for ft in FileType]:
         # file is one of tsv, csv, smi, or txt
         delimiter = get_delimiter(file_path, data=file_data)
         # TODO: handle error if delimiter could not be determined
         if file_path is not None and os.path.exists(file_path):
-            # TODO: make this dynamic
             suppl = Chem.SmilesMolSupplier(
                 file_path,
                 delimiter=delimiter,
-                smilesColumn=0,
-                nameColumn=1,
-                titleLine=False,
-                sanitize=True,
+                smilesColumn=smiles_col,
+                nameColumn=names_col,
+                titleLine=has_header,
+                sanitize=sanitize_mols,
             )
         else:
             suppl = Chem.SmilesMolSupplierFromText(
                 file_data,
                 delimiter=delimiter,
-                smilesColumn=0,
-                nameColumn=1,
-                titleLine=False,
-                sanitize=True,
+                smilesColumn=smiles_col,
+                nameColumn=names_col,
+                titleLine=has_header,
+                sanitize=sanitize_mols,
             )
     else:
         raise ValueError("Unsupported file type: {}".format(file_type))
@@ -221,11 +221,12 @@ def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts:
         if mol is None:
             logging.log(logging.WARNING, f"Molecule {i} could not be interpreted by RDKit")
             continue
-
-        name = mol.GetProp("_Name")
+        name = NO_COMPOUND_NAME
+        if mol.HasProp("_Name"):
+            name = mol.GetProp("_Name")
+        # edge case for sdf files where whitespace used in place of name
         n_whitespace = sum(1 for char in name if char.isspace())
-        all_whitespace = (len(name) == n_whitespace)
-        name = NO_COMPOUND_NAME if name is None or all_whitespace else name
+        name = NO_COMPOUND_NAME if (len(name) == n_whitespace) else name
         fname = name if name != NO_COMPOUND_NAME else f"mol_{i}"
         image_name, first_match_coords = create_image(
             mol,

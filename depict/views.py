@@ -23,6 +23,11 @@ def get_mols(request, request_type):
     size = request.POST.get("size")
     smarts = request.POST.get("smarts")
     align_smarts = request.POST.get("alignSmarts", "off") == "on"
+    # options for tsv/csv/smiles file
+    smiles_col = int(request.POST.get("smiles_col"))
+    names_col = int(request.POST.get("name_col"))
+    has_header = request.POST.get("has_header", "off") == "on"
+    sanitize_mols = request.POST.get("sanitize_mols", "off") == "on"
 
     size = get_image_size(size)
     input_text = None
@@ -36,7 +41,14 @@ def get_mols(request, request_type):
             # store current file type in case of using input_text later on
             # (else statement below)
             request.session["file_type"] = file_type
-            mol_supplier = get_mol_supplier(file_type, file_path=filename)
+            mol_supplier = get_mol_supplier(
+                file_type,
+                file_path=filename,
+                has_header=has_header,
+                smiles_col=smiles_col,
+                names_col=names_col,
+                sanitize_mols=sanitize_mols,
+            )
             input_text = get_content_from_file(filename)
             if input_text[0] == "\n":
                 # this covers an edge case, middleware removes "\n" otherwise
@@ -53,7 +65,14 @@ def get_mols(request, request_type):
                 input_text = request.data.get(IN_TEXT)
             else:
                 input_text, _ = get_content(request_type, request)
-            mol_supplier = get_mol_supplier(file_type, file_data=input_text)
+            mol_supplier = get_mol_supplier(
+                file_type,
+                file_data=input_text,
+                has_header=has_header,
+                smiles_col=smiles_col,
+                names_col=names_col,
+                sanitize_mols=sanitize_mols,
+            )
 
     output = get_svgs_from_mol_supplier(
         mol_supplier, format, size, smarts, align_smarts
