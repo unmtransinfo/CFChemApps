@@ -7,8 +7,6 @@ from django.core.files.storage import FileSystemStorage
 import os
 import csv
 import secrets
-import logging
-
 
 from .enums import InputType, FileType, ImageFormat, ImageSize
 from cfchem.Constants import *
@@ -217,9 +215,12 @@ def get_svgs_from_mol_file(filename, format, size, smarts, align_smarts: bool, f
 def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts: bool):
     output = []
     first_match_coords = None
+    failed_mols = [] # mols which rdkit could not interpret
+    if mol_supplier is None:
+        return output, failed_mols
     for i, mol in enumerate(mol_supplier):
         if mol is None:
-            logging.log(logging.WARNING, f"Molecule {i} could not be interpreted by RDKit")
+            failed_mols.append(i)
             continue
         name = NO_COMPOUND_NAME
         if mol.HasProp("_Name"):
@@ -238,7 +239,7 @@ def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts:
             align_smarts,
         )
         output.append([image_name, fname, name])
-    return output
+    return output, failed_mols
 
 
 def get_svgs_from_data(datas, format, size, smarts, align_smarts: bool):

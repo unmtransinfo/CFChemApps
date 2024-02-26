@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import messages
 
 from rest_framework.decorators import api_view
 
@@ -41,15 +42,19 @@ def get_mols(request, request_type):
             # store current file type in case of using input_text later on
             # (else statement below)
             request.session["file_type"] = file_type
-            mol_supplier = get_mol_supplier(
-                file_type,
-                file_path=filename,
-                has_header=has_header,
-                smiles_col=smiles_col,
-                names_col=names_col,
-                sanitize_mols=sanitize_mols,
-            )
-            input_text = get_content_from_file(filename)
+            try:
+                mol_supplier = get_mol_supplier(
+                    file_type,
+                    file_path=filename,
+                    has_header=has_header,
+                    smiles_col=smiles_col,
+                    names_col=names_col,
+                    sanitize_mols=sanitize_mols,
+                )
+                input_text = get_content_from_file(filename)
+            except Exception as e:
+                msg = f"Error reading file: {str(e)}"
+                messages.error(request, str(e))
             if input_text[0] == "\n":
                 # this covers an edge case, middleware removes "\n" otherwise
                 # which leads to error in processing certain SDF/MOL files
@@ -65,19 +70,30 @@ def get_mols(request, request_type):
                 input_text = request.data.get(IN_TEXT)
             else:
                 input_text, _ = get_content(request_type, request)
-            mol_supplier = get_mol_supplier(
-                file_type,
-                file_data=input_text,
-                has_header=has_header,
-                smiles_col=smiles_col,
-                names_col=names_col,
-                sanitize_mols=sanitize_mols,
-            )
+            if len(input_text) > 0:
+                try:
+                    mol_supplier = get_mol_supplier(
+                        file_type,
+                        file_data=input_text,
+                        has_header=has_header,
+                        smiles_col=smiles_col,
+                        names_col=names_col,
+                        sanitize_mols=sanitize_mols,
+                    )
+                except Exception as e:
+                    msg = f"Error reading data: {str(e)}"
+                    messages.error(request, msg)
 
-    output = get_svgs_from_mol_supplier(
+    output, failed_mols = get_svgs_from_mol_supplier(
         mol_supplier, format, size, smarts, align_smarts
     )
-    print("input_txt:", input_text)
+    if len(failed_mols) > 0:
+        msg = f"Failed to depict {len(failed_mols)} molecules from input."
+        msg += f"\nFailed Molecule rows: {failed_mols}"
+        messages.warning(
+            request,
+            msg,
+        )
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text,
