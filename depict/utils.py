@@ -7,6 +7,8 @@ from django.core.files.storage import FileSystemStorage
 import os
 import csv
 import secrets
+import logging
+
 
 from .enums import InputType, FileType, ImageFormat, ImageSize
 from cfchem.Constants import *
@@ -43,6 +45,7 @@ def get_mol_supplier(file_type: str, file_path=None, file_data=None):
     elif file_type in [ft.value for ft in FileType]:
         # file is one of tsv, csv, smi, or txt
         delimiter = get_delimiter(file_path, data=file_data)
+        # TODO: handle error if delimiter could not be determined
         if file_path is not None and os.path.exists(file_path):
             # TODO: make this dynamic
             suppl = Chem.SmilesMolSupplier(
@@ -216,11 +219,14 @@ def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts:
     first_match_coords = None
     for i, mol in enumerate(mol_supplier):
         if mol is None:
-            # TODO: raise some kind of error here?
+            logging.log(logging.WARNING, "Molecule {i} could not be interpreted by RDKit".format(i))
             continue
 
         name = mol.GetProp("_Name")
-        fname = name if name else f"mol_{i}"
+        n_whitespace = sum(1 for char in name if char.isspace())
+        all_whitespace = (len(name) == n_whitespace)
+        name = NO_COMPOUND_NAME if name is None or all_whitespace else name
+        fname = name if name != NO_COMPOUND_NAME else f"mol_{i}"
         image_name, first_match_coords = create_image(
             mol,
             create_media_filename(fname),
@@ -230,7 +236,7 @@ def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts:
             first_match_coords,
             align_smarts,
         )
-        output.append([image_name, name])
+        output.append([image_name, fname, name])
     return output
 
 

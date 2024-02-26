@@ -293,7 +293,7 @@
 <br>
 <center>
     <div class="image-grid" id="imageGrid">
-        {% for image, name in images %}
+        {% for image, fname, name in images %}
             <div class="image-content">
                 <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
                     <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
@@ -301,7 +301,7 @@
                 </a>
                 <div class="textbox">{{ name }}</div>
                 <button type="button" class="btn btn-default delete-image-btn">
-                    <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
+                    <a href="{{ static }}/{{ image|safe }}" download="{{ fname }}">Download</a>
                 </button>
             </div>
         {% endfor %}
