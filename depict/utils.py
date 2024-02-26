@@ -219,7 +219,7 @@ def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts:
     first_match_coords = None
     for i, mol in enumerate(mol_supplier):
         if mol is None:
-            logging.log(logging.WARNING, "Molecule {i} could not be interpreted by RDKit".format(i))
+            logging.log(logging.WARNING, f"Molecule {i} could not be interpreted by RDKit")
             continue
 
         name = mol.GetProp("_Name")
