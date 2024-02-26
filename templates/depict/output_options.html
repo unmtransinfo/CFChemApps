@@ -1,7 +1,8 @@
-<B>Output Options:</B>
+<div id="user-options-container">
+    <B>Output Options:</B>
     <BR>
     Format:
-    <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" id="pngRadio" CHECKED>png&nbsp
+    <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" id="imgfmtDefault" CHECKED>png&nbsp
     <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="jpeg">jpeg
     <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="svg">svg
     <BR><BR>
@@ -9,56 +10,8 @@
     <select name="size" id="sizeSelector">
         <option value="xs">xs - 96x96</option>
         <option value="s">s - 160x160</option>
-        <option value="m" id="mOption" selected="">m - 180x260</option>
+        <option value="m" id="sizeSelectorDefault" selected="">m - 180x260</option>
         <option value="l">l - 280x380</option>
         <option value="xl">xl - 480x640</option>
     </select>
-<script>
-    // add listener to persist user's choice for image format
-    // Get the radio buttons and the default checked radio button
-    var radioButtons = document.getElementsByName("imgfmt");
-    var defaultCheckedRadioButton = document.getElementById("pngRadio");
-
-    // Check if there is a saved value in storage
-    var savedImgFormat = sessionStorage.getItem("selectedImgFormat");
-
-    // Set the checked radio button based on the saved value or default to "svg"
-    defaultCheckedRadioButton.checked = true;  // Ensure one is always checked
-    if (savedImgFormat) {
-        // Find the radio button with the saved value and check it
-        var selectedRadioButton = Array.from(radioButtons).find(button => button.value === savedImgFormat);
-        if (selectedRadioButton) {
-            selectedRadioButton.checked = true;
-        }
-    }
-
-    // Add an event listener to save the selected image format when it changes
-    radioButtons.forEach(function (radioButton) {
-        radioButton.addEventListener("change", function () {
-            sessionStorage.setItem("selectedImgFormat", radioButton.value);
-        });
-    });
-</script>
-<script>
-    // Get the select element and the default selected option
-    var sizeSelector = document.getElementById("sizeSelector");
-    var defaultOption = document.getElementById("mOption");
-
-    // Check if there is a saved value in storage
-    var savedSize = sessionStorage.getItem("selectedSize");
-
-    // Set the selected option based on the saved value or default to "m"
-    defaultOption.selected = true;  // Ensure one is always selected
-    if (savedSize) {
-        // Find the option with the saved value and select it
-        var selectedOption = Array.from(sizeSelector.options).find(option => option.value === savedSize);
-        if (selectedOption) {
-            selectedOption.selected = true;
-        }
-    }
-
-    // Add an event listener to save the selected size when it changes
-    sizeSelector.addEventListener("change", function () {
-        sessionStorage.setItem("selectedSize", sizeSelector.value);
-    });
-</script>
+</div>

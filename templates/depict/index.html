@@ -107,10 +107,37 @@
                 selectedOption.selected = true;
             }
         }
-
         // Add an event listener to save the selected option when it changes
         element.addEventListener("change", function () {
             sessionStorage.setItem(item, element.value);
+        });
+    }
+
+    function makePersistentRadio(item, defaultId) {
+        // Get the radio buttons and the default checked radio button
+        var radioButtons = document.getElementsByName(item);
+        var defaultCheckedRadioButton = document.getElementById(defaultId);
+
+        // Check if there is a saved value in storage
+        var savedImgFormat = sessionStorage.getItem(item);
+        console.log(savedImgFormat);
+
+        // Set the checked radio button based on the saved value or default to "svg"
+        defaultCheckedRadioButton.checked = true;  // Ensure one is always checked
+        if (savedImgFormat) {
+            console.log("inside + ", savedImgFormat);
+            // Find the radio button with the saved value and check it
+            var selectedRadioButton = Array.from(radioButtons).find(button => button.value === savedImgFormat);
+            if (selectedRadioButton) {
+                selectedRadioButton.checked = true;
+            }
+        }
+
+        // Add an event listener to save the selected image format when it changes
+        radioButtons.forEach(function (radioButton) {
+            radioButton.addEventListener("change", function () {
+                sessionStorage.setItem(item, radioButton.value);
+            });
         });
     }
 
@@ -238,7 +265,7 @@
             
             <td valign="top">
                 <b>SMARTS: </b><br><br>
-                <div id="input-options-container">
+                <div id="user-options-container">
                     <input type="text" name="smarts" id="smartsEntry" size="48" value="">
                     <br>
                     <label for="alignSmarts">Align SMARTS</label>
@@ -253,45 +280,19 @@
                 {% endfor %}
                 </textarea>
             </td>
-            <!-- 
             <script>
-                // set smarts query if it was previously set
-                var smartsValue = sessionStorage.getItem("smarts");
-                var smartsElement = document.getElementById("smartsEntry");
-
-                if (smartsValue !== null) {
-                    smartsElement.value = smartsValue;
-                }
-
-                // add event listener to persist smarts query
-                smartsElement.addEventListener("change", function() {
-                    var smarts = smartsElement.value;
-                    sessionStorage.setItem("smarts", smarts);
-                });
-            </script>
-            <script>
-                // set alignSmarts checkbox if it was previously set
-                var alignSmartsValue = sessionStorage.getItem("alignSmarts");
-                var alignSmartsElement = document.getElementById("alignSmarts");
-            
-                if (alignSmartsValue !== null) {
-                    alignSmartsElement.checked = alignSmartsValue === "true";
-                }
-            
-                // add event listener to persist alignSmarts checkbox
-                alignSmartsElement.addEventListener("change", function() {
-                    sessionStorage.setItem("alignSmarts", alignSmartsElement.checked);
-                });
-            </script>
-            -->
-            <script>
-                var inputs = document.querySelectorAll('#input-options-container input:not([type="button"])');
-                var selects = document.querySelectorAll('#input-options-container select');
+                var inputs = document.querySelectorAll('#user-options-container input:not([type="button"])');
+                var selects = document.querySelectorAll('#user-options-container select');
                 // Apply makePersistent to input options
                 inputs.forEach(function(input) {
+                    console.log(input.name, input.id, input.type);
                     if (input.type === 'checkbox') {
                         makePersistentCheckbox(input.name, input.id);
-                    } else {
+                    } 
+                    else if (input.type === 'radio') {
+                        makePersistentRadio(input.name, input.name + "Default");
+                    }
+                    else {
                         makePersistent(input.name, input.id);
                     }
                 });
