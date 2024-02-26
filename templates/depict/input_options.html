@@ -1,5 +1,11 @@
-<B>Input Options:</B><BR>
-Header: <INPUT TYPE="checkbox" NAME="has_header"><BR>
-SMILES Col: <INPUT TYPE="number" NAME="smiles_col" min=0 SIZE=2 VALUE="0"><BR>
-Name Col: <INPUT TYPE="number" NAME="name_col" min=0 SIZE=2 VALUE="1"><BR>
-Sanitize: <INPUT TYPE="checkbox" NAME="sanitize_mols" CHECKED>
+<div id="input-options-container">
+    <B>Input Options:</B><BR>
+    <label for="has_header">SMILES Col</label>
+    <INPUT TYPE="number" NAME="smiles_col" id="smiles_column" min=0 SIZE=2 VALUE="0"><BR>
+    <label for="has_header">Name Col</label>
+    <INPUT TYPE="number" NAME="name_col" id="name_column" min=0 SIZE=2 VALUE="1"><BR>
+    <label for="has_header">Header</label>
+    <INPUT TYPE="checkbox" NAME="has_header" id="header_checkbox"><BR>
+    <label for="sanitize_mols">Sanitize</label>
+    <INPUT TYPE="checkbox" NAME="sanitize_mols" id="sanitize_checkbox" CHECKED>
+</div>

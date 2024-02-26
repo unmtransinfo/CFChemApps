@@ -57,6 +57,38 @@
         newWindow.document.close();
     }
 
+    function makePersistent(item, id) {
+        // get the stored value and the element
+        var storedValue = sessionStorage.getItem(item);
+        var element = document.getElementById(id);
+
+        // if a stored value exists, set the element's value
+        if (storedValue !== null) {
+            element.value = storedValue;
+        }
+
+        // add event listener to persist changes
+        element.addEventListener("change", function() {
+            var value = element.value;
+            sessionStorage.setItem(item, value);
+        });
+    }
+
+    function makePersistentCheckbox(item, id) {
+        // set alignSmarts checkbox if it was previously set
+        var storedValue = sessionStorage.getItem(item);
+        var element = document.getElementById(id);
+    
+        if (storedValue !== null) {
+            element.checked = storedValue === "true";
+        }
+    
+        // add event listener to persist checkbox
+        element.addEventListener("change", function() {
+            sessionStorage.setItem(item, element.checked);
+        });
+    }
+
     function setListeners() {
         var modal = document.getElementById('myModal');
         var modalImg = document.getElementById("img01");
@@ -95,7 +127,6 @@
         }
 
         document.getElementById("help-button").onclick = function () {
-            console.log("caledwaeqd")
             help();
         }
     }
@@ -160,7 +191,7 @@
             <TD ALIGN=RIGHT>
                 <BUTTON TYPE=BUTTON id="help-button"><B>Help</B></BUTTON>
                 <BUTTON type="submit" form="mainform"
-                    onclick="javascript: form.action='{% url 'get_mols' request_type='demo' %}';"><B>Demo</B></BUTTON>
+                    onclick="javascript:  sessionStorage.clear();form.action='{% url 'get_mols' request_type='demo' %}';"><B>Demo</B></BUTTON>
                 <BUTTON TYPE=BUTTON id="reset-button" onClick="reset"><B>Reset</B></BUTTON>
             </TD>
         </TR>
@@ -182,11 +213,14 @@
             
             <td valign="top">
                 <b>SMARTS: </b><br><br>
-                <input type="text" name="smarts" id="smartsEntry" size="48" value="">
-                <br>
-                <label for="alignSmarts">Align SMARTS</label>
-                <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
+                <div id="input-options-container">
+                    <input type="text" name="smarts" id="smartsEntry" size="48" value="">
+                    <br>
+                    <label for="alignSmarts">Align SMARTS</label>
+                    <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
+                </div>
             </td>
+            <!-- 
             <script>
                 // set smarts query if it was previously set
                 var smartsValue = sessionStorage.getItem("smarts");
@@ -214,6 +248,19 @@
                 // add event listener to persist alignSmarts checkbox
                 alignSmartsElement.addEventListener("change", function() {
                     sessionStorage.setItem("alignSmarts", alignSmartsElement.checked);
+                });
+            </script>
+            -->
+            <script>
+                var inputs = document.querySelectorAll('#input-options-container input:not([type="button"])');
+
+                // Apply makePersistent to input options
+                inputs.forEach(function(input) {
+                    if (input.type === 'checkbox') {
+                        makePersistentCheckbox(input.name, input.id);
+                    } else {
+                        makePersistent(input.name, input.id);
+                    }
                 });
             </script>
         </TR>
