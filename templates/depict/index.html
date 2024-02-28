@@ -183,7 +183,25 @@
         document.getElementById("help-button").onclick = function () {
             help();
         }
-    }
+
+        // defined in input_options.html
+        var molfmt = document.getElementById('molFmt');
+        var options = document.getElementById('user-options-csv');
+
+        function checkMolfmtValue() {
+            if (molfmt.value === 'csv') {  // Replace 'value1' with the actual value that should show the options
+                options.style.display = 'block';
+            } else {
+                options.style.display = 'none';
+            }
+        }
+
+        // Run checkMolfmtValue when the page loads
+        checkMolfmtValue();
+
+        // Run checkMolfmtValue when the value of molfmt changes
+        molfmt.addEventListener('change', checkMolfmtValue);
+    };
 </script>
 
 <script>
@@ -335,10 +353,15 @@
             // this function is used to center the image grid if there's only one row of images
             // Get the image grid element
             var imageGrid = document.getElementById("imageGrid");
-    
+            
             // Get the height of the image grid and the height of a single image
             var gridHeight = imageGrid.offsetHeight;
-            var imageHeight = imageGrid.querySelector('.image-content').offsetHeight;
+            var querySelector = imageGrid.querySelector('.image-content')
+            if (querySelector === null) {
+                // no images to display, don't need to do anything more
+                return;
+            }
+            var imageHeight = querySelector.offsetHeight;
     
             // If the height of the image grid is less than or equal to the height of a single image (plus margins), it means there's only one row
             if (gridHeight <= imageHeight + 2) { // assuming 1px margin

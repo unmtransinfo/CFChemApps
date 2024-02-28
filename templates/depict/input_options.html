@@ -1,15 +1,10 @@
-<style>
-    #user-options-csv {
-        display: none;
-    }
-</style>
 <div id="user-options-container">
     <B>Input Options:</B><BR>
     <label for="molfmt">Format</label>
     <SELECT NAME="molfmt" id="molFmt">
-    <OPTION VALUE="mol" id="molFmtDefault" selected>
+    <OPTION VALUE="mol">
         MDL Molfile
-    <OPTION VALUE="csv">
+    <OPTION VALUE="csv"  id="molFmtDefault" selected>
         SMILES
     </SELECT><BR>
     <div id="user-options-csv">
@@ -28,30 +23,3 @@
     </div>
 </div>
 <!--TODO: fix issues with this function and reset/help page-->
-<script>
-    window.onload = function() {
-        var molfmt = document.getElementById('molFmt');
-        var options = document.getElementById('user-options-csv');
-    
-        function checkMolfmtValue() {
-            if (molfmt.value === 'csv') {
-                options.style.display = 'block';
-                sessionStorage.setItem('displayOptions', 'block');
-            } else {
-                options.style.display = 'none';
-                sessionStorage.setItem('displayOptions', 'none');
-            }
-        }
-    
-        // Run checkMolfmtValue when the page loads
-        var displayOptions = sessionStorage.getItem('displayOptions');
-        if (displayOptions) {
-            options.style.display = displayOptions;
-        } else {
-            checkMolfmtValue();
-        }
-    
-        // Run checkMolfmtValue when the value of molfmt changes
-        molfmt.addEventListener('change', checkMolfmtValue);
-    };
-</script>
