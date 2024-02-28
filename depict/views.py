@@ -1,6 +1,5 @@
-from django.shortcuts import render
 from django.contrib import messages
-
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 
 from .utils import *
@@ -20,10 +19,11 @@ def index(request):
 
 @api_view(["GET", "POST"])
 def get_mols(request, request_type):
-    format = request.POST.get("imgfmt")
+    image_format = request.POST.get("imgfmt")
     size = request.POST.get("size")
     smarts = request.POST.get("smarts")
     align_smarts = request.POST.get("alignSmarts", "off") == "on"
+    input_format = request.POST.get("molfmt")  # either MolFile or SMILES
     # options for tsv/csv/smiles file
     delimiter = request.POST.get("delimiter")
     delimiter = "\t" if delimiter == "\\t" else delimiter
@@ -39,14 +39,12 @@ def get_mols(request, request_type):
     if request.method == "POST":
         if INFILE in request.FILES:
             filename = save_file(request)
-            file_type = get_file_type(filename).value
 
             # store current file type in case of using input_text later on
             # (else statement below)
-            request.session["file_type"] = file_type
             try:
                 mol_supplier = get_mol_supplier(
-                    file_type,
+                    input_format,
                     file_path=filename,
                     has_header=has_header,
                     smiles_col=smiles_col,
@@ -64,11 +62,7 @@ def get_mols(request, request_type):
                 input_text = " " + input_text
             delete_file(filename)
         else:
-            if request_type == InputType.DEMO.value:
-                # in case earlier file was sdf/mol
-                request.session["file_type"] = FileType.CSV.value
-            file_type = request.session.get("file_type")
-            if file_type == FileType.MOL.value or file_type == FileType.SDF.value:
+            if input_format == "MOLFILE":
                 # text is from sdf/mol file
                 input_text = request.data.get(IN_TEXT)
             else:
@@ -76,7 +70,7 @@ def get_mols(request, request_type):
             if len(input_text) > 0:
                 try:
                     mol_supplier = get_mol_supplier(
-                        file_type,
+                        input_format,
                         file_data=input_text,
                         has_header=has_header,
                         smiles_col=smiles_col,
@@ -88,7 +82,7 @@ def get_mols(request, request_type):
                     msg = f"Error reading data: {str(e)}"
                     messages.error(request, msg)
     output, failures = get_svgs_from_mol_supplier(
-        mol_supplier, format, size, smarts, align_smarts
+        mol_supplier, image_format, size, smarts, align_smarts
     )
     context = {
         IMAGES: output,
