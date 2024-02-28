@@ -5,10 +5,12 @@
     <INPUT TYPE="checkbox" NAME="sanitize_mols" id="sanitize_checkbox" CHECKED>
     <BR>
     <label for="imgfmt">Format</label>
-    <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" id="imgfmtDefault" CHECKED>png&nbsp
-    <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="jpeg">jpeg
-    <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="svg">svg
-    <BR><BR>
+    <select name="imgfmt" id="imgFormat">
+        <option value="png" id="imgFormatDefault" selected>png</option>
+        <option value="jpeg">jpeg</option>
+        <option value="svg">svg</option>
+    </select>
+    <BR>
     <label for="size">Size</label>
     <select name="size" id="sizeSelector">
         <option value="xs">xs - 96x96</option>

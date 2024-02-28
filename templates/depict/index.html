@@ -115,33 +115,6 @@
         });
     }
 
-    function makePersistentRadio(item, defaultId) {
-        // Get the radio buttons and the default checked radio button
-        var radioButtons = document.getElementsByName(item);
-        var defaultCheckedRadioButton = document.getElementById(defaultId);
-
-        // Check if there is a saved value in storage
-        var savedImgFormat = sessionStorage.getItem(item);
-        console.log(savedImgFormat);
-
-        // Set the checked radio button based on the saved value or default to "svg"
-        defaultCheckedRadioButton.checked = true;  // Ensure one is always checked
-        if (savedImgFormat) {
-            console.log("inside + ", savedImgFormat);
-            // Find the radio button with the saved value and check it
-            var selectedRadioButton = Array.from(radioButtons).find(button => button.value === savedImgFormat);
-            if (selectedRadioButton) {
-                selectedRadioButton.checked = true;
-            }
-        }
-
-        // Add an event listener to save the selected image format when it changes
-        radioButtons.forEach(function (radioButton) {
-            radioButton.addEventListener("change", function () {
-                sessionStorage.setItem(item, radioButton.value);
-            });
-        });
-    }
 
     function setListeners() {
         var modal = document.getElementById('myModal');
@@ -300,22 +273,20 @@
                 </textarea>
             </td>
             <script>
-                var inputs = document.querySelectorAll('#user-options-container input:not([type="button"])');
+                var inputs = document.querySelectorAll('#user-options-container input');
                 var selects = document.querySelectorAll('#user-options-container select');
                 // Apply makePersistent to input options
                 inputs.forEach(function(input) {
                     console.log(input.name, input.id, input.type);
                     if (input.type === 'checkbox') {
                         makePersistentCheckbox(input.name, input.id);
-                    } 
-                    else if (input.type === 'radio') {
-                        makePersistentRadio(input.name, input.name + "Default");
                     }
                     else {
                         makePersistent(input.name, input.id);
                     }
                 });
                 selects.forEach(function(select) {
+                    console.log(select.name, select.id, select.type);
                     makePersistentSelect(select.name, select.id);
                 });
             </script>
