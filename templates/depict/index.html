@@ -193,10 +193,10 @@
             // Check if a file was selected
             var file = this.files[0];
             if (file) {
-                // Check if the file size exceeds the limit (5 MB)
+                // Check if the file size exceeds the limit (1 MB)
                 var fileSizeMB = file.size / (1024 * 1024);
-                if (fileSizeMB > 5) {
-                    alert('The file size exceeds the limit (5 MB). Please select a smaller file.');
+                if (fileSizeMB > 1) {
+                    alert('The file size exceeds the limit (1 MB). Please select a smaller file.');
                     reset(resetOptions=false);
                     return;
                 }
@@ -209,28 +209,20 @@
                 file_reader.readAsText(file);
             }
         })
-    }
-</script>
+    };
+    
+    function checkPastedChars() {
+        // don't allow for user to paste more than maxLength chars
+        var textarea = document.getElementById('textarea');
+        var maxLength = 1048576;  // 1 MB worth of characters
 
-<script type="text/javascript">
-
-    var reader = new FileReader();
-
-    function readText(that) {
-
-        if (that.files && that.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var output = e.target.result;
-
-                //process text to show only lines with "@": 
-                output = output.split("n").filter(/./.test, /@/).join("n");
-
-                document.getElementById('main').innerHTML = output;
-            };//end onload()
-            reader.readAsText(that.files[0]);
-        }//end if html5 filelist support
-    } 
+        textarea.addEventListener('input', function () {
+            if (this.value.length > maxLength) {
+                alert('The input exceeds the limit (' + maxLength + ' characters). It will be truncated.');
+                this.value = this.value.substring(0, maxLength);
+            }
+        });
+    };
 </script>
 
 <script>
@@ -247,6 +239,7 @@
     window.onload = function () {
         setListeners();
         readFile();
+        checkPastedChars();
         adjustImageGrid();
         adjustImageContentWidths();
     };
