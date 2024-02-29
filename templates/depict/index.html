@@ -188,6 +188,10 @@
 </script>
 
 <script>
+    function getExtension(filename) {
+        var parts = filename.split('.');
+        return parts[parts.length - 1];
+    }
     function readFile() {
         document.getElementById('infile').addEventListener('change', function () {
             // Check if a file was selected
@@ -197,6 +201,16 @@
                 var fileSizeMB = file.size / (1024 * 1024);
                 if (fileSizeMB > 1) {
                     alert('The file size exceeds the limit (1 MB). Please select a smaller file.');
+                    reset(resetOptions=false);
+                    return;
+                }
+                // check file extension
+                var extension = "." + getExtension(file.name);
+                var acceptedFileTypes = this.accept.split(',').map(item => item.trim());;
+                console.log(acceptedFileTypes);
+                if (!acceptedFileTypes.includes(extension)) {
+                    var msg = `The detected file type (${extension}) is not supported.`
+                    alert(msg);
                     reset(resetOptions=false);
                     return;
                 }
