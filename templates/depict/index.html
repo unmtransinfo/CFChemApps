@@ -156,25 +156,33 @@
         document.getElementById("help-button").onclick = function () {
             help();
         }
-
-        // defined in input_options.html
+    };
+    /* there is some flickering when the page loads, but to fix 
+        we'd need to use a server-side solution to render the page before sending it to the client*/
+    function showHideOptions() {
         var molfmt = document.getElementById('molFmt');
         var options = document.getElementById('user-options-csv');
 
         function checkMolfmtValue() {
             if (molfmt.value === 'SMILES') { 
                 options.style.display = 'block';
+                sessionStorage.setItem('optionsDisplay', 'block');
             } else {
                 options.style.display = 'none';
+                sessionStorage.setItem('optionsDisplay', 'none');
             }
         }
 
         // Run checkMolfmtValue when the page loads
-        checkMolfmtValue();
+        if (sessionStorage.getItem('optionsDisplay')) {
+            options.style.display = sessionStorage.getItem('optionsDisplay');
+        } else {
+            checkMolfmtValue();
+        }
 
         // Run checkMolfmtValue when the value of molfmt changes
         molfmt.addEventListener('change', checkMolfmtValue);
-    };
+    }
 </script>
 
 <script>
@@ -211,7 +219,16 @@
 </script>
 
 <script>
-
+    document.onreadystatechange = function(e)
+    {   
+        // calling showHideOptions() here instead of window.onload 
+        // improves flickering issue, but it's not perfect
+        if (document.readyState === 'complete')
+        {
+            //dom is ready, window.onload fires later
+            showHideOptions();
+        }
+    };
     window.onload = function () {
         setListeners();
         readFile();
@@ -277,7 +294,6 @@
                 var selects = document.querySelectorAll('#user-options-container select');
                 // Apply makePersistent to input options
                 inputs.forEach(function(input) {
-                    console.log(input.name, input.id, input.type);
                     if (input.type === 'checkbox') {
                         makePersistentCheckbox(input.name, input.id);
                     }
@@ -286,7 +302,6 @@
                     }
                 });
                 selects.forEach(function(select) {
-                    console.log(select.name, select.id, select.type);
                     makePersistentSelect(select.name, select.id);
                 });
             </script>
