@@ -37,8 +37,10 @@
         form.action='{% url 'get_mols' request_type='demo' %}';
     }
 
-    function reset() {
-        sessionStorage.clear(); // reset options to defaults
+    function reset(resetOptions=true) {
+        if (resetOptions) {
+            sessionStorage.clear(); // reset options to defaults
+        }
         let url = "{% url 'index' %}"
         document.location.href = url
     }
@@ -188,11 +190,24 @@
 <script>
     function readFile() {
         document.getElementById('infile').addEventListener('change', function () {
-            var file_reader = new FileReader();
-            file_reader.onload = function () {
-                document.getElementById('textarea').textContent = file_reader.result;
+            // Check if a file was selected
+            var file = this.files[0];
+            if (file) {
+                // Check if the file size exceeds the limit (5 MB)
+                var fileSizeMB = file.size / (1024 * 1024);
+                if (fileSizeMB > 5) {
+                    alert('The file size exceeds the limit (5 MB). Please select a smaller file.');
+                    reset(resetOptions=false);
+                    return;
+                }
+
+                // Read the file
+                var file_reader = new FileReader();
+                file_reader.onload = function () {
+                    document.getElementById('textarea').textContent = file_reader.result;
+                }
+                file_reader.readAsText(file);
             }
-            file_reader.readAsText(this.files[0]);
         })
     }
 </script>
