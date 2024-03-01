@@ -66,19 +66,15 @@ def generate_random_name():
     return name
 
 
-def get_content(type, request):
+def get_input_text(type, request):
     input_text = None
-    datas = None
     if type == InputType.INPUT.value:
-        input_text = request.data.get(IN_TEXT).strip()
-        datas = input_text.split("\r\n")
-
-    if type == InputType.DEMO.value:
+        input_text = request.data.get(IN_TEXT)
+    elif type == InputType.DEMO.value:
         f = open(DEMO_COMPOUNDS_FILE_NAME)
         input_text = f.read()
-        datas = input_text.split("\n")
 
-    return input_text, datas
+    return input_text
 
 
 def get_content_from_csv(filename):

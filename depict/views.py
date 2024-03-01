@@ -69,7 +69,7 @@ def get_mols(request, request_type):
                 # text is from sdf/mol file
                 input_text = request.data.get(IN_TEXT)
             else:
-                input_text, _ = get_content(request_type, request)
+                input_text = get_input_text(request_type, request)
             if len(input_text) > 0:
                 try:
                     mol_supplier = get_mol_supplier(
