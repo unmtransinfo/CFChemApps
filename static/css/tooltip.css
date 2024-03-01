@@ -1,3 +1,8 @@
+/* Tooltip 
+CSS for tooltips (help messages for user)
+This code based on: https://stackoverflow.com/a/25813336
+*/
+
 [data-tooltip]::before {
     /* needed - do not touch */
     content: attr(data-tooltip);
