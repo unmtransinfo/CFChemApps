@@ -140,6 +140,9 @@ def create_media_filename(filename):
 
 def get_atom_bond_matches(m, smarts):
     substructure = Chem.MolFromSmarts(smarts)
+    if substructure is None:
+        # bad SMARTS given
+        raise ValueError("Invalid SMARTS pattern: {}".format(smarts))
     all_atom_matches = m.GetSubstructMatches(substructure)
     bond_matches = []
     for atom_matches in all_atom_matches:
