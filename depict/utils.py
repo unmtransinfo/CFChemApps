@@ -237,17 +237,22 @@ def get_svgs_from_mol_file(
     return output
 
 
-def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts: bool):
+def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts: bool,
+                               start_idx: int = 0, max_mols=None):
     output = []
     first_match_coords = None
     failures = []  # mols which rdkit could not interpret
     sio = sys.stderr = StringIO()  # redirect error messages to string
     if mol_supplier is None:
         return output, failures
-    for i, mol in enumerate(mol_supplier):
+    if max_mols is None:
+        max_mols = len(mol_supplier)
+    # avoid OOB error
+    end_idx = min(len(mol_supplier), start_idx + max_mols)
+    for i in range(start_idx, end_idx):
+        mol = mol_supplier[i]
         if mol is None:
             failures.append(sio.getvalue().strip())
-            print(failures)
             sio = sys.stderr = StringIO()  # reset the error logger
             continue
         name = NO_COMPOUND_NAME

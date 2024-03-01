@@ -24,6 +24,9 @@ def get_mols(request, request_type):
     smarts = request.POST.get("smarts")
     align_smarts = request.POST.get("alignSmarts", "off") == "on"
     input_format = request.POST.get("molfmt")  # either MolFile or SMILES
+    start_idx = int(request.POST.get("start_idx"))
+    max_mols = int(request.POST.get("max_mols"))
+    names_col = int(request.POST.get("name_col"))
     # options for tsv/csv/smiles file
     delimiter = request.POST.get("delimiter")
     delimiter = "\t" if delimiter == "\\t" else delimiter
@@ -62,7 +65,7 @@ def get_mols(request, request_type):
                 input_text = " " + input_text
             delete_file(filename)
         else:
-            if input_format == "MOLFILE":
+            if input_format == MOLFILE:
                 # text is from sdf/mol file
                 input_text = request.data.get(IN_TEXT)
             else:
@@ -82,7 +85,7 @@ def get_mols(request, request_type):
                     msg = f"Error reading data: {str(e)}"
                     messages.error(request, msg)
     output, failures = get_svgs_from_mol_supplier(
-        mol_supplier, image_format, size, smarts, align_smarts
+        mol_supplier, image_format, size, smarts, align_smarts, start_idx, max_mols
     )
     context = {
         IMAGES: output,
