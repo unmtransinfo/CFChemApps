@@ -295,17 +295,25 @@
             </TD>
             
             <td valign="top">
-                <b>SMARTS: </b><br><br>
                 <div id="user-options-container">
+                    <div data-tooltip="Highlight substructures which match given SMARTS query">
+                        <label for="smarts"><B>SMARTS</B></label>
+                    </div>
+                    <BR>
                     <input type="text" name="smarts" id="smartsEntry" size="48" value="">
                     <br>
-                    <label for="alignSmarts">Align SMARTS</label>
+                    <div data-tooltip="Align molecules to given substructure(s)">
+                        <label for="alignSmarts">Align SMARTS</label>
+                    </div>
                     <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
                 </div>
-                <br><br>
-                <b>Failures: </b><br>
+                <BR>
+                <div data-tooltip="Errors reported by RDKit when parsing molecules">
+                    <label for="failure_msgs"><B>Error Log</B></label>
+                </div>
+                <BR>
                 <!-- box for logging info -->
-                <textarea readonly WRAP=OFF ROWS=6 COLS=50>
+                <textarea name="failure_msgs" readonly WRAP=OFF ROWS=6 COLS=50>
                 {% for mol_err_msg in failures %}
                 {{ mol_err_msg }}
                 {% endfor %}

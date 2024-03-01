@@ -1,25 +1,38 @@
 <div id="user-options-container">
     <B>Input Options:</B><BR>
-    <label for="molfmt">Format</label>
+    <div data-tooltip="Input format. Select 'MolFile' for SDF and MOL formats, 'SMILES' for inputs with delimiter-separated values (e.g., TSV)">
+        <label for="molfmt">Format</label>
+    </div>
     <SELECT NAME="molfmt" id="molFmt">
-    <OPTION VALUE="MOLFILE">
-        Molfile (.mol, .sdf)
-    <OPTION VALUE="SMILES"  id="molFmtDefault" selected>
-        SMILES
-    </SELECT><BR>
+        <OPTION VALUE="MOLFILE">
+            Molfile (.mol, .sdf)
+        <OPTION VALUE="SMILES"  id="molFmtDefault" selected>
+            SMILES
+    </SELECT>
+    <BR>
     <div id="user-options-csv">
-        <label for="delimeter">Delimiter</label>
+        <div data-tooltip="File delimiter">
+            <label for="delimeter">Delimiter</label>
+        </div>
         <select name="delimiter" id="delimChoice">
             <option value=" " id="delimChoiceDefault" selected>" " - space</option>
             <option value=",">"," - comma</option>
             <option value="\t">"\t" - tab</option>
-        </select><br>
-        <label for="has_header">SMILES Col</label>
-        <INPUT TYPE="number" NAME="smiles_col" id="smiles_column" min=0 SIZE=2 VALUE="0"><BR>
-        <label for="has_header">Name Col</label>
-        <INPUT TYPE="number" NAME="name_col" id="name_column" min=0 SIZE=2 VALUE="1"><BR>
-        <label for="has_header">Header</label>
-        <INPUT TYPE="checkbox" NAME="has_header" id="header_checkbox"><BR>
+        </select>
+        <BR>
+        <div data-tooltip="Column index of SMILES (indexing from 0)">
+            <label for="smiles_col">SMILES Col</label>
+        </div>
+        <INPUT TYPE="number" NAME="smiles_col" id="smiles_column" min=0 SIZE=4 VALUE="0">
+        <BR>
+        <div data-tooltip="Column index of molecule names (indexing from 0)">
+            <label for="name_col">Name Col</label>
+        </div>
+        <INPUT TYPE="number" NAME="name_col" id="name_column" min=0 SIZE=4 VALUE="1">
+        <BR>
+        <div data-tooltip="Indicates if header line present">
+            <label for="has_header">Header</label>
+        </div>
+        <INPUT TYPE="checkbox" NAME="has_header" id="header_checkbox">
     </div>
 </div>
-<!--TODO: fix issues with this function and reset/help page-->
