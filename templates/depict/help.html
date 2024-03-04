@@ -6,36 +6,47 @@
 {% endblock %}
 
 {% block content %}
-
-<!-- <body bgcolor="#EEEEEE"> -->
-    <!-- <div id="ddtooltip"></div> -->
-    <!-- <script type="text/javascript">ddtip_init()</script> -->
-
-    <b>Depict Help</b>
+    <h1>Depict Help</h1>
+    <h2>Overview</h2>
     <p>
         This web app consists of a portal which uses basic HTML, CSS and JS
-        for the user interface, and a Python framework (Django) for the backend.
+        for the user interface, and a Python framework (Django) for the backend.<br>
 
-        The Django backend takes in input in the form of
-        (1) - SMILES (CSV format) or
-        (2) - MDL Mol File
+        The Django backend takes in input in the form of:<br>
+        <ol>
+            <li>MDL Mol File (.mol, .sdf)</li>
+            <li>SMILES (files with delimiter-separated values, such as CSV or TSV)</li>
+        </ol>
+        
 
-        and returns the structures of the different molecules, which is
+        The app then returns the structures of the different molecules, which is
         shown to the user using the interface. The images for the structures
-        can be downloaded in JPEG, PNG, or SVG format (as specified).
-
+        can be downloaded in JPEG, PNG, or SVG format (as specified). 
         RDKit is being used to convert the different representations
         of the molecules to their respective structures.
-
-        User can choose the image format (PNG, JPEG, or SVG) as per
-        their requirements, and upload a Mol File or SMILES (csv)
-        in order to get the structure of the compounds.
+    </p>
+    <h2>Interface</h2>
+    <p>
         <ul>
-            <li>The DEMO button can be used to test run the portal with some pre-existing SMILE representations.</li>
-            <li>The RESET button can be used to reset any inputs for processing.</li>
-            <li>The ALIGN SMARTS checkbox toggles whether or not to align SMARTS substructures.</li>
+            <li>The upload area can be used to upload files. Input can also be pasted into the text box.</li>
+            <li>The <b>Help</b> button shows this page.</li>
+            <li>The <b>Demo</b> button can be used to test run the portal with some pre-existing SMILE representations.</li>
+            <li>The <b>Reset</b> button can be used to reset any inputs for processing.</li>
+            <li>The <b>Input Options</b> section specifies the input format. 
+                If "SMILES" is selected, the additional options correspond to the arguments of <a href="https://www.rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html#rdkit.Chem.rdmolfiles.SmilesMolSupplier" target="_blank">SmilesMolSupplier</a> from RDKit.</li>
+            <li>The <b>Output Options</b> section specifies the format of images, as well as which molecules from the input to visualize.</li>
+            <ul>
+                <li>For details on the "Sanitize" option, see <a href="https://www.rdkit.org/docs/RDKit_Book.html#molecular-sanitization" target="_blank">here</a>.</li>
+            </ul>
+            <li>The <b>SMARTS</b> text area will highlight the given <a href="https://www.daylight.com/dayhtml/doc/theory/theory.smarts.html" target="_blank">SMARTS</a> pattern (where found).</li>
+            <ul>
+                <li>The "Align SMARTS" option will align subsequent depictions to the first found substructure.</li>
+            </ul>
+            <li>The <b>Error Log</b> text area reports errors encountered by RDKit when parsing input.</li>
+            <li>The <b>Depict</b> button will submit the input for processing using the given options.</li>
         </ul>
     </p>
+    <h2>About</h2>
     <p>
         Lead Developer: <a href="https://github.com/Priyansh-Kedia" target="_blank">Priyansh Kedia</a>
         <br>
@@ -43,12 +54,11 @@
         <br>
         Supervision: <a href="https://github.com/jeremyjyang" target="_blank">Jeremy Yang</a>
     </p>
-
+    <h2></h2>
     <p>
         The Github Repository can be found <a href="https://github.com/unmtransinfo/CFChemApps" target="_blank">here</a>
         <br>
         If any issues are identified, they can be reported <a href="https://github.com/unmtransinfo/CFChemApps/issues" target="_blank">here</a>
     </p>
     <hr>
-   
 {% endblock %}
