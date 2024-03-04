@@ -1,5 +1,4 @@
 import os
-import secrets
 import sys
 from io import StringIO
 
@@ -9,7 +8,7 @@ from rdkit.Chem import Draw, rdDepictor
 
 from cfchem.Constants import *
 
-from .enums import FileType, ImageFormat, ImageSize, InputType
+from .enums import ImageFormat, ImageSize, InputType
 
 rdBase.WrapLogs()  # log rdkit errors to stderr
 
@@ -24,7 +23,6 @@ def get_mol_supplier(
     sanitize_mols=True,
     delimiter="\t",
 ):
-    print("MOL SUPPLIER:", input_format, file_path, file_data)
     if file_path is None and file_data is None:
         # must provide at least one
         raise ValueError("No file_path or file_data provided")
@@ -61,11 +59,6 @@ def get_mol_supplier(
     return suppl
 
 
-def generate_random_name():
-    name = secrets.token_hex(16)
-    return name
-
-
 def get_input_text(type, request):
     input_text = None
     if type == InputType.INPUT.value:
@@ -75,13 +68,6 @@ def get_input_text(type, request):
         input_text = f.read()
 
     return input_text
-
-
-def get_content_from_csv(filename):
-    f = open(filename)
-    csv_text = f.read()
-    datas = csv_text.split("\n")
-    return csv_text, datas
 
 
 def get_content_from_file(filename):
@@ -106,13 +92,6 @@ def save_file(request):
 
 def delete_file(file):
     os.remove(file)
-
-
-def get_file_type(filename):
-    extension = filename.split(".")[-1]
-    file_types = {ft.value: ft for ft in FileType}
-
-    return file_types[extension]
 
 
 def get_image_size(size):
@@ -202,42 +181,15 @@ def create_image(
     return img_name, first_match_coords
 
 
-def get_svgs_from_mol_file(
-    filename, format, size, smarts, align_smarts: bool, file_text: str = None
+def get_svgs_from_mol_supplier(
+    mol_supplier,
+    format,
+    size,
+    smarts,
+    align_smarts: bool,
+    start_idx: int = 0,
+    max_mols=None,
 ):
-    output = []
-    counter = 0
-    suppl = None
-    if os.path.exists(filename):
-        suppl = Chem.SDMolSupplier(filename)
-    elif file_text is not None:
-        suppl = Chem.SDMolSupplier()
-        suppl.SetData(file_text)
-    else:
-        # this should be unreachable
-        raise ValueError("No file or file text provided")
-    first_match_coords = None
-    for mol in suppl:
-        if mol is None:
-            continue
-
-        name = mol.GetProp("_Name")
-        image_name, first_match_coords = create_image(
-            mol,
-            create_media_filename(name),
-            format,
-            size,
-            smarts,
-            first_match_coords,
-            align_smarts,
-        )
-        counter += 1
-        output.append([image_name, name])
-    return output
-
-
-def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts: bool,
-                               start_idx: int = 0, max_mols=None):
     output = []
     first_match_coords = None
     failures = []  # mols which rdkit could not interpret
@@ -272,43 +224,3 @@ def get_svgs_from_mol_supplier(mol_supplier, format, size, smarts, align_smarts:
         )
         output.append([image_name, fname, name])
     return output, failures
-
-
-def get_svgs_from_data(datas, format, size, smarts, align_smarts: bool):
-    output = []
-    counter = 0
-    # track coordinates of first smarts match to use for subsequent matches
-    # no effect if align_smarts == False
-    first_match_coords = None
-    for d in datas:
-        d = d.strip()
-        if not d:
-            continue
-
-        d_split = d.split(maxsplit=1)
-        print(d_split)
-        try:
-            if len(d_split) == 1:
-                smile, name = d_split[0], NO_COMPOUND_NAME
-            else:
-                smile, name = d_split
-            name = name.split("\t")[0]
-        except Exception as e:
-            print(e, d)
-            smile, name = d.split("\t")  # , NO_COMPOUND_NAME
-        comp = Chem.MolFromSmiles(smile)
-
-        filename = name if name != NO_COMPOUND_NAME else generate_random_name()
-        image_name, first_match_coords = create_image(
-            comp,
-            create_media_filename(filename),
-            format,
-            size,
-            smarts,
-            first_match_coords,
-            align_smarts,
-        )
-        counter += 1
-        print(image_name, name)
-        output.append([image_name, name])
-    return output

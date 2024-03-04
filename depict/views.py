@@ -2,9 +2,10 @@ from django.contrib import messages
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 
+from .enums import FileType
 from .utils import *
 
-accepted_filetypes = [f".{filetype.value}" for filetype in FileType]
+ACCEPTED_FILE_TYPES_LIST = [f".{filetype.value}" for filetype in FileType]
 
 
 def index(request):
@@ -12,7 +13,7 @@ def index(request):
         request,
         "depict/index.html",
         context={
-            ACCEPTABLE_FILETYPES: accepted_filetypes,
+            ACCEPTABLE_FILETYPES: ACCEPTED_FILE_TYPES_LIST,
         },
     )
 
@@ -95,7 +96,7 @@ def get_mols(request, request_type):
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text,
-        ACCEPTABLE_FILETYPES: accepted_filetypes,
+        ACCEPTABLE_FILETYPES: ACCEPTED_FILE_TYPES_LIST,
         FAILURES: failures,
     }
 
