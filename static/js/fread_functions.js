@@ -9,11 +9,11 @@ function readFile() {
     // Check if a file was selected
     var file = this.files[0];
     if (file) {
-      // Check if the file size exceeds the limit (1 MB)
+      // Check if the file size exceeds the limit (5 MB)
       var fileSizeMB = file.size / (1024 * 1024);
-      if (fileSizeMB > 1) {
+      if (fileSizeMB > 5) {
         alert(
-          "The file size exceeds the limit (1 MB). Please select a smaller file."
+          "The file size exceeds the limit (5 MB). Please select a smaller file."
         );
         reset((resetOptions = false));
         return;
@@ -42,7 +42,7 @@ function readFile() {
 function checkPastedChars() {
   // don't allow for user to paste more than maxLength chars
   var textarea = document.getElementById("textarea");
-  var maxLength = 1048576; // 1 MB worth of characters
+  var maxLength = 5242880; // 5 MB worth of characters
 
   textarea.addEventListener("input", function () {
     if (this.value.length > maxLength) {
