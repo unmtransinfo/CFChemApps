@@ -145,6 +145,7 @@ def create_image(
     first_match_coords=None,
     align_smarts: bool = False,
 ):
+    print("SMARTS:", smarts)
     all_atom_matches, bond_matches, substructure = get_atom_bond_matches(m, smarts)
     if align_smarts and (len(all_atom_matches) > 0 or len(bond_matches) > 0):
         # have match to smarts
@@ -181,6 +182,23 @@ def create_image(
     return img_name, first_match_coords
 
 
+def validate_smarts(smarts: str, failures: list, sio: StringIO) -> str:
+    """
+    Ensure that the given smarts string is valid.
+    If not, return "" and record error.
+    :param str smarts: given SMARTS pattern
+    :param list failures: list of errors
+    :param StringIO sio: error logger
+    :return str: valid SMARTS pattern ("" if smarts not valid)
+    """
+    substructure = Chem.MolFromSmarts(smarts)
+    if substructure is None:
+        failures.append(sio.getvalue().strip())
+        sio = sys.stderr = StringIO()  # reset the error logger
+        return ""
+    return smarts
+
+
 def get_svgs_from_mol_supplier(
     mol_supplier,
     format,
@@ -200,6 +218,8 @@ def get_svgs_from_mol_supplier(
         max_mols = len(mol_supplier)
     # avoid OOB error
     end_idx = min(len(mol_supplier), start_idx + max_mols)
+    # ensure smarts valid, if not record error and set smarts to ""
+    smarts = validate_smarts(smarts, failures, sio)
     for i in range(start_idx, end_idx):
         mol = mol_supplier[i]
         if mol is None:

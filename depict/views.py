@@ -86,13 +86,9 @@ def get_mols(request, request_type):
                     msg = f"Error reading data: {str(e)}"
                     messages.error(request, msg)
     output, failures = [], []
-    try:
-        output, failures = get_svgs_from_mol_supplier(
-            mol_supplier, image_format, size, smarts, align_smarts, start_idx, max_mols
-        )
-    except ValueError as e:
-        # catches errors from bad SMARTS
-        messages.error(request, str(e))
+    output, failures = get_svgs_from_mol_supplier(
+        mol_supplier, image_format, size, smarts, align_smarts, start_idx, max_mols
+    )
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text,
