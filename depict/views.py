@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.shortcuts import render
 from rest_framework.decorators import api_view
@@ -35,6 +37,10 @@ def get_mols(request, request_type):
     names_col = int(request.POST.get("name_col"))
     has_header = request.POST.get("has_header", "off") == "on"
     sanitize_mols = request.POST.get("sanitize_mols", "off") == "on"
+    # image files created by user on previous request
+    created_files_json = request.POST.get("created_filenames")
+    created_files = json.loads(created_files_json)
+    delete_created_files(created_files)
 
     size = get_image_size(size)
     input_text = None

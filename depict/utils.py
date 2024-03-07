@@ -1,5 +1,6 @@
 import logging
 import os
+import secrets
 import sys
 from io import StringIO
 
@@ -12,6 +13,16 @@ from cfchem.Constants import *
 from .enums import ImageFormat, ImageSize, InputType
 
 rdBase.WrapLogs()  # log rdkit errors to stderr
+
+
+def delete_created_files(created_files: list):
+    for file in created_files:
+        delete_file(file)
+
+
+def generate_random_name():
+    name = secrets.token_hex(16)
+    return name
 
 
 def get_mol_supplier(
@@ -92,7 +103,8 @@ def save_file(request):
 
 
 def delete_file(file):
-    os.remove(file)
+    if os.path.exists(file):
+        os.remove(file)
 
 
 def get_image_size(size):
@@ -146,7 +158,6 @@ def create_image(
     first_match_coords=None,
     align_smarts: bool = False,
 ):
-    print("SMARTS:", smarts)
     all_atom_matches, bond_matches, substructure = get_atom_bond_matches(m, smarts)
     if align_smarts and (len(all_atom_matches) > 0 or len(bond_matches) > 0):
         # have match to smarts
@@ -237,7 +248,7 @@ def get_svgs_from_mol_supplier(
         # edge case for sdf files where whitespace used in place of name
         n_whitespace = sum(1 for char in name if char.isspace())
         name = NO_COMPOUND_NAME if (len(name) == n_whitespace) else name
-        fname = name if name != NO_COMPOUND_NAME else f"mol_{i}"
+        fname = generate_random_name()
         image_name, first_match_coords = create_image(
             mol,
             create_media_filename(fname),

@@ -10,6 +10,8 @@
 <script type="text/javascript" src="{% static './js/listeners.js' %}"></script>
 <!--for adjusting the image grid-->
 <script type="text/javascript" src="{% static './js/grid_adjust.js' %}"></script>
+<!--helper functions-->
+<script type="text/javascript" src="{% static './js/utils.js' %}"></script>
 
 <script>
     // button functions
@@ -152,6 +154,9 @@
             </script>
         </tr>
     </table>
+    <!--hidden field that allows us to pass names of previously created image files
+        back to Django backend so we can delete them-->
+    <input type="hidden" id="created_filenames" name="created_filenames">
     <p>
         <center>
             <input type="submit" value="Depict">
@@ -161,8 +166,19 @@
 <br>
 <!-- Display images in grid -->
 <center>
+    <script>
+        // reset this each time the page is loaded
+        let downloadNames = {};
+        // newly created images
+        let imageFileNames = [];
+    </script>
     <div class="image-grid" id="imageGrid">
         {% for image, fname, name in images %}
+        <script>
+            // note that generated fnames are all unique, so this is ok
+            downloadNames["{{ fname }}"] = getDownloadName("{{ name }}", "{{ fname }}");
+            imageFileNames.push("{{ image|safe }}");
+        </script>
         <div class="image-content">
             <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
                 <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
@@ -170,10 +186,13 @@
             </a>
             <div class="textbox">{{ name }}</div>
             <button type="button" class="btn btn-default delete-image-btn">
-                <a href="{{ static }}/{{ image|safe }}" download="{{ fname }}">Download</a>
+                <a href="{{ static }}/{{ image|safe }}" download onclick="this.download = downloadNames['{{ fname }}']")>Download</a>
             </button>
         </div>
         {% endfor %}
+        <script>
+            document.getElementById('created_filenames').value = JSON.stringify(imageFileNames);
+        </script>
     </div>
     <div id="myModal" class="modal">
         <img class="modal-content" id="img01">
