@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 from io import StringIO
@@ -193,7 +194,9 @@ def validate_smarts(smarts: str, failures: list, sio: StringIO) -> str:
     """
     substructure = Chem.MolFromSmarts(smarts)
     if substructure is None:
-        failures.append(sio.getvalue().strip())
+        msg = sio.getvalue().strip()
+        failures.append(msg)
+        logging.warning(msg)
         sio = sys.stderr = StringIO()  # reset the error logger
         return ""
     return smarts
@@ -223,7 +226,9 @@ def get_svgs_from_mol_supplier(
     for i in range(start_idx, end_idx):
         mol = mol_supplier[i]
         if mol is None:
-            failures.append(sio.getvalue().strip())
+            msg = sio.getvalue().strip()
+            failures.append(msg)
+            logging.warning(msg)
             sio = sys.stderr = StringIO()  # reset the error logger
             continue
         name = NO_COMPOUND_NAME
