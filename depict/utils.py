@@ -15,11 +15,6 @@ from .enums import ImageFormat, ImageSize, InputType
 rdBase.WrapLogs()  # log rdkit errors to stderr
 
 
-def delete_created_files(created_files: list):
-    for file in created_files:
-        delete_file(file)
-
-
 def generate_random_name():
     name = secrets.token_hex(16)
     return name

@@ -154,9 +154,6 @@
             </script>
         </tr>
     </table>
-    <!--hidden field that allows us to pass names of previously created image files
-        back to Django backend so we can delete them-->
-    <input type="hidden" id="created_filenames" name="created_filenames">
     <p>
         <center>
             <input type="submit" value="Depict">
@@ -169,15 +166,12 @@
     <script>
         // reset this each time the page is loaded
         let downloadNames = {};
-        // newly created images
-        let imageFileNames = [];
     </script>
     <div class="image-grid" id="imageGrid">
         {% for image, fname, name in images %}
         <script>
             // note that generated fnames are all unique, so this is ok
             downloadNames["{{ fname }}"] = getDownloadName("{{ name }}", "{{ fname }}");
-            imageFileNames.push("{{ image|safe }}");
         </script>
         <div class="image-content">
             <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
@@ -190,9 +184,6 @@
             </button>
         </div>
         {% endfor %}
-        <script>
-            document.getElementById('created_filenames').value = JSON.stringify(imageFileNames);
-        </script>
     </div>
     <div id="myModal" class="modal">
         <img class="modal-content" id="img01">
