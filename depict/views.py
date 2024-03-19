@@ -38,9 +38,10 @@ def get_mols(request, request_type):
     has_header = request.POST.get("has_header", "off") == "on"
     sanitize_mols = request.POST.get("sanitize_mols", "off") == "on"
     # image files created by user on previous request
-    created_files_json = request.POST.get("created_filenames")
-    created_files = json.loads(created_files_json)
-    delete_created_files(created_files)
+
+    # created_files_json = request.POST.get("created_filenames")
+    # created_files = json.loads(created_files_json)
+    # delete_created_files(created_files)
 
     size = get_image_size(size)
     input_text = None
@@ -101,7 +102,9 @@ def get_mols(request, request_type):
         ACCEPTABLE_FILETYPES: ACCEPTED_FILE_TYPES_LIST,
         FAILURES: failures,
     }
-
+    prev_image_paths = request.session.get(IMAGE_PATHS, [])
+    # o[0] = image path
+    request.session[IMAGE_PATHS] = prev_image_paths + [o[0] for o in output]
     return render(request, "depict/index.html", context=context)
 
 
