@@ -1,3 +1,11 @@
+# Depict
+The depict portal allows a user to enter SMILE representations of molecules and get the structure of the molecules as the output. SMARTS-highlighting is also supported. 
+
+
+The app is publicly available [here](http://3.145.25.193/depict/). 
+
+Depict can also be set up locally by following the instructions below.
+
 ## Installation with Docker
 To run the application on your system, you need docker installed. You can run the app directly using docker by using the following command to do so
 
@@ -6,9 +14,6 @@ To run the application on your system, you need docker installed. You can run th
 You can leave out `-d` flag if you do not wish to run in detached mode
 
 > On successfully running the server, go to http://127.0.0.1:8000/depict/ to check out the portal.
-
-## Depict Portal
-In the depict portal, we can enter SMILE representation of the molecules and can get the structure of the molecules as the output. 
 
 
 ## Deployment on Chiltepin
@@ -36,18 +41,7 @@ After the EC2 is created, connect using the SSH client option in the AWS console
 On successful connection, install docker, docker-compose and git on the instance using the following commands
 
 > Note: If you want to allow traffic over HTTP and HTTPS, make sure to check the options under **Network Settings** while creating EC2 instance.
-
-### Installing Docker
-
-    sudo yum install docker 
-    sudo service docker start 
-    sudo usermod -a -G docker ec2-user
-
-Use the command below to auto start docker
-
-    sudo chkconfig docker on
-
-### Installing Git
+ontainer, run python manage.py migrate
 
     sudo yum install -y git
 
@@ -86,3 +80,15 @@ The server can now be accessed using the public IP of the EC2 instance.
 	DATABASE_PASSWORD=<DB_PASSWORD>
 	DATABASE_HOST=<DB_HOST>
 	DATABASE_PORT=<DB_PORT>
+
+## Production Troubleshooting
+Below are some common issues that can occur launching to production with potential fixes:
+* **Server Error: (500)** when initially connecting to site:
+    1. Run `docker ps` and find the container with image `cfchemapps-cfchemapps`. Note the container id.
+    2. Run `docker exec -it <id> /bin/bash`
+    3. Inside the docker container, run `python manage.py migrate`
+* The `static/` directory is not updated inside the docker container.
+    1. Stop current docker containers: `docker stop $(docker ps -a -q)`
+    2. Remove all docker containers: `docker rm -f $(docker ps -a -q)`
+    3. Remove all volumes: `docker volume rm $(docker volume ls -q)`
+    4. Re-launch docker containers: `bash deploy.sh`
