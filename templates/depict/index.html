@@ -2,7 +2,39 @@
 {% load static %}
 
 {% block content_head %}
+<!--loading js utils-->
+
+<!--for file reading utils-->
+<script type="text/javascript" src="{% static './js/fread_functions.js' %}"></script>
+<!--for making elements persistent-->
+<script type="text/javascript" src="{% static './js/listeners.js' %}"></script>
+<!--for adjusting the image grid-->
+<script type="text/javascript" src="{% static './js/grid_adjust.js' %}"></script>
+<!--helper functions-->
+<script type="text/javascript" src="{% static './js/utils.js' %}"></script>
+
 <script>
+    // button functions
+    function go_demo() {
+        var form = document.getElementById('mainform');
+        sessionStorage.clear(); // reset options to defaults
+        form.reset();
+        form.action = "{% url 'get_mols' request_type='demo' %}";
+    }
+
+    function reset(resetOptions = true) {
+        if (resetOptions) {
+            sessionStorage.clear(); // reset options to defaults
+        }
+        let url = "{% url 'index' %}"
+        document.location.href = url
+    }
+
+    function help() {
+        let url = "{% url 'help' %}"
+        window.open(url)
+    }
+
     // script for displaying modal (zoomed-in image on click)
     $(document).ready(function () {
         // Trigger modal on image link click
@@ -26,331 +58,145 @@
             $(this).css('display', 'none');
         });
     });
-    </script>
 
-
-<script>
-    function go_demo() {
-        let url = "{% url 'get_mols' type='demo' %}"
-        document.location.href = url
-    }
-
-    function reset() {
-        sessionStorage.clear(); // reset options to defaults
-        let url = "{% url 'index' %}"
-        document.location.href = url
-    }
-
-    function help() {
-        let url = "{% url 'help' %}"
-        window.open(url)
-    }
-</script>
-
-
-<script>
-
-    function openNewWindow(svg) {
-        var htmlCode = "<html><body><center><div>" + svg + "</div></center></body></html>"
-        var newWindow = window.open("", "newWindow", "width=400,height=400");
-        newWindow.document.write(htmlCode);
-        newWindow.document.close();
-    }
-
-    function setListeners() {
-        var modal = document.getElementById('myModal');
-        var modalImg = document.getElementById("img01");
-        const captionText = document.getElementById("caption");
-        var images = document.querySelectorAll(".image-div")
-        for (var i = 0; i < images.length; i++) {
-            images[i].onclick = function () {
-                modal.style.display = "block";
-                modalImg.src = "/" + this.getAttribute('value');
-                modalImg.alt = this.getAttribute('name');
-                captionText.innerHTML = this.getAttribute('name');
-            }
+    document.onreadystatechange = function (e) {
+        // calling showHideOptions() here instead of window.onload 
+        // improves flickering issue, but it's not perfect
+        if (document.readyState === 'complete') {
+            //dom is ready, window.onload fires later
+            showHideOptions();
         }
-
-        modal.onclick = function () {
-            modalImg.className += " out";
-            setTimeout(function () {
-                modal.style.display = "none";
-                modalImg.className = "modal-content";
-            }, 400);
-
-        }
-
-        window.onkeyup = function (event) {
-            if (event.keyCode == 27) {
-                modalImg.className += " out";
-                setTimeout(function () {
-                    modal.style.display = "none";
-                    modalImg.className = "modal-content";
-                }, 400);
-            }
-        }
-
-        document.getElementById("reset-button").onclick = function () {
-            reset();
-        }
-
-        document.getElementById("help-button").onclick = function () {
-            console.log("caledwaeqd")
-            help();
-        }
-    }
-</script>
-
-<script>
-    function readFile() {
-        document.getElementById('infile').addEventListener('change', function () {
-            var file_reader = new FileReader();
-            file_reader.onload = function () {
-                document.getElementById('textarea').textContent = file_reader.result;
-            }
-            file_reader.readAsText(this.files[0]);
-        })
-    }
-</script>
-
-<script type="text/javascript">
-
-    var reader = new FileReader();
-
-    function readText(that) {
-
-        if (that.files && that.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var output = e.target.result;
-
-                //process text to show only lines with "@": 
-                output = output.split("n").filter(/./.test, /@/).join("n");
-
-                document.getElementById('main').innerHTML = output;
-            };//end onload()
-            reader.readAsText(that.files[0]);
-        }//end if html5 filelist support
-    } 
-</script>
-
-<script>
-
+    };
     window.onload = function () {
         setListeners();
         readFile();
+        checkPastedChars();
         adjustImageGrid();
         adjustImageContentWidths();
     };
-
 </script>
 
 {% endblock %}
 
 {% block content %}
 
-<FORM NAME="mainform" id="mainform" method="post" action="{% url 'get_mols' type='input' %}"
+<form NAME="mainform" id="mainform" method="post" action="{% url 'get_mols' request_type='input' %}"
     ENCTYPE="multipart/form-data">
-    <INPUT TYPE=HIDDEN NAME="depict">
-    <TABLE WIDTH="100%">
-        <TR>
-            <TD>
-                <H1>Depict</H1>
-            </TD>
-            <TD ALIGN=RIGHT>
-                <BUTTON TYPE=BUTTON id="help-button"><B>Help</B></BUTTON>
-                <BUTTON type="submit" form="mainform"
-                    onclick="javascript: form.action='{% url 'get_mols' type='demo' %}';"><B>Demo</B></BUTTON>
-                <BUTTON TYPE=BUTTON id="reset-button" onClick="reset"><B>Reset</B></BUTTON>
-            </TD>
-        </TR>
-    </TABLE>
-    <HR>
-    <TABLE WIDTH="100%" CELLPADDING=5 CELLSPACING=5>
-        <TR BGCOLOR="#CCCCCC">
-            <TD VALIGN=TOP>
-                format:<SELECT NAME="molfmt" SELECTED>
-
-                    <OPTION VALUE="mol" SELECTED>
-                        MDL Molfile
-
-                    <OPTION VALUE="csv" SELECTED>
-                        SMILES
-                </SELECT>
-                <!-- <INPUT TYPE=CHECKBOX NAME="file2txt" VALUE="CHECKED">file2txt -->
-                    <BR>
-                upload: <INPUT accept=".csv, .mol, .sdf, .smi" id="infile" TYPE="FILE" NAME="infile"> ...or paste:<BR>
-
-
-
-                <TEXTAREA NAME="intxt" id="textarea" WRAP=OFF ROWS=12 COLS=60>{{ input_text }}</TEXTAREA>
-
-
-
-            </TD>
-            <TD VALIGN=TOP>
-                <B>options:</B><BR>
-                <BR>
-                format: 
-                <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="png" id="pngRadio" CHECKED>png&nbsp
-                <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="jpeg">jpeg
-                <INPUT TYPE=RADIO NAME="imgfmt" onchange="readFile(this)" VALUE="svg">svg
-                <BR>
-            </TD>
-            <script>
-                // add listener to persist user's choice for image format
-                // Get the radio buttons and the default checked radio button
-                var radioButtons = document.getElementsByName("imgfmt");
-                var defaultCheckedRadioButton = document.getElementById("pngRadio");
-            
-                // Check if there is a saved value in storage
-                var savedImgFormat = sessionStorage.getItem("selectedImgFormat");
-            
-                // Set the checked radio button based on the saved value or default to "svg"
-                defaultCheckedRadioButton.checked = true;  // Ensure one is always checked
-                if (savedImgFormat) {
-                    // Find the radio button with the saved value and check it
-                    var selectedRadioButton = Array.from(radioButtons).find(button => button.value === savedImgFormat);
-                    if (selectedRadioButton) {
-                        selectedRadioButton.checked = true;
-                    }
-                }
-            
-                // Add an event listener to save the selected image format when it changes
-                radioButtons.forEach(function (radioButton) {
-                    radioButton.addEventListener("change", function () {
-                        sessionStorage.setItem("selectedImgFormat", radioButton.value);
-                    });
-                });
-            </script>
-            <td valign="top">
-                <b>size: </b><br><br>
-                <select name="size" id="sizeSelector">
-                    <option value="xs">xs - 96x96</option>
-                    <option value="s">s - 160x160</option>
-                    <option value="m" id="mOption" selected="">m - 180x260</option>
-                    <option value="l">l - 280x380</option>
-                    <option value="xl">xl - 480x640</option>
-                </select>
+    <input TYPE=HIDDEN NAME="depict">
+    <table WIDTH="100%">
+        <tr>
+            <td>
+                <h1>Depict</h1>
             </td>
-            
-            <script>
-                // Get the select element and the default selected option
-                var sizeSelector = document.getElementById("sizeSelector");
-                var defaultOption = document.getElementById("mOption");
-            
-                // Check if there is a saved value in storage
-                var savedSize = sessionStorage.getItem("selectedSize");
-            
-                // Set the selected option based on the saved value or default to "m"
-                defaultOption.selected = true;  // Ensure one is always selected
-                if (savedSize) {
-                    // Find the option with the saved value and select it
-                    var selectedOption = Array.from(sizeSelector.options).find(option => option.value === savedSize);
-                    if (selectedOption) {
-                        selectedOption.selected = true;
-                    }
-                }
-            
-                // Add an event listener to save the selected size when it changes
-                sizeSelector.addEventListener("change", function () {
-                    sessionStorage.setItem("selectedSize", sizeSelector.value);
-                });
-            </script>
-            
+            <td ALIGN=RIGHT>
+                <button TYPE=BUTTON id="help-button"><b>Help</b></button>
+                <button type="submit" form="mainform" onclick="go_demo()"><b>Demo</b></button>
+                <button TYPE=BUTTON id="reset-button" onClick="reset()"><b>Reset</b></button>
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <table WIDTH="100%" CELLPADDING=5 CELLSPACING=5>
+        <tr BGCOLOR="#CCCCCC">
+            <td VALIGN=TOP>
+                Upload: <input accept="{{ acceptable_filetypes|join:', ' }}" id="infile" type="file" name="infile">
+                ...or paste:<br>
+
+                <textarea NAME="intxt" id="textarea" WRAP=OFF ROWS=12 COLS=50>{{ input_text }}</textarea>
+            </td>
+            <td VALIGN=TOP>
+                {% include "depict/input_options.html" %}
+            </td>
+            <td VALIGN=TOP>
+                {% include "depict/output_options.html" %}
+            </td>
+
             <td valign="top">
-                <b>smarts: </b><br><br>
-                <input type="text" name="smarts" id="smartsEntry" size="48" value="">
+                <div id="user-options-container">
+                    <div data-tooltip="Highlight substructures which match given SMARTS query">
+                        <label for="smarts"><b>SMARTS</b></label>
+                    </div>
+                    <br>
+                    <input type="text" name="smarts" id="smartsEntry" size="48" value>
+                    <br>
+                    <div data-tooltip="Align molecules to given substructure(s)">
+                        <label for="alignSmarts">Align SMARTS</label>
+                    </div>
+                    <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
+                </div>
                 <br>
-                <label for="alignSmarts">Align SMARTS</label>
-                <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
+                <div data-tooltip="Errors reported by RDKit when parsing molecules">
+                    <label for="failure_msgs"><b>Error Log</b></label>
+                </div>
+                <br>
+                <!-- box for logging info -->
+                <textarea name="failure_msgs" readonly WRAP=OFF ROWS=6 COLS=50>
+                {% for mol_err_msg in failures %}
+                {{ mol_err_msg }}
+                {% endfor %}
+                </textarea>
             </td>
             <script>
-                // set smarts query if it was previously set
-                var smartsValue = sessionStorage.getItem("smarts");
-                var smartsElement = document.getElementById("smartsEntry");
-
-                if (smartsValue !== null) {
-                    smartsElement.value = smartsValue;
-                }
-
-                // add event listener to persist smarts query
-                smartsElement.addEventListener("change", function() {
-                    var smarts = smartsElement.value;
-                    sessionStorage.setItem("smarts", smarts);
+                var inputs = document.querySelectorAll('#user-options-container input');
+                var selects = document.querySelectorAll('#user-options-container select');
+                // Apply makePersistent to input options
+                inputs.forEach(function (input) {
+                    if (input.type === 'checkbox') {
+                        makePersistentCheckbox(input.name, input.id);
+                    }
+                    else {
+                        makePersistent(input.name, input.id);
+                    }
+                });
+                selects.forEach(function (select) {
+                    makePersistentSelect(select.name, select.id);
                 });
             </script>
-            <script>
-                // set alignSmarts checkbox if it was previously set
-                var alignSmartsValue = sessionStorage.getItem("alignSmarts");
-                var alignSmartsElement = document.getElementById("alignSmarts");
-            
-                if (alignSmartsValue !== null) {
-                    alignSmartsElement.checked = alignSmartsValue === "true";
-                }
-            
-                // add event listener to persist alignSmarts checkbox
-                alignSmartsElement.addEventListener("change", function() {
-                    sessionStorage.setItem("alignSmarts", alignSmartsElement.checked);
-                });
-            </script>
-        </TR>
-    </TABLE>
-    <P>
-        <CENTER>
+        </tr>
+    </table>
+    <p>
+        <center>
             <input type="submit" value="Depict">
-            <!-- <BUTTON TYPE=BUTTON onClick="go_depict(this.form)"><B>Go Depict</B></BUTTON> -->
-        </CENTER>
+        </center>
         {% csrf_token %}
-</FORM>
-
+</form>
 <br>
+<!-- Display images in grid -->
 <center>
+    <script>
+        // reset this each time the page is loaded
+        let downloadNames = {};
+    </script>
     <div class="image-grid" id="imageGrid">
-        {% for image, name in images %}
-            <div class="image-content">
-                <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
-                    <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
-                    </img>
-                </a>
-                <div class="textbox">{{ name }}</div>
-                <button type="button" class="btn btn-default delete-image-btn">
-                    <a href="{{ static }}/{{ image|safe }}" download="{{ name }}">Download</a>
-                </button>
-            </div>
+        {% for image, fname, name in images %}
+        <script>
+            // note that generated fnames are all unique, so this is ok
+            downloadNames["{{ fname }}"] = getDownloadName("{{ name }}", "{{ fname }}");
+        </script>
+        <div class="image-content">
+            <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
+                <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
+                </img>
+            </a>
+            <div class="textbox">{{ name }}</div>
+            <button type="button" class="btn btn-default delete-image-btn">
+                <a href="{{ static }}/{{ image|safe }}" download onclick="this.download = downloadNames['{{ fname }}']")>Download</a>
+            </button>
+        </div>
         {% endfor %}
     </div>
     <div id="myModal" class="modal">
         <img class="modal-content" id="img01">
         <div id="caption"></div>
     </div>
-    <script>
-        function adjustImageGrid() {
-            // this function is used to center the image grid if there's only one row of images
-            // Get the image grid element
-            var imageGrid = document.getElementById("imageGrid");
-    
-            // Get the height of the image grid and the height of a single image
-            var gridHeight = imageGrid.offsetHeight;
-            var imageHeight = imageGrid.querySelector('.image-content').offsetHeight;
-    
-            // If the height of the image grid is less than or equal to the height of a single image (plus margins), it means there's only one row
-            if (gridHeight <= imageHeight + 2) { // assuming 1px margin
-                imageGrid.style.justifyContent = 'center';
-            } else {
-                imageGrid.style.justifyContent = 'flex-start';
-            }
-        }
-        function adjustImageContentWidths() {
-            // adjust the width of image-content to match the width of the images
-            var imageContents = document.getElementsByClassName("image-content");
-            for (var i = 0; i < imageContents.length; i++) {
-                var image = imageContents[i].getElementsByTagName("img")[0];
-                var padding = 12;
-                var width = image.offsetWidth + padding;
-                imageContents[i].style.maxWidth = width + 'px';
-            }
-        }
-    </script>
 </center>
+<!-- Display alerts for messages if they occur -->
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    {% if message.tags %}
+    <script>alert("{{ message }}")</script> {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,38 @@
+<div id="user-options-container">
+    <B>Output Options:</B>
+    <BR>
+    <div data-tooltip="Parse molecules with sanitization">
+        <label for="sanitize_mols">Sanitize</label>
+    </div>
+    <INPUT TYPE="checkbox" NAME="sanitize_mols" id="sanitize_checkbox" CHECKED>
+    <BR>
+    <div data-tooltip="Output image format">
+        <label for="imgfmt">Format</label>
+    </div>
+    <select name="imgfmt" id="imgFormat">
+        <option value="png" id="imgFormatDefault" selected>png</option>
+        <option value="jpeg">jpeg</option>
+        <option value="svg">svg</option>
+    </select>
+    <BR>
+    <div data-tooltip="Output image size">
+        <label for="size">Size</label>
+    </div>
+    <select name="size" id="sizeSelector">
+        <option value="xs">xs - 96x96</option>
+        <option value="s">s - 160x160</option>
+        <option value="m" id="sizeSelectorDefault" selected="">m - 180x260</option>
+        <option value="l">l - 280x380</option>
+        <option value="xl">xl - 480x640</option>
+    </select>
+    <BR>
+    <div data-tooltip="Index of first molecule to visualize (indexing from 0)">
+        <label for="start_idx">Start Index</label>
+    </div>
+    <INPUT TYPE="number" NAME="start_idx" id="startIdx" min=0 SIZE=4 VALUE="0">
+    <BR>
+    <div data-tooltip="Number of molecules to visualize, beginning from given start index">
+        <label for="max_mols">N. Molecules</label>
+    </div>
+    <INPUT TYPE="number" NAME="max_mols" id="maxMols" min=1 max=500 SIZE=4 VALUE="20">
+</div>
