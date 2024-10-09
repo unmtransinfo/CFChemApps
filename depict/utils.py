@@ -180,13 +180,14 @@ def create_image(
         )
         pil_image.save(img_name)
     elif format == ImageFormat.SVG.value:
-        m = Draw.rdMolDraw2D.PrepareMolForDrawing(m)
+        m = Draw.rdMolDraw2D.PrepareMolForDrawing(m, kekulize=kekulize)
         drawer = Draw.rdMolDraw2D.MolDraw2DSVG(size[0], size[1])
+        dopts = drawer.drawOptions()
+        dopts.prepareMolsBeforeDrawing = kekulize
         drawer.DrawMolecule(
             m,
             highlightAtoms=all_atom_matches,
             highlightBonds=bond_matches,
-            kekulize=kekulize,
         )
         drawer.FinishDrawing()
         svg = drawer.GetDrawingText()
