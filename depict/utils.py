@@ -152,6 +152,7 @@ def create_image(
     smarts,
     first_match_coords=None,
     align_smarts: bool = False,
+    kekulize: bool = True,
 ):
     all_atom_matches, bond_matches, substructure = get_atom_bond_matches(m, smarts)
     if align_smarts and (len(all_atom_matches) > 0 or len(bond_matches) > 0):
@@ -171,14 +172,21 @@ def create_image(
     img_name = "{}.{}".format(filename, format)
     if format in [ImageFormat.JPG.value, ImageFormat.PNG.value]:
         pil_image = Draw.MolToImage(
-            m, size=size, highlightAtoms=all_atom_matches, highlightBonds=bond_matches
+            m,
+            size=size,
+            highlightAtoms=all_atom_matches,
+            highlightBonds=bond_matches,
+            kekulize=kekulize,
         )
         pil_image.save(img_name)
     elif format == ImageFormat.SVG.value:
         m = Draw.rdMolDraw2D.PrepareMolForDrawing(m)
         drawer = Draw.rdMolDraw2D.MolDraw2DSVG(size[0], size[1])
         drawer.DrawMolecule(
-            m, highlightAtoms=all_atom_matches, highlightBonds=bond_matches
+            m,
+            highlightAtoms=all_atom_matches,
+            highlightBonds=bond_matches,
+            kekulize=kekulize,
         )
         drawer.FinishDrawing()
         svg = drawer.GetDrawingText()
@@ -216,6 +224,7 @@ def get_svgs_from_mol_supplier(
     align_smarts: bool,
     start_idx: int = 0,
     max_mols=None,
+    kekulize_mols: bool = True,
 ):
     output = []
     first_match_coords = None
@@ -252,6 +261,7 @@ def get_svgs_from_mol_supplier(
             smarts,
             first_match_coords,
             align_smarts,
+            kekulize_mols,
         )
         output.append([image_name, fname, name])
     return output, failures
