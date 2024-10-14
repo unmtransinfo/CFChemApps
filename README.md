@@ -72,7 +72,7 @@ The server can now be accessed using the public IP of the EC2 instance.
 
 > An environment file is required to be created (cfchem/.env) with the following parameters:
 ```
-DEBUG=1
+DEBUG=0
 SECRET_KEY="<your_secret_key>"
 ```
 
