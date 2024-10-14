@@ -70,16 +70,11 @@ The above command will spin up the docker containers and attach them to the port
 
 The server can now be accessed using the public IP of the EC2 instance.
 
-> An environment file is required to be created (.env.prod), and must contain the necessary values required to run the server in production environment. If no values are defined, containers run on default values
-> The values that are required to be defined in the environment file are 
-		
-
-	DATABASE_ENGINE=<DB_ENGINE>
-	DATABASE_NAME=<DB_NAME>
-	DATABASE_USER=<DB_USERNAME>
-	DATABASE_PASSWORD=<DB_PASSWORD>
-	DATABASE_HOST=<DB_HOST>
-	DATABASE_PORT=<DB_PORT>
+> An environment file is required to be created (cfchem/.env) with the following parameters:
+```
+DEBUG=0
+SECRET_KEY="<your_secret_key>"
+```
 
 ## Production Troubleshooting
 Below are some common issues that can occur launching to production with potential fixes:

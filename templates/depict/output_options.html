@@ -6,6 +6,11 @@
     </div>
     <INPUT TYPE="checkbox" NAME="sanitize_mols" id="sanitize_checkbox" CHECKED>
     <BR>
+        <div data-tooltip="Display molecules with kekulization">
+            <label for="kekulize_mols">Kekulize</label>
+        </div>
+        <INPUT TYPE="checkbox" NAME="kekulize_mols" id="kekulize_checkbox" CHECKED>
+    <BR>
     <div data-tooltip="Output image format">
         <label for="imgfmt">Format</label>
     </div>
@@ -19,11 +24,11 @@
         <label for="size">Size</label>
     </div>
     <select name="size" id="sizeSelector">
-        <option value="xs">xs - 96x96</option>
-        <option value="s">s - 160x160</option>
-        <option value="m" id="sizeSelectorDefault" selected="">m - 180x260</option>
-        <option value="l">l - 280x380</option>
-        <option value="xl">xl - 480x640</option>
+        <option value="xs">xs - 120x80</option>
+        <option value="s">s - 150x100</option>
+        <option value="m" id="sizeSelectorDefault" selected="">m - 300x200</option>
+        <option value="l">l - 450x300</option>
+        <option value="xl">xl - 600x400</option>
     </select>
     <BR>
     <div data-tooltip="Index of first molecule to visualize (indexing from 0)">

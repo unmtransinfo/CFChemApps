@@ -1,9 +1,11 @@
 from enum import Enum
- 
+
+
 class InputType(Enum):
     DEMO = "demo"
     INPUT = "input"
     FILE = "file"
+
 
 class FileType(Enum):
     CSV = "csv"
@@ -14,14 +16,16 @@ class FileType(Enum):
     TSV = "tsv"
     TXT = "txt"
 
+
 class ImageFormat(Enum):
     PNG = "png"
     JPG = "jpeg"
     SVG = "svg"
 
+
 class ImageSize(Enum):
-    xs = (96, 96)
-    s = (160, 160)
-    m = (180, 260)
-    l = (280, 380)
-    xl = (480, 640)
+    xs = (120, 80)
+    s = (150, 100)
+    m = (300, 200)
+    l = (450, 300)
+    xl = (600, 400)

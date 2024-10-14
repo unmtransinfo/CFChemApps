@@ -20,21 +20,23 @@ def index(request):
 
 @api_view(["GET", "POST"])
 def get_mols(request, request_type):
-    image_format = request.POST.get("imgfmt")
-    size = request.POST.get("size")
-    smarts = request.POST.get("smarts")
-    align_smarts = request.POST.get("alignSmarts", "off") == "on"
     input_format = request.POST.get("molfmt")  # either MolFile or SMILES
-    start_idx = int(request.POST.get("start_idx"))
-    max_mols = int(request.POST.get("max_mols"))
-    names_col = int(request.POST.get("name_col"))
     # options for tsv/csv/smiles file
     delimiter = request.POST.get("delimiter")
     delimiter = "\t" if delimiter == "\\t" else delimiter
     smiles_col = int(request.POST.get("smiles_col"))
     names_col = int(request.POST.get("name_col"))
     has_header = request.POST.get("has_header", "off") == "on"
+    # output options
     sanitize_mols = request.POST.get("sanitize_mols", "off") == "on"
+    kekulize_mols = request.POST.get("kekulize_mols", "off") == "on"
+    image_format = request.POST.get("imgfmt")
+    size = request.POST.get("size")
+    start_idx = int(request.POST.get("start_idx"))
+    max_mols = int(request.POST.get("max_mols"))
+    # SMARTS options
+    smarts = request.POST.get("smarts")
+    align_smarts = request.POST.get("alignSmarts", "off") == "on"
 
     size = get_image_size(size)
     input_text = None
@@ -87,7 +89,14 @@ def get_mols(request, request_type):
                     messages.error(request, msg)
     output, failures = [], []
     output, failures = get_svgs_from_mol_supplier(
-        mol_supplier, image_format, size, smarts, align_smarts, start_idx, max_mols
+        mol_supplier,
+        image_format,
+        size,
+        smarts,
+        align_smarts,
+        start_idx,
+        max_mols,
+        kekulize_mols,
     )
     context = {
         IMAGES: output,
