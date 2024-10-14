@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@g!y@ujgnt6tj0q!&4rjbj^!#*!c2_*1g$#5vo$o=8o9ti^vg_"
+SECRET_KEY = os.getenv("SECRET_KEY", "default-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get("DEBUG", 1)) == 1
+DEBUG = int(os.getenv("DEBUG", 1)) == 1
 
 ALLOWED_HOSTS = [
     "206.192.180.166",
@@ -86,7 +90,8 @@ WSGI_APPLICATION = "cfchem.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+# note that a database is not used for this project, but Django expects
+# the template
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("DATABASE_ENGINE", "django.db.backends.sqlite3"),
