@@ -6,6 +6,7 @@ function getExtension(filename) {
 
 function readFile() {
   document.getElementById("infile").addEventListener("change", function () {
+    console.log("hi");
     // Check if a file was selected
     var file = this.files[0];
     if (file) {

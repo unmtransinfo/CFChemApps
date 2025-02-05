@@ -1,17 +1,16 @@
 <div id="user-options-container">
-    <B>Output Options:</B>
-    <BR>
-    <div data-tooltip="Parse molecules with sanitization">
+    <h2>Output Options:</h2>
+    <div class="input-selection" data-tooltip="Parse molecules with sanitization">
         <label for="sanitize_mols">Sanitize</label>
     </div>
     <INPUT TYPE="checkbox" NAME="sanitize_mols" id="sanitize_checkbox" CHECKED>
     <BR>
-        <div data-tooltip="Display molecules with kekulization">
+        <div class="input-selection" data-tooltip="Display molecules with kekulization">
             <label for="kekulize_mols">Kekulize</label>
         </div>
         <INPUT TYPE="checkbox" NAME="kekulize_mols" id="kekulize_checkbox" CHECKED>
     <BR>
-    <div data-tooltip="Output image format">
+    <div class="input-selection" data-tooltip="Output image format">
         <label for="imgfmt">Format</label>
     </div>
     <select name="imgfmt" id="imgFormat">
@@ -20,7 +19,7 @@
         <option value="svg">svg</option>
     </select>
     <BR>
-    <div data-tooltip="Output image size">
+    <div class="input-selection" data-tooltip="Output image size">
         <label for="size">Size</label>
     </div>
     <select name="size" id="sizeSelector">
@@ -31,12 +30,12 @@
         <option value="xl">xl - 600x400</option>
     </select>
     <BR>
-    <div data-tooltip="Index of first molecule to visualize (indexing from 0)">
+    <div class="input-selection" data-tooltip="Index of first molecule to visualize (indexing from 0)">
         <label for="start_idx">Start Index</label>
     </div>
     <INPUT TYPE="number" NAME="start_idx" id="startIdx" min=0 SIZE=4 VALUE="0">
     <BR>
-    <div data-tooltip="Number of molecules to visualize, beginning from given start index">
+    <div class="input-selection" data-tooltip="Number of molecules to visualize, beginning from given start index">
         <label for="max_mols">N. Molecules</label>
     </div>
     <INPUT TYPE="number" NAME="max_mols" id="maxMols" min=1 max=500 SIZE=4 VALUE="20">
