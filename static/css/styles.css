@@ -10,8 +10,9 @@
 /* new added styles for depict */
 
 .whole-page{
-    padding: 40px;
+    padding: 40px 40px 20px 40px;
     background-image: linear-gradient(to top right, #1e3a8a, #1f2937, #374151);
+    color: white;
 }
 
 .smiles{
@@ -234,8 +235,7 @@
     display: flex;
     justify-content: center;
     gap: 1rem;
-    background-image: linear-gradient(to top right, #1e3a8a, #1f2937, #374151);
-    padding: 1rem;
+    margin-top: 3rem;
 }
 
 /* Adjust the margin for screens smaller than 600px */
