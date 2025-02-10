@@ -14,15 +14,21 @@
     background-image: linear-gradient(to top right, #1e3a8a, #1f2937, #374151);
     color: white;
 }
-
+.logo{
+    display: flex;
+    align-items: center;
+}
+.logo > img{
+    width: 120px;
+    
+}
 .smiles{
     display: flex;
     box-sizing: border-box;
-    justify-content: space-evenly;
-}
-.test{
-    display: grid;
-    gap: 1.5rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: 3rem;
 }
 .upload-button {
     display: inline-block;
@@ -56,7 +62,8 @@
     color: rgb(129, 140, 248);
     letter-spacing: -0.025em;
     font-weight:bolder;
-    margin-bottom: 3rem;
+    margin: 2rem;
+    margin-bottom: 5rem;
 
 }
  .depict > div > h1{
@@ -133,6 +140,7 @@
     margin-top: 1.5rem;
 }
 .depict-output{
+    width: 17%;
     color: wheat;
     height: fit-content;
     box-sizing: border-box;
@@ -145,8 +153,14 @@
     background-color: rgb(31,41,55,1);
     grid-row: 1;
 }
-
+.input-selection > input[type="text"]{
+    width: 351px;
+}
+.input-selection {
+    width: min-content;
+}
 .depict-input{
+    width: fit-content;
     color: wheat;
     height: fit-content;
     box-sizing: border-box;
@@ -160,6 +174,8 @@
     grid-row: 1;
 }
 .error-log{
+    width: min-content;
+    height: fit-content;
     border-width: 1px;
     border-style: solid;
     border-color: rgb(55,65,81,1);
@@ -231,11 +247,15 @@
 .input-selection{
     margin-right: 0.5rem;
 }
+#help-page a{
+    color: rgb(83, 169, 212);
+}
+
 .bottom-images{
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-top: 3rem;
+    margin-top: 5rem;
 }
 
 /* Adjust the margin for screens smaller than 600px */
