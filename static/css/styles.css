@@ -62,7 +62,7 @@
     color: rgb(129, 140, 248);
     letter-spacing: -0.025em;
     font-weight:bolder;
-    margin: 2rem;
+    margin: 2rem 3rem;
     margin-bottom: 5rem;
 
 }
@@ -140,7 +140,7 @@
     margin-top: 1.5rem;
 }
 .depict-output{
-    width: 17%;
+    width: 330px;
     color: wheat;
     height: fit-content;
     box-sizing: border-box;
@@ -218,19 +218,19 @@
 .submition{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     padding: 2rem 1.5rem 0.4rem;
 }
 .submition > input{
     display: inline-block;
-    width: 115px;
-    height: 45px;
+    width: 233px;
+    height: 60px;
     background-color: rgb(80, 82, 200);
     color: white;
     padding: 10px 20px;
-    font-size: 0.875rem;
+    font-size: 1.25rem;
     font-weight: 500;
-    border-radius: 5px;
+    border-radius: 30px;
     cursor: pointer;
     text-align: center;
     border: none;

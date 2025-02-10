@@ -87,7 +87,6 @@
     ENCTYPE="multipart/form-data">
     <input TYPE=HIDDEN NAME="depict">
     <div class="depict">
-        
         <div class="logo"><img src="../../static/images/Depict.png" alt="Depict Logo"><h1>Depict</h1></div>
         <div class="nav-section">
             <button TYPE=BUTTON id="help-button"><b>Help</b></button>
@@ -108,14 +107,9 @@
                                 style="display: none;"
                             >
                             <textarea placeholder="Paste SMILES data here or drag & drop a file..." name="intxt" id="textarea" wrap="off" rows="12" cols="50">{{ input_text }}</textarea>
-                            <div class="submition">
                                 <label for="infile" class="upload-button">
                                     <i class="fa-solid fa-upload"></i> Upload
-                                </label>
-                                <input type="submit" value="Depict">
-                                {% csrf_token %}
-                            </div>  
-                            
+                                </label>                      
                         </div>
                     </div>
                     
@@ -147,6 +141,7 @@
                     <textarea name="failure_msgs" readonly WRAP=OFF ROWS=6 COLS=50 placeholder="Errors will appear here">{% for mol_err_msg in failures %}{{ mol_err_msg }}{% endfor %}</textarea>
                 </div>
     </div>
+    <div class="submition"><input type="submit" value="Depict">{% csrf_token %}</div>
     
     <script>
             var inputs = document.querySelectorAll('#user-options-container input');
