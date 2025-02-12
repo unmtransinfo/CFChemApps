@@ -136,7 +136,6 @@
                 <div data-tooltip="Errors reported by RDKit when parsing molecules">
                     <label for="failure_msgs"><b>Error Log</b></label>
                 </div>
-                <br>
                 <!-- box for logging info -->
                     <textarea name="failure_msgs" readonly WRAP=OFF ROWS=6 COLS=50 placeholder="Errors will appear here">{% for mol_err_msg in failures %}{{ mol_err_msg }}{% endfor %}</textarea>
                 </div>

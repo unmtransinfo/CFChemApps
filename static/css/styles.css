@@ -26,7 +26,6 @@
     display: flex;
     box-sizing: border-box;
     justify-content: flex-start;
-    flex-wrap: wrap;
     gap: 1rem;
     margin-left: 3rem;
 }
@@ -60,10 +59,9 @@
     align-items: center;
     line-height: 1;
     color: rgb(129, 140, 248);
-    letter-spacing: -0.025em;
+    letter-spacing: 0.2em;
     font-weight:bolder;
-    margin: 2rem 3rem;
-    margin-bottom: 5rem;
+    margin: 2rem 10rem 4rem 4rem;
 
 }
  .depict > div > h1{
@@ -80,7 +78,7 @@
     padding: 0.5rem 1rem;
     color: rgb(209, 213, 219);
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: 1.23rem;
     line-height: 1.25rem;
     gap: 0.5rem;
     
@@ -174,7 +172,9 @@
     grid-row: 1;
 }
 .error-log{
-    width: min-content;
+    display: flex;
+    flex-direction: column;
+    width: 27%;
     height: fit-content;
     border-width: 1px;
     border-style: solid;
@@ -264,7 +264,26 @@
         margin: 0 20px;
     }
 }
+@media(max-width: 1670px){
+    .smiles{
+        flex-wrap: wrap;
+    }
+    .error-log{
+        width: 517px;
+    }
+}
+@media(max-width: 2087px){
+    .input-data-outer{
+        width: 530px;
+    }
+    .depict-input{
+        width: 330px;
+    }
+    .input-selection > input[type="text"]{
+        width:246px;
+    }
 
+}
 
 .image-content {
     text-align: center;
