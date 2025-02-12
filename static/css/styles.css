@@ -10,9 +10,12 @@
 /* new added styles for depict */
 
 .whole-page{
+    box-sizing: content-box;
     padding: 40px 40px 20px 40px;
     background-image: linear-gradient(to top right, #1e3a8a, #1f2937, #374151);
     color: white;
+    height: 100vh;
+   
 }
 .logo{
     display: flex;
@@ -25,13 +28,14 @@
 .smiles{
     display: flex;
     box-sizing: border-box;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 1rem;
     margin-left: 3rem;
 }
 .upload-button {
     display: inline-block;
     width: 115px;
+    margin-left: 16rem;
     background-color: rgb(99, 102, 241);
     color: white;
     padding: 10px 20px;
@@ -61,7 +65,7 @@
     color: rgb(129, 140, 248);
     letter-spacing: 0.2em;
     font-weight:bolder;
-    margin: 2rem 10rem 4rem 4rem;
+    margin: 2rem 8rem 2rem 4rem;
 
 }
  .depict > div > h1{
@@ -114,6 +118,7 @@
 
 }
 .input-data-outer > h2{
+    display: inline-block;
     color: rgb(165,180,252);
     font-weight: 600;
     font-size: 1.875rem;
@@ -263,16 +268,21 @@
     .image-grid {
         margin: 0 20px;
     }
+    
 }
+
 @media(max-width: 1670px){
     .smiles{
-        flex-wrap: wrap;
+        gap: 0.4rem;
     }
-    .error-log{
+    /* .error-log{
         width: 517px;
-    }
+    } */
 }
 @media(max-width: 2087px){
+    .smiles{
+        justify-content: flex-start;
+    }
     .input-data-outer{
         width: 530px;
     }
@@ -282,7 +292,25 @@
     .input-selection > input[type="text"]{
         width:246px;
     }
-
+    .upload-button{
+        margin-left: 13rem;
+    }
+    @media(max-width: 1600px){
+        .input-data-outer{
+            width: 458px;
+        }
+        .upload-button{
+            margin-left: 9rem;
+        }
+    }
+    @media(max-width: 1500px){
+        .smiles{
+            flex-wrap: wrap;
+        }
+        .error-log{
+            width: 460px;
+        }
+    }
 }
 
 .image-content {
