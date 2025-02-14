@@ -12,6 +12,8 @@
 <script type="text/javascript" src="{% static './js/grid_adjust.js' %}"></script>
 <!--helper functions-->
 <script type="text/javascript" src="{% static './js/utils.js' %}"></script>
+<!-- font awesome icon -->
+<script src="https://kit.fontawesome.com/097373e58e.js" crossorigin="anonymous"></script>
 
 <script>
     // button functions
@@ -80,39 +82,41 @@
 
 {% block content %}
 
+<div class="page-container">
 <form NAME="mainform" id="mainform" method="post" action="{% url 'get_mols' request_type='input' %}"
     ENCTYPE="multipart/form-data">
     <input TYPE=HIDDEN NAME="depict">
-    <table WIDTH="100%">
-        <tr>
-            <td>
-                <h1>Depict</h1>
-            </td>
-            <td ALIGN=RIGHT>
-                <button TYPE=BUTTON id="help-button"><b>Help</b></button>
-                <button type="submit" form="mainform" onclick="go_demo()"><b>Demo</b></button>
-                <button TYPE=BUTTON id="reset-button" onClick="reset()"><b>Reset</b></button>
-            </td>
-        </tr>
-    </table>
-    <hr>
-    <table WIDTH="100%" CELLPADDING=5 CELLSPACING=5>
-        <tr BGCOLOR="#CCCCCC">
-            <td VALIGN=TOP>
-                Upload: <input accept="{{ acceptable_filetypes|join:', ' }}" id="infile" type="file" name="infile">
-                ...or paste:<br>
-
-                <textarea NAME="intxt" id="textarea" WRAP=OFF ROWS=12 COLS=50>{{ input_text }}</textarea>
-            </td>
-            <td VALIGN=TOP>
+    <div class="depict">
+        <div class="logo"><img src="{% static 'images/Depict.png' %}" alt="Depict Logo"><h1>Depict</h1></div>
+        <div class="nav-section">
+            <button TYPE=BUTTON id="help-button"><b>Help</b></button>
+            <button type="submit" form="mainform" onclick="go_demo()"><b>Demo</b></button>
+            <button TYPE=BUTTON id="reset-button" onClick="reset()"><b>Reset</b></button>
+        </div>
+    </div>
+    <div class="smiles">
+            <div class="input-data-outer">
+                <h2 class="input-data-text">Input Data</h2>
+                <label for="infile" class="upload-button">
+                    <i class="fa-solid fa-upload"></i> Upload
+                </label>  
+                    <div class="input-data-inner1">
+                        <div class="file-input">
+                            <input
+                                accept="{{ acceptable_filetypes|join:', ' }}"
+                                id="infile"
+                                type="file"
+                                name="infile"
+                                style="display: none;"
+                            >
+                            <textarea placeholder="Paste SMILES data here or drag & drop a file..." name="intxt" id="textarea" wrap="off" rows="12" cols="50">{{ input_text }}</textarea>                  
+                        </div>
+                    </div>
+                    <div class="submition"><input type="submit" value="Depict">{% csrf_token %}</div>
+            </div>
+            <div class="depict-input">
                 {% include "depict/input_options.html" %}
-            </td>
-            <td VALIGN=TOP>
-                {% include "depict/output_options.html" %}
-            </td>
-
-            <td valign="top">
-                <div id="user-options-container">
+                <div class="input-selection" id="user-options-container">
                     <div data-tooltip="Highlight substructures which match given SMARTS query">
                         <label for="smarts"><b>SMARTS</b></label>
                     </div>
@@ -120,46 +124,44 @@
                     <input type="text" name="smarts" id="smartsEntry" size="48" value>
                     <br>
                     <div data-tooltip="Align molecules to given substructure(s)">
-                        <label for="alignSmarts">Align SMARTS</label>
+                         <label for="alignSmarts">Align SMARTS</label>
                     </div>
                     <input type="checkbox" id="alignSmarts" name="alignSmarts" checked>
                 </div>
-                <br>
+            </div>
+            <div class="depict-output">
+                {% include "depict/output_options.html" %}
+            </div>
+            <div class="error-log">
                 <div data-tooltip="Errors reported by RDKit when parsing molecules">
                     <label for="failure_msgs"><b>Error Log</b></label>
                 </div>
-                <br>
                 <!-- box for logging info -->
-                <textarea name="failure_msgs" readonly WRAP=OFF ROWS=6 COLS=50>
-                {% for mol_err_msg in failures %}
-                {{ mol_err_msg }}
-                {% endfor %}
-                </textarea>
-            </td>
-            <script>
-                var inputs = document.querySelectorAll('#user-options-container input');
-                var selects = document.querySelectorAll('#user-options-container select');
-                // Apply makePersistent to input options
-                inputs.forEach(function (input) {
-                    if (input.type === 'checkbox') {
-                        makePersistentCheckbox(input.name, input.id);
-                    }
-                    else {
-                        makePersistent(input.name, input.id);
-                    }
-                });
-                selects.forEach(function (select) {
-                    makePersistentSelect(select.name, select.id);
-                });
-            </script>
-        </tr>
-    </table>
-    <p>
-        <center>
-            <input type="submit" value="Depict">
-        </center>
-        {% csrf_token %}
-</form>
+                    <textarea name="failure_msgs" readonly WRAP=OFF ROWS=6 COLS=50 placeholder="Errors will appear here">{% for mol_err_msg in failures %}{{ mol_err_msg }}{% endfor %}</textarea>
+                </div>
+    </div>
+    
+    
+    <script>
+            var inputs = document.querySelectorAll('#user-options-container input');
+            var selects = document.querySelectorAll('#user-options-container select');
+            // Apply makePersistent to input options
+            inputs.forEach(function (input) {
+                if (input.type === 'checkbox') {
+                    makePersistentCheckbox(input.name, input.id);
+                }
+                else {
+                    makePersistent(input.name, input.id);
+                }
+            });
+            selects.forEach(function (select) {
+                makePersistentSelect(select.name, select.id);
+            });
+        </script>
+    
+    </form>
+</div>
+
 <br>
 <!-- Display images in grid -->
 <center>
@@ -180,7 +182,7 @@
             </a>
             <div class="textbox">{{ name }}</div>
             <button type="button" class="btn btn-default delete-image-btn">
-                <a href="{{ static }}/{{ image|safe }}" download onclick="this.download = downloadNames['{{ fname }}']")>Download</a>
+                <a class="download-btn" href="{{ static }}/{{ image|safe }}" download onclick="this.download = downloadNames['{{ fname }}']")>Download  <i class="fa-solid fa-download"></i></a>
             </button>
         </div>
         {% endfor %}
@@ -190,6 +192,7 @@
         <div id="caption"></div>
     </div>
 </center>
+
 <!-- Display alerts for messages if they occur -->
 {% if messages %}
 <ul class="messages">
