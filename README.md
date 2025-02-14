@@ -68,17 +68,24 @@ The above command will spin up the docker containers and attach them to the port
 
 The server can now be accessed using the public IP of the EC2 instance.
 
+### Updating on AWS
+The steps below outline how one can update the public web app after making changes and pushing to master. 
+1. Login to the EC2 instance hosting Depict
+2. Go to repo directory: `cd CFChemApps/`
+3. Pull the changes: `git pull`
+4. Compose down: `docker-compose -f docker-compose-prod.yml down`
+5. Re-deploy app: `bash deploy.sh`
+6. If changes are not observed then try the steps outlined in Production Troubleshooting below.
 
-
-## Production Troubleshooting
+### Production Troubleshooting
 Below are some common issues that can occur launching to production with potential fixes:
 * **Server Error: (500)** when initially connecting to site:
     1. Run `docker ps` and find the container with image `cfchemapps-cfchemapps`. Note the container id.
     2. Run `docker exec -it <id> /bin/bash`
     3. Inside the docker container, run `python manage.py migrate`
-* The `static/` directory is not updated inside the docker container.
+* CSS changes not showing up because the `static/` directory is not updated inside the docker container.
     1. Stop current docker containers: `docker stop $(docker ps -a -q)`
     2. Remove all docker containers: `docker rm -f $(docker ps -a -q)`
     3. Remove all volumes: `docker volume rm $(docker volume ls -q)`
     4. Re-launch docker containers: `bash deploy.sh`
-    * Note that if you've used Depict previously you'll want to clear your browser files cache for CSS-related changes to appear
+  * Note that if you've used Depict previously you'll want to clear your browser files cache for CSS-related changes to appear
