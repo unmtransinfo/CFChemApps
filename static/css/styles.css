@@ -23,6 +23,10 @@
     width: 120px;
     
 }
+.depict-header{
+    display: flex;
+    justify-content: space-between
+}
 .smiles{
     display: flex;
     box-sizing: border-box;
@@ -33,7 +37,6 @@
 .upload-button {
     display: inline-block;
     width: 115px;
-    margin-left: 16rem;
     background-color: rgb(99, 102, 241);
     color: white;
     padding: 10px 20px;
@@ -90,6 +93,7 @@
     border: none;
     
 }
+
 .nav-section > button:hover{
     color: grey;
     font-weight: 700;
@@ -115,7 +119,7 @@
     background-color: rgb(17,24,39,1);
 
 }
-.input-data-outer > h2{
+.depict-header > h2{
     display: inline-block;
     color: rgb(165,180,252);
     font-weight: 600;
@@ -260,15 +264,100 @@
     gap: 1rem;
     margin-top: 5rem;
 }
-
-/* Adjust the margin for screens smaller than 600px */
-@media (max-width: 600px) {
-    .image-grid {
-        margin: 0 20px;
-    }
-    
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
+#menu-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 35px;
+    color: #fff;
+    padding: 10px;
+}
+/* Adjust the margin for screens smaller than 600px */
 
+@media (max-width: 768px) {
+    #menu-icon {
+        display: block; /* Show the menu icon on smaller screens */
+        z-index: 1200;
+    }
+    .nav-section > button:first-child{
+        margin-top: 11rem;
+    }
+    .nav-section > button{
+        padding-bottom: 1.7rem;
+    }
+    .nav-section {
+        position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            flex-direction: column;
+            background-color: #2A2A3B;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+    }
+    .nav-section.show {
+        right: 0;
+    }
+    .depict{
+        margin: 2rem 0rem 2rem 0rem;
+    }
+    .unm-img{
+        width: 100%;
+    }
+    .rdkit-img{
+        width: 100%;
+    }
+    .bottom-images{
+        margin-top: 3rem;
+    }
+    .submition > input{
+        width: 129px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    .file-input{
+        width: 100%;
+    }
+    .file-input > textarea{
+        width: 100%;
+    }
+    .depict-header > h2{
+        font-size: 1.475rem;
+    }
+    .upload-button{
+        width: 92px;
+        height: 35px;
+        font-size: 0.675rem;
+    }
+}
+@media (min-width: 769px) {
+    .nav-section {
+        display: block; /* Always show the nav-section on larger screens */
+    }
+    .nav-section > button:first-child{
+        margin-top: 0;
+    }
+    .nav-section > button{
+        padding: 0.5rem 1rem;
+    }
+    #menu-icon {
+        display: none; /* Hide the menu icon on larger screens */
+    }
+}
+@media(max-width: 900px){
+    .depict{
+        margin: 2rem 0rem;
+    }
+}
 @media(max-width: 1670px){
     .smiles{
         gap: 0.4rem;
@@ -290,15 +379,9 @@
     .input-selection > input[type="text"]{
         width:246px;
     }
-    .upload-button{
-        margin-left: 13rem;
-    }
     @media(max-width: 1600px){
         .input-data-outer{
             width: 458px;
-        }
-        .upload-button{
-            margin-left: 9rem;
         }
     }
     @media(max-width: 1500px){
@@ -310,7 +393,21 @@
         }
     }
 }
-
+@media (max-width: 600px) {
+    .image-grid {
+        margin: 0 20px;
+    }
+    .input-selection > input[type="text"]{
+        width: 100%;
+    }
+    .depict-input{
+        width: 100%;
+    }
+    .error-log > textarea{
+        width: 100%;
+    }
+    
+}
 .image-content {
     text-align: center;
     display: flex;
