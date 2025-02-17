@@ -88,18 +88,23 @@
     <input TYPE=HIDDEN NAME="depict">
     <div class="depict">
         <div class="logo"><img src="{% static 'images/Depict.png' %}" alt="Depict Logo"><h1>Depict</h1></div>
-        <div class="nav-section">
-            <button TYPE=BUTTON id="help-button"><b>Help</b></button>
-            <button type="submit" form="mainform" onclick="go_demo()"><b>Demo</b></button>
-            <button TYPE=BUTTON id="reset-button" onClick="reset()"><b>Reset</b></button>
+        <div class="nav-container">
+            <i class="fa-solid fa-bars" id="menu-icon" onclick="toggleMenu()"></i>
+            <div class="nav-section" id="navSection">
+                <button TYPE=BUTTON id="help-button"><b>Help</b></button>
+                <button type="submit" form="mainform" onclick="go_demo()"><b>Demo</b></button>
+                <button TYPE=BUTTON id="reset-button" onClick="reset()"><b>Reset</b></button>
+            </div>
         </div>
     </div>
     <div class="smiles">
             <div class="input-data-outer">
-                <h2 class="input-data-text">Input Data</h2>
-                <label for="infile" class="upload-button">
-                    <i class="fa-solid fa-upload"></i> Upload
-                </label>  
+                <div class="depict-header">
+                    <h2 class="input-data-text">Input Data</h2>
+                    <label for="infile" class="upload-button">
+                        <i class="fa-solid fa-upload"></i> Upload
+                    </label>
+                </div>
                     <div class="input-data-inner1">
                         <div class="file-input">
                             <input
@@ -157,6 +162,11 @@
             selects.forEach(function (select) {
                 makePersistentSelect(select.name, select.id);
             });
+            // Add event listener for the menu icon to toggle the nav section visibility
+            function toggleMenu() {
+                const menu = document.getElementById('navSection');
+                menu.classList.toggle('show');
+            }
         </script>
     
     </form>
