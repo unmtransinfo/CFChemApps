@@ -62,7 +62,7 @@ function setListeners() {
   var modal = document.getElementById("myModal");
   var modalImg = document.getElementById("img01");
   const captionText = document.getElementById("caption");
-  var images = document.querySelectorAll(".image-div");
+  var images = document.querySelectorAll(".molimg");
   for (var i = 0; i < images.length; i++) {
     images[i].onclick = function () {
       modal.style.display = "block";

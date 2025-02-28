@@ -1,3 +1,6 @@
+body{
+    background-image: linear-gradient(to top right, #1e3a8a, #1f2937, #374151, #1f2937, #374151);
+}
 /* styles.css */
 .image-grid {
     display: flex;
@@ -10,10 +13,8 @@
 /* new added styles for depict */
 
 .whole-page{
-    padding: 40px 40px 20px 40px;
-    background-image: linear-gradient(to top right, #1e3a8a, #1f2937, #374151);
+    padding: 15px 40px 20px 40px;
     color: white;
-   
 }
 .logo{
     display: flex;
@@ -37,6 +38,7 @@
 .upload-button {
     display: inline-block;
     width: 115px;
+    height: 41px;
     background-color: rgb(99, 102, 241);
     color: white;
     padding: 10px 20px;
@@ -56,17 +58,22 @@
   #infile {
     display: none; /* Hide the file input */
 }
-
+.unm-img{
+    max-width: 300px;
+}
+.rdkit-img{
+    max-width: 150px;
+}
 .depict{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     line-height: 1;
     color: rgb(129, 140, 248);
     letter-spacing: 0.2em;
     font-weight:bolder;
-    margin: 2rem 8rem 2rem 4rem;
+    margin: 0rem 0rem 1.5rem 0rem;
 
 }
  .depict > div > h1{
@@ -100,6 +107,7 @@
 }
 
 .input-data-outer{
+    height: 387px;
     box-sizing: border-box;
     border-width: 1px;
     border-style: solid;
@@ -111,6 +119,7 @@
     grid-row: 1;
 }
 .input-data-inner1{
+    height: 258px;
     padding: 1.5rem;
     border-style: dashed;
     border-width: 2px;
@@ -128,11 +137,13 @@
     margin-bottom: 1.5rem;
 }
 .file-input{
+    height: 100%;
     margin-right: 8px;
     display: flex;
     flex-direction: column;
 }
 .file-input > textarea{
+    height: 100%;
     padding: 0.3rem;
     background-color: rgb(31,41,55,1);
     border-color: #e5e7eb;
@@ -178,10 +189,15 @@
     background-color: rgb(31,41,55,1);
     grid-row: 1;
 }
-.error-log{
+.outer-log{
     display: flex;
+    justify-content: center;
+}
+.error-log{
+    display: none;
+    margin: 25px 50px;
     flex-direction: column;
-    width: 27%;
+    width: 40%;
     height: fit-content;
     border-width: 1px;
     border-style: solid;
@@ -226,16 +242,15 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    padding: 2rem 1.5rem 0.4rem;
+    padding: 0.3rem 0rem 0rem;
 }
 .submition > input{
     display: inline-block;
-    width: 233px;
-    height: 60px;
+    width: 198px;
+    height: 48px;
     background-color: rgb(80, 82, 200);
     color: white;
-    padding: 10px 20px;
-    font-size: 1.25rem;
+    font-size: 1.20rem;
     font-weight: 500;
     border-radius: 30px;
     cursor: pointer;
@@ -262,152 +277,15 @@
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-top: 5rem;
 }
 .nav-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-left: 1.5rem;
 }
-#menu-icon {
-    display: none;
-    cursor: pointer;
-    font-size: 35px;
-    color: #fff;
-    padding: 10px;
-}
-/* Adjust the margin for screens smaller than 600px */
 
-@media (max-width: 768px) {
-    #menu-icon {
-        display: block; /* Show the menu icon on smaller screens */
-        z-index: 1200;
-    }
-    .nav-section > button:first-child{
-        margin-top: 11rem;
-    }
-    .nav-section > button{
-        padding-bottom: 1.7rem;
-    }
-    .nav-section {
-        position: fixed;
-            top: 0;
-            right: -250px;
-            width: 250px;
-            height: 100%;
-            flex-direction: column;
-            background-color: #2A2A3B;
-            justify-content: flex-start;
-            align-items: flex-start;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-            transition: right 0.3s ease-in-out;
-            z-index: 1000;
-    }
-    .nav-section.show {
-        right: 0;
-    }
-    .depict{
-        margin: 2rem 0rem 2rem 0rem;
-    }
-    .unm-img{
-        width: 100%;
-    }
-    .rdkit-img{
-        width: 100%;
-    }
-    .bottom-images{
-        margin-top: 3rem;
-    }
-    .submition > input{
-        width: 129px;
-        height: 45px;
-        font-size: 1rem;
-    }
-    .file-input{
-        width: 100%;
-    }
-    .file-input > textarea{
-        width: 100%;
-    }
-    .depict-header > h2{
-        font-size: 1.475rem;
-    }
-    .upload-button{
-        width: 92px;
-        height: 35px;
-        font-size: 0.675rem;
-    }
-}
-@media (min-width: 769px) {
-    .nav-section {
-        display: block; /* Always show the nav-section on larger screens */
-    }
-    .nav-section > button:first-child{
-        margin-top: 0;
-    }
-    .nav-section > button{
-        padding: 0.5rem 1rem;
-    }
-    #menu-icon {
-        display: none; /* Hide the menu icon on larger screens */
-    }
-}
-@media(max-width: 900px){
-    .depict{
-        margin: 2rem 0rem;
-    }
-}
-@media(max-width: 1670px){
-    .smiles{
-        gap: 0.4rem;
-    }
-    /* .error-log{
-        width: 517px;
-    } */
-}
-@media(max-width: 2087px){
-    .smiles{
-        justify-content: flex-start;
-    }
-    .input-data-outer{
-        width: 530px;
-    }
-    .depict-input{
-        width: 330px;
-    }
-    .input-selection > input[type="text"]{
-        width:246px;
-    }
-    @media(max-width: 1600px){
-        .input-data-outer{
-            width: 458px;
-        }
-    }
-    @media(max-width: 1500px){
-        .smiles{
-            flex-wrap: wrap;
-        }
-        .error-log{
-            width: 460px;
-        }
-    }
-}
-@media (max-width: 600px) {
-    .image-grid {
-        margin: 0 20px;
-    }
-    .input-selection > input[type="text"]{
-        width: 100%;
-    }
-    .depict-input{
-        width: 100%;
-    }
-    .error-log > textarea{
-        width: 100%;
-    }
-    
-}
+
 .image-content {
     text-align: center;
     display: flex;
@@ -425,6 +303,7 @@
     height: auto;
 }
 
+/* Old Styles*/
 
 /* include small margin around text (name of each compound */
 .textbox {
@@ -541,9 +420,120 @@
     animation-duration: 0.6s;
 }
 
+/* Media Query */
+
+/* Adjust the margin for screens smaller than 600px */
+@media (max-width: 600px) {
+    .image-grid {
+        margin: 0 20px;
+    }
+    .input-selection > input[type="text"]{
+        width: 100%;
+    }
+    .depict-input{
+        width: 100%;
+    }
+    .error-log > textarea{
+        width: 100%;
+    }
+    .depict > div > h1{
+        font-size: 2.6rem !important;
+    }
+
+    
+}
+
 /* 100% Image Width on Smaller Screens */
 @media only screen and (max-width: 700px) {
     .modal-content {
         width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .unm-img{
+        width: 100%;
+    }
+    .smiles{
+        margin-left: 0;
+        
+    }
+    .rdkit-img{
+        width: 100%;
+    }
+    .submition > input{
+        width: 129px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    .file-input{
+        width: 100%;
+    }
+    .file-input > textarea{
+        width: 100%;
+    }
+    .depict-header > h2{
+        font-size: 1.475rem;
+    }
+    .upload-button{
+        width: 92px;
+        height: 35px;
+        font-size: 0.675rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .nav-section {
+        display: block; /* Always show the nav-section on larger screens */
+    }
+    .nav-section > button:first-child{
+        margin-top: 0;
+    }
+    .nav-section > button{
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media(max-width: 900px){
+    .smiles{
+        justify-content: center !important;
+    }
+}
+
+@media(max-width: 1600px){
+    .smiles{
+        flex-wrap: wrap;
+    }
+    .error-log{
+        width: 460px;
+    }
+    .input-data-outer{
+        width: 458px;
+    }
+}
+
+@media(max-width: 1670px){
+    .smiles{
+        gap: 0.4rem;
+    }
+}
+
+@media(max-width: 2087px){
+    .smiles{
+        justify-content: flex-start;
+    }
+    .input-data-outer{
+        width: 530px;
+    }
+    .depict-input{
+        width: 330px;
+    }
+    .input-selection > input[type="text"]{
+        width:246px;
+    }
+}
+@media(min-width: 1350px){
+    .smiles{
+        justify-content: center;
     }
 }

@@ -22,12 +22,14 @@
         sessionStorage.clear(); // reset options to defaults
         form.reset();
         form.action = "{% url 'get_mols' request_type='demo' %}";
+        showError();
     }
 
     function reset(resetOptions = true) {
-        if (resetOptions) {
-            sessionStorage.clear(); // reset options to defaults
-        }
+        sessionStorage.clear(); // reset options to defaults
+        // if (resetOptions) {
+            
+        // }
         let url = "{% url 'index' %}"
         document.location.href = url
     }
@@ -75,6 +77,12 @@
         checkPastedChars();
         adjustImageGrid();
         adjustImageContentWidths();
+        if (sessionStorage.getItem("error-log") === "true") {
+                document.getElementById("error-log").style.display = "flex";
+            }
+            else{
+                sessionStorage.removeItem("error-log");
+            }
     };
 </script>
 
@@ -89,7 +97,6 @@
     <div class="depict">
         <div class="logo"><img src="{% static 'images/Depict.png' %}" alt="Depict Logo"><h1>Depict</h1></div>
         <div class="nav-container">
-            <i class="fa-solid fa-bars" id="menu-icon" onclick="toggleMenu()"></i>
             <div class="nav-section" id="navSection">
                 <button TYPE=BUTTON id="help-button"><b>Help</b></button>
                 <button type="submit" form="mainform" onclick="go_demo()"><b>Demo</b></button>
@@ -117,7 +124,7 @@
                             <textarea placeholder="Paste SMILES data here or drag & drop a file..." name="intxt" id="textarea" wrap="off" rows="12" cols="50">{{ input_text }}</textarea>                  
                         </div>
                     </div>
-                    <div class="submition"><input type="submit" value="Depict">{% csrf_token %}</div>
+                    <div class="submition"><input type="submit" onclick="showError(event)" value="Depict">{% csrf_token %}</div>
             </div>
             <div class="depict-input">
                 {% include "depict/input_options.html" %}
@@ -137,15 +144,7 @@
             <div class="depict-output">
                 {% include "depict/output_options.html" %}
             </div>
-            <div class="error-log">
-                <div data-tooltip="Errors reported by RDKit when parsing molecules">
-                    <label for="failure_msgs"><b>Error Log</b></label>
-                </div>
-                <!-- box for logging info -->
-                    <textarea name="failure_msgs" readonly WRAP=OFF ROWS=6 COLS=50 placeholder="Errors will appear here">{% for mol_err_msg in failures %}{{ mol_err_msg }}{% endfor %}</textarea>
-                </div>
     </div>
-    
     
     <script>
             var inputs = document.querySelectorAll('#user-options-container input');
@@ -162,11 +161,7 @@
             selects.forEach(function (select) {
                 makePersistentSelect(select.name, select.id);
             });
-            // Add event listener for the menu icon to toggle the nav section visibility
-            function toggleMenu() {
-                const menu = document.getElementById('navSection');
-                menu.classList.toggle('show');
-            }
+            
         </script>
     
     </form>
@@ -192,7 +187,7 @@
             </a>
             <div class="textbox">{{ name }}</div>
             <button type="button" class="btn btn-default delete-image-btn">
-                <a class="download-btn" href="{{ static }}/{{ image|safe }}" download onclick="this.download = downloadNames['{{ fname }}']")>Download  <i class="fa-solid fa-download"></i></a>
+                <a class="download-btn" href="{{ static }}/{{ image|safe }}" download onclick="this.download = downloadNames['{{ fname }}']")><i class="fa-solid fa-download"></i></a>
             </button>
         </div>
         {% endfor %}

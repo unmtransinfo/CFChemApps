@@ -30,10 +30,26 @@
     <div>
         {% block content %} {% endblock %}
     </div>
-    <div class="bottom-images">
+    <div class="outer-log">
+        <div id="error-log" class="error-log">
+            <div data-tooltip="Errors reported by RDKit when parsing molecules">
+                <label for="failure_msgs"><b>Error Log</b></label>
+            </div>
+            <!-- box for logging info -->
+                <textarea name="failure_msgs" readonly WRAP=OFF ROWS=6 COLS=50 placeholder="Errors will appear here">{% for mol_err_msg in failures %}{{ mol_err_msg }}{% endfor %}</textarea>
+        </div>
+    </div>
+    
+    <footer class="bottom-images">
         <a href="https://datascience.unm.edu/"><img class="unm-img" border="0" src="{% static 'images/unmlogo.png' %}"></a>
         <a href="https://www.rdkit.org/"><img class="rdkit-img" border="0" src="{% static 'images/rdkit.png' %}"></a>
-    </div>
+    </footer>
+    <script>
+        function showError() {
+        sessionStorage.setItem("error-log", "true"); 
+    }
+    </script>
+    
     </div>
 </body>
 
