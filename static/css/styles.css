@@ -7,6 +7,7 @@ body{
     flex-wrap: wrap;
     justify-content: left;
     margin: 0 50px;
+    margin-bottom: 10px;
     gap: 2px;
 }
 
@@ -298,10 +299,10 @@ body{
     color: floralwhite;
 }
 
-.image-content img {
+/* .image-content img {
     max-width: 100%;
     height: auto;
-}
+} */
 
 /* Old Styles*/
 

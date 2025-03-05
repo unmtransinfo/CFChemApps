@@ -103,6 +103,7 @@ def get_mols(request, request_type):
         INPUT_TEXT: input_text,
         ACCEPTABLE_FILETYPES: ACCEPTED_FILE_TYPES_LIST,
         FAILURES: failures,
+        'image_width': size[0],
     }
     prev_image_paths = request.session.get(IMAGE_PATHS, [])
     # o[0] = image path
