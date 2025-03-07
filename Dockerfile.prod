@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED 1
 # PYTHONDONTWRITEBYTECODE means Python will not try to write .pyc files
 # PYTHONUNBUFFERED ensures our console output is not buffered by Docker
 
-RUN apt update && apt install -y libsm6 libxext6 libcairo2 libpango1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev
+RUN apt update && apt install -y libsm6 libxext6
 RUN apt-get install -y gcc libxrender-dev
 
 WORKDIR /cfchemapps

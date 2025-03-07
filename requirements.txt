@@ -2,7 +2,6 @@ asgiref==3.7.1
 asttokens==2.2.1
 backcall==0.2.0
 backports.zoneinfo==0.2.1
-cairosvg==2.7.1
 decorator==5.1.1
 Django==4.1.7
 djangorestframework==3.14.0

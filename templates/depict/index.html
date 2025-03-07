@@ -45,7 +45,6 @@
         // Trigger modal on image link click
         $('.image-link').on('click', function (e) {
             e.preventDefault();
-            console.log("HERE");
 
             // Get image source and name from data attributes
             var imageUrl = $(this).data('image');
@@ -76,12 +75,12 @@
     window.onload = function () {
         setListeners();
         readFile();
-        // getSelectedWidth(); enable only if the getSelectedWidth is being used.
+        getSelectedWidth(); //enable only if the getSelectedWidth is being used.
         checkPastedChars();
-        updateImageSize();
         adjustImageGrid();
         adjustImageContentWidths();
-        if (sessionStorage.getItem("error-log") === "true") {
+        var length = document.querySelector(".error-log textarea").value.length;
+        if (sessionStorage.getItem("error-log") === "true" && length>=1) {
                 document.getElementById("error-log").style.display = "flex";
             }
             else{
@@ -186,7 +185,7 @@
         </script>
         <div class="image-content">
             <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
-                <img class="molimg" src="/{{ image|safe }}" width="{{ image_width }}" alt="{{ name }}">
+                <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
                 </img>
             </a>
             <div class="textbox">{{ name }}</div>
@@ -204,17 +203,15 @@
 <!-- below code can be uses quick switching of sizes of mol images. need to add onchange=getSelectedWidth() in output_option.html on select tag and also in window.onload function.-->
 <!-- <script>
     // window.onload = () => getSelectedWidth();
-    document.getElementById("sizeSelector").addEventListener("change", getSelectedWidth);
+    document.getElementById("sizeSelector").addEventListener("submit", getSelectedWidth);
     function getSelectedWidth(event) {
-        const sizeSelector = document.getElementById("sizeSelector");
-        const selectedOption = sizeSelector.options[sizeSelector.selectedIndex];
-        const text = selectedOption.textContent || selectedOption.innerText;
-        const match = text.match(/(\d+)x\d+/);
-        const width = match[1];
-        const images = document.querySelectorAll(".image-content img");
-        images.forEach(img => {
-            img.style.width = (width-10) + 'px';
-        });
+        
+        // const match = text.match(/(\d+)x\d+/);
+        // const width = match[1];
+        // const images = document.querySelectorAll(".image-content img");
+        // images.forEach(img => {
+        //     img.style.width = (width-10) + 'px';
+        // });
     } 
   </script> -->
 <!-- Display alerts for messages if they occur -->

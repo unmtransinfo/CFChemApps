@@ -24,8 +24,13 @@ class ImageFormat(Enum):
 
 
 class ImageSize(Enum):
-    xs = (120, 80)
-    s = (150, 100)
-    m = (300, 200)
-    l = (450, 300)
-    xl = (600, 400)
+    xs = (800, 500)
+    s = (1000, 600)
+    m = (1400, 800)
+
+class MolsRow(Enum):
+    ten = 10
+    eight = 8
+    six = 6
+    four = 4
+

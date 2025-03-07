@@ -8,12 +8,9 @@ from django.core.files.storage import FileSystemStorage
 from rdkit import Chem, Geometry, rdBase
 from rdkit.Chem import Draw, rdDepictor
 
-import cairosvg
-from PIL import Image
-
 from cfchem.Constants import *
 
-from .enums import ImageFormat, ImageSize, InputType
+from .enums import ImageFormat, ImageSize, InputType, MolsRow
 
 rdBase.WrapLogs()  # log rdkit errors to stderr
 
@@ -106,16 +103,21 @@ def delete_file(file):
 
 
 def get_image_size(size):
-
     image_sizes = {
         ImageSize.xs.name: ImageSize.xs.value,
         ImageSize.s.name: ImageSize.s.value,
         ImageSize.m.name: ImageSize.m.value,
-        ImageSize.l.name: ImageSize.l.value,
-        ImageSize.xl.name: ImageSize.xl.value,
     }
-
     return image_sizes[size]
+
+def get_mols_row(row):
+    mols_row = {
+        MolsRow.ten.name: MolsRow.ten.value,
+        MolsRow.eight.name: MolsRow.eight.value,
+        MolsRow.six.name: MolsRow.six.value,
+        MolsRow.four.name: MolsRow.four.value,
+    }
+    return mols_row[row]
 
 
 def ensure_directory_exists(dir_name):
@@ -173,45 +175,29 @@ def create_image(
             coords = [m.GetConformer().GetAtomPosition(x) for x in match]
             first_match_coords = [Geometry.Point2D(pt.x, pt.y) for pt in coords]
     img_name = "{}.{}".format(filename, format)
-    m = Draw.rdMolDraw2D.PrepareMolForDrawing(m, kekulize=kekulize)
-    drawer = Draw.rdMolDraw2D.MolDraw2DSVG(size[0], size[1])
-    dopts = drawer.drawOptions()
-    dopts.maxFontSize = int(0.03*size[0])
-    dopts.minFontSize = int(0.03*size[0])
-    dopts.bondLineWidth=(0.002*size[0])
-    dopts.prepareMolsBeforeDrawing = kekulize
-    drawer.DrawMolecule(
-        m,
-        highlightAtoms=all_atom_matches,
-        highlightBonds=bond_matches,
-    )
-    drawer.FinishDrawing()
-    svg = drawer.GetDrawingText()
-
-    if format == ImageFormat.SVG.value:
+    if format in [ImageFormat.JPG.value, ImageFormat.PNG.value]:
+        pil_image = Draw.MolToImage(
+            m,
+            size=size,
+            highlightAtoms=all_atom_matches,
+            highlightBonds=bond_matches,
+            kekulize=kekulize,
+        )
+        pil_image.save(img_name)
+    elif format == ImageFormat.SVG.value:
+        m = Draw.rdMolDraw2D.PrepareMolForDrawing(m, kekulize=kekulize)
+        drawer = Draw.rdMolDraw2D.MolDraw2DSVG(size[0], size[1])
+        dopts = drawer.drawOptions()
+        dopts.prepareMolsBeforeDrawing = kekulize
+        drawer.DrawMolecule(
+            m,
+            highlightAtoms=all_atom_matches,
+            highlightBonds=bond_matches,
+        )
+        drawer.FinishDrawing()
+        svg = drawer.GetDrawingText()
         with open(img_name, "w") as f:
             f.write(svg)
-        print(f"Saved as {img_name}")
-    elif format == ImageFormat.PNG.value:
-        if size[0] < 150:
-            cairosvg.svg2png(bytestring=svg.encode('utf-8'), write_to=f"{img_name}", scale=8, dpi = 400)
-        elif size[0] >=150 and size[0] <300:
-            cairosvg.svg2png(bytestring=svg.encode('utf-8'), write_to=f"{img_name}", scale=6, dpi = 300)
-        elif size[0] >= 300:
-            cairosvg.svg2png(bytestring=svg.encode('utf-8'), write_to=f"{img_name}", scale=4, dpi = 200)    
-        print(f"Saved as {img_name}")
-    elif format == ImageFormat.JPG.value:
-        temp_png = f"{img_name}_temp"
-        if size[0] < 150:
-            cairosvg.svg2png(bytestring=svg.encode('utf-8'), write_to=temp_png, scale=8)
-        elif size[0] >=150 and size[0] <300:
-            cairosvg.svg2png(bytestring=svg.encode('utf-8'), write_to=temp_png, scale=6)
-        elif size[0] >= 300:
-            cairosvg.svg2png(bytestring=svg.encode('utf-8'), write_to=temp_png, scale=4)
-        # Open PNG and convert to JPG
-        img = Image.open(temp_png).convert("RGB")
-        img.save(f"{img_name}", "JPEG", quality=95)
-        print(f"Saved as {img_name}")
     else:
         raise ValueError("Unsupported image format: {}".format(format))
     return img_name, first_match_coords
@@ -240,6 +226,7 @@ def get_svgs_from_mol_supplier(
     mol_supplier,
     format,
     size,
+    row,
     smarts,
     align_smarts: bool,
     start_idx: int = 0,

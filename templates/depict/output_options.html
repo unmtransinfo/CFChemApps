@@ -19,15 +19,23 @@
         <option value="svg">svg</option>
     </select>
     <BR>
-    <div class="input-selection" data-tooltip="Output image size">
-        <label for="size">Size</label>
+    <div class="input-selection" data-tooltip="Output images quality">
+        <label for="size">Resolution</label>
     </div>
     <select name="size" id="sizeSelector">
-        <option value="xs">xs - 120x80</option>
-        <option value="s">s - 150x100</option>
-        <option value="m" id="sizeSelectorDefault" selected="">m - 300x200</option>
-        <option value="l">l - 450x300</option>
-        <option value="xl">xl - 600x400</option>
+        <option value="xs">800x500</option>
+        <option value="s" id="sizeSelectorDefault" selected="">1000x600</option>
+        <option value="m">1400x800</option>
+    </select>
+    <BR>
+    <div class="input-selection" data-tooltip="Output images per row">
+        <label for="mols-row">Mols/Row</label>
+    </div>
+    <select name="mols-row" id="mols-row">
+        <option value="ten">10</option>
+        <option value="eight">8</option>
+        <option value="six" id="mols-rowDefault" selected="">6</option>
+        <option value="four">4</option>
     </select>
     <BR>
     <div class="input-selection" data-tooltip="Index of first molecule to visualize (indexing from 0)">

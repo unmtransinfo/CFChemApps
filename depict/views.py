@@ -32,6 +32,7 @@ def get_mols(request, request_type):
     kekulize_mols = request.POST.get("kekulize_mols", "off") == "on"
     image_format = request.POST.get("imgfmt")
     size = request.POST.get("size")
+    molsRow = request.POST.get("mols-row")
     start_idx = int(request.POST.get("start_idx"))
     max_mols = int(request.POST.get("max_mols"))
     # SMARTS options
@@ -39,6 +40,7 @@ def get_mols(request, request_type):
     align_smarts = request.POST.get("alignSmarts", "off") == "on"
 
     size = get_image_size(size)
+    row = get_mols_row(molsRow)
     input_text = None
     mol_supplier = None
 
@@ -92,6 +94,7 @@ def get_mols(request, request_type):
         mol_supplier,
         image_format,
         size,
+        row,
         smarts,
         align_smarts,
         start_idx,
@@ -103,7 +106,6 @@ def get_mols(request, request_type):
         INPUT_TEXT: input_text,
         ACCEPTABLE_FILETYPES: ACCEPTED_FILE_TYPES_LIST,
         FAILURES: failures,
-        'image_width': size[0],
     }
     prev_image_paths = request.session.get(IMAGE_PATHS, [])
     # o[0] = image path

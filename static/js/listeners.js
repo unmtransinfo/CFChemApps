@@ -126,3 +126,27 @@ function showHideOptions() {
   // Run checkMolfmtValue when the value of molfmt changes
   molfmt.addEventListener("change", checkMolfmtValue);
 }
+
+function getSelectedWidth(){
+  // document.getElementById("sizeSelector").addEventListener("onchange", function() {
+  //   console.log("hi");
+  // });
+  var rowSelector = document.getElementById("mols-row");
+  var rowOption = rowSelector.options[rowSelector.selectedIndex];
+  var text = rowOption.textContent || selectedOption.innerText;
+  var integerValue = parseInt(text, 10);
+  var screenSize = window.innerWidth;
+  var imageWidth = Math.floor(((screenSize-90)/(integerValue))-33);
+  var images = document.querySelectorAll(".image-content img");
+      images.forEach(img => {
+      img.style.width = (imageWidth-10) + 'px';
+  });
+  window.addEventListener('resize', function() {
+    screenSize = this.window.innerWidth;
+    imageWidth =Math.floor(((screenSize-90)/(integerValue))-33);
+    images = document.querySelectorAll(".image-content img");
+      images.forEach(img => {
+      img.style.width = (imageWidth-10) + 'px';
+  });
+});
+}
