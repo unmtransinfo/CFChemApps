@@ -63,7 +63,19 @@
             $(this).css('display', 'none');
         });
     });
+    function updateImageWidths() {
+            var rowSelector = document.getElementById("mols-row");
+            var rowOption = rowSelector.options[rowSelector.selectedIndex];
+            var selectedRows = parseInt(rowOption.textContent || rowOption.innerText, 10);
+            var screenSize = window.innerWidth;
+            var imageWidth = screenSize / selectedRows;  
 
+            imageWidth = Math.max(imageWidth, 50);  
+
+            document.querySelectorAll(".image-content img").forEach(img => {
+                img.style.width = imageWidth + 'px';
+            });
+        }
     document.onreadystatechange = function (e) {
         // calling showHideOptions() here instead of window.onload 
         // improves flickering issue, but it's not perfect
@@ -75,7 +87,7 @@
     window.onload = function () {
         setListeners();
         readFile();
-        getSelectedWidth(); //enable only if the getSelectedWidth is being used.
+        updateImageWidths();
         checkPastedChars();
         adjustImageGrid();
         adjustImageContentWidths();
@@ -185,7 +197,7 @@
         </script>
         <div class="image-content">
             <a href="#" class="image-link" data-image="{{ static }}/{{ image|safe }}" data-name="{{ name }}">
-                <img class="molimg" src="/{{ image|safe }}" alt="{{ name }}">
+                <img class="molimg" src="/{{ image|safe }}" width="{image_width}" alt="{{ name }}">
                 </img>
             </a>
             <div class="textbox">{{ name }}</div>
