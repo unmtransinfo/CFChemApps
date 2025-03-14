@@ -126,8 +126,6 @@ function showHideOptions() {
   // Run checkMolfmtValue when the value of molfmt changes
   molfmt.addEventListener("change", checkMolfmtValue);
 }
-// Update the image width when the window is resized
-window.addEventListener('resize', updateImageWidths);
 
 // // Optional, update the width when the dropdown selection changes
 // document.getElementById("mols-row").addEventListener("change", updateImageWidths);
