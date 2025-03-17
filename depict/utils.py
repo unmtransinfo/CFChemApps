@@ -10,7 +10,7 @@ from rdkit.Chem import Draw, rdDepictor
 
 from cfchem.Constants import *
 
-from .enums import ImageFormat, ImageSize, InputType
+from .enums import ImageFormat, ImageSize, InputType, MolsRow
 
 rdBase.WrapLogs()  # log rdkit errors to stderr
 
@@ -103,16 +103,22 @@ def delete_file(file):
 
 
 def get_image_size(size):
-
     image_sizes = {
-        ImageSize.xs.name: ImageSize.xs.value,
         ImageSize.s.name: ImageSize.s.value,
         ImageSize.m.name: ImageSize.m.value,
         ImageSize.l.name: ImageSize.l.value,
         ImageSize.xl.name: ImageSize.xl.value,
     }
-
     return image_sizes[size]
+
+def get_mols_row(row):
+    mols_row = {
+        MolsRow.ten.name: MolsRow.ten.value,
+        MolsRow.eight.name: MolsRow.eight.value,
+        MolsRow.six.name: MolsRow.six.value,
+        MolsRow.four.name: MolsRow.four.value,
+    }
+    return mols_row[row]
 
 
 def ensure_directory_exists(dir_name):

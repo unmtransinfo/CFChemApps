@@ -62,7 +62,7 @@ function setListeners() {
   var modal = document.getElementById("myModal");
   var modalImg = document.getElementById("img01");
   const captionText = document.getElementById("caption");
-  var images = document.querySelectorAll(".image-div");
+  var images = document.querySelectorAll(".molimg");
   for (var i = 0; i < images.length; i++) {
     images[i].onclick = function () {
       modal.style.display = "block";
@@ -126,3 +126,7 @@ function showHideOptions() {
   // Run checkMolfmtValue when the value of molfmt changes
   molfmt.addEventListener("change", checkMolfmtValue);
 }
+
+// // Optional, update the width when the dropdown selection changes
+// document.getElementById("mols-row").addEventListener("change", updateImageWidths);
+
