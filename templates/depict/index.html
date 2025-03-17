@@ -64,18 +64,37 @@
         });
     });
     function updateImageWidths() {
-            var rowSelector = document.getElementById("mols-row");
-            var rowOption = rowSelector.options[rowSelector.selectedIndex];
-            var selectedRows = parseInt(rowOption.textContent || rowOption.innerText, 10);
-            var screenSize = window.innerWidth;
-            var imageWidth = screenSize / selectedRows;  
+        const rowSelector = document.getElementById("mols-row");
+        const selectedText = rowSelector.options[rowSelector.selectedIndex].text;
+        const imagesPerRow = parseInt(selectedText, 10); 
 
-            imageWidth = Math.floor(((screenSize-90)/(selectedRows))-50);
+        // 2. Measure the actual container width
+        const container = document.getElementById("imageGrid");
+        const containerWidth = container.offsetWidth;
 
-            document.querySelectorAll(".image-content img").forEach(img => {
-                img.style.width = imageWidth + 'px';
-            });
-        }
+        // 3. Calculate total gap between .image-content blocks
+        //    If you want 2px gap between each item, for N items you have (N - 1) * gap.
+        const gap = 2;
+        const totalGap = (imagesPerRow - 1) * gap;
+
+        // 4. Subtract the gap from containerWidth and divide by imagesPerRow
+        const containerWidthPerItem = (containerWidth - totalGap) / imagesPerRow;
+
+        // 5. Each .image-content has:
+        //    - padding: 6px each side → 12px total
+        //    - border: 1px each side → 2px total
+        //    - margin: 1px each side → 2px total
+        //    => 16px total extra space
+        const extraSpace = 16;
+        const imageWidth = Math.floor(containerWidthPerItem - extraSpace);
+
+    // 6. Apply the calculated width to each image
+        document.querySelectorAll("#imageGrid .image-content img").forEach((img) => {
+            img.style.width = imageWidth + "px";
+        });
+}
+
+
     // Update the image width when the window is resized
     window.addEventListener('resize', updateImageWidths);
     document.onreadystatechange = function (e) {
