@@ -165,7 +165,7 @@ body {
     margin-top: 1.5rem;
 }
 .depict-output{
-    width: 330px;
+    width: 245px;
     color: wheat;
     height: fit-content;
     box-sizing: border-box;
@@ -181,8 +181,14 @@ body {
 .input-selection > input[type="text"]{
     width: 351px;
 }
+#user-options-csv input[type="number"]{
+    max-width: 35px;
+}
+#user-options-container input[type="number"]{
+    max-width: 35px;
+}
 .input-selection {
-    width: min-content;
+    width: max-content;
 }
 .depict-input{
     width: fit-content;
@@ -430,35 +436,70 @@ body {
 }
 
 /* Media Query */
-
-/* Adjust the margin for screens smaller than 600px */
-@media (max-width: 600px) {
-    .image-grid {
-        margin: 0 20px;
+@media(max-width: 2087px){
+    .smiles{
+        justify-content: center;
     }
-    .input-selection > input[type="text"]{
-        width: 100%;
+    .input-data-outer{
+        width: 530px;
     }
     .depict-input{
-        width: 100%;
+        width: 260px;
     }
-    .error-log > textarea{
-        width: 100%;
-    }
-    .depict > div > h1{
-        font-size: 2.6rem !important;
-    }
-
-    
-}
-
-/* 100% Image Width on Smaller Screens */
-@media only screen and (max-width: 700px) {
-    .modal-content {
-        width: 100%;
+    .input-selection > input[type="text"]{
+        width:203px;
     }
 }
-
+@media(max-width: 1670px){
+    .smiles{
+        gap: 0.4rem;
+    }
+}
+@media(max-width: 1600px){
+    .smiles{
+        flex-wrap: wrap;
+    }
+    .error-log{
+        width: 460px;
+    }
+    .input-data-outer{
+        width: 458px;
+    }
+}
+@media(max-width: 1190px){
+    .input-data-outer{
+        width: 318px;
+    }
+    .depict-header > h2{
+        font-size: 1.475rem;
+    }
+    .submition > input{
+        width: 166px;
+        height: 43px;
+    }
+    .upload-button{
+        width: 105px;
+    }
+    .file-input > textarea {
+        font-size: 0.55rem;
+    }
+}
+@media(max-width: 965px){
+    .smiles{
+        justify-content: flex-start;
+    }
+}
+@media (min-width: 769px) {
+    .nav-section {
+        display: block; /* Always show the nav-section on larger screens */
+    }
+    .nav-section > button:first-child{
+        margin-top: 0;
+    }
+    .nav-section > button{
+        padding: 0.5rem 1rem;
+    }
+}
 @media (max-width: 768px) {
     .unm-img{
         width: 100%;
@@ -490,59 +531,14 @@ body {
         font-size: 0.675rem;
     }
 }
-
-@media (min-width: 769px) {
-    .nav-section {
-        display: block; /* Always show the nav-section on larger screens */
-    }
-    .nav-section > button:first-child{
-        margin-top: 0;
-    }
-    .nav-section > button{
-        padding: 0.5rem 1rem;
+@media only screen and (max-width: 700px) {
+    .modal-content {
+        width: 100%;
     }
 }
-
-@media(max-width: 900px){
-    .smiles{
-        justify-content: center !important;
-    }
-}
-
-@media(max-width: 1600px){
-    .smiles{
-        flex-wrap: wrap;
-    }
-    .error-log{
-        width: 460px;
-    }
-    .input-data-outer{
-        width: 458px;
-    }
-}
-
-@media(max-width: 1670px){
-    .smiles{
-        gap: 0.4rem;
-    }
-}
-
-@media(max-width: 2087px){
-    .smiles{
-        justify-content: flex-start;
-    }
-    .input-data-outer{
-        width: 530px;
-    }
-    .depict-input{
-        width: 330px;
-    }
-    .input-selection > input[type="text"]{
-        width:246px;
-    }
-}
-@media(min-width: 1350px){
+@media (max-width: 600px) {
     .smiles{
         justify-content: center;
     }
 }
+

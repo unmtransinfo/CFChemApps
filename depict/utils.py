@@ -104,9 +104,10 @@ def delete_file(file):
 
 def get_image_size(size):
     image_sizes = {
-        ImageSize.xs.name: ImageSize.xs.value,
         ImageSize.s.name: ImageSize.s.value,
         ImageSize.m.name: ImageSize.m.value,
+        ImageSize.l.name: ImageSize.l.value,
+        ImageSize.xl.name: ImageSize.xl.value,
     }
     return image_sizes[size]
 
@@ -226,7 +227,6 @@ def get_svgs_from_mol_supplier(
     mol_supplier,
     format,
     size,
-    row,
     smarts,
     align_smarts: bool,
     start_idx: int = 0,

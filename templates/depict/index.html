@@ -27,10 +27,10 @@
     }
 
     function reset(resetOptions = true) {
-        sessionStorage.clear(); // reset options to defaults
-        // if (resetOptions) {
-            
-        // }
+         // reset options to defaults
+        if (resetOptions) {
+            sessionStorage.clear();    
+        }
         let url = "{% url 'index' %}"
         document.location.href = url
     }
@@ -68,23 +68,11 @@
         const selectedText = rowSelector.options[rowSelector.selectedIndex].text;
         const imagesPerRow = parseInt(selectedText, 10); 
 
-        // 2. Measure the actual container width
         const container = document.getElementById("imageGrid");
         const containerWidth = container.offsetWidth;
-
-        // 3. Calculate total gap between .image-content blocks
-        //    If you want 2px gap between each item, for N items you have (N - 1) * gap.
         const gap = 2;
         const totalGap = (imagesPerRow - 1) * gap;
-
-        // 4. Subtract the gap from containerWidth and divide by imagesPerRow
         const containerWidthPerItem = (containerWidth - totalGap) / imagesPerRow;
-
-        // 5. Each .image-content has:
-        //    - padding: 6px each side → 12px total
-        //    - border: 1px each side → 2px total
-        //    - margin: 1px each side → 2px total
-        //    => 16px total extra space
         const extraSpace = 16;
         const imageWidth = Math.floor(containerWidthPerItem - extraSpace);
 

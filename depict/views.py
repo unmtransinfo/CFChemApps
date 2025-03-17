@@ -102,7 +102,6 @@ def get_mols(request, request_type):
         mol_supplier,
         image_format,
         size,
-        row,
         smarts,
         align_smarts,
         start_idx,
