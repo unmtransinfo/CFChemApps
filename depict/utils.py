@@ -8,6 +8,8 @@ from django.core.files.storage import FileSystemStorage
 from rdkit import Chem, Geometry, rdBase
 from rdkit.Chem import Draw, rdDepictor
 
+import selfies as sf
+
 from cfchem.Constants import *
 
 from .enums import ImageFormat, ImageSize, InputType, MolsRow
@@ -41,7 +43,7 @@ def get_mol_supplier(
         else:
             suppl = Chem.SDMolSupplier()
             suppl.SetData(file_data, sanitize=sanitize_mols, removeHs=True)
-    elif input_format == SMILES_FILE:
+    elif input_format == SMILES_FILE or input_format == SELFIES_FILE:
         # file is one of tsv, csv, smi, or txt
         if file_path is not None and os.path.exists(file_path):
             suppl = Chem.SmilesMolSupplier(
@@ -53,6 +55,13 @@ def get_mol_supplier(
                 sanitize=sanitize_mols,
             )
         else:
+            if input_format == SELFIES_FILE:
+                file_data, chemical_name = separate_selfies_name(file_data)
+                try:
+                    file_data = sf.decoder(file_data)
+                    file_data = file_data + " " + chemical_name
+                except sf.DecoderError:
+                    raise ValueError("Unsupported file type: {}".format(input_format)) 
             suppl = Chem.SmilesMolSupplierFromText(
                 file_data,
                 delimiter=delimiter,
@@ -61,6 +70,7 @@ def get_mol_supplier(
                 titleLine=has_header,
                 sanitize=sanitize_mols,
             )
+
     else:
         raise ValueError("Unsupported file type: {}".format(input_format))
     return suppl
@@ -76,6 +86,12 @@ def get_input_text(type, request):
 
     return input_text
 
+def separate_selfies_name(input_string):
+    parts = input_string.rsplit(" ", 1)
+    selfies = parts[0] 
+    name = parts[1] if len(parts) > 1 else "" 
+
+    return selfies, name
 
 def get_content_from_file(filename):
     f = open(filename)

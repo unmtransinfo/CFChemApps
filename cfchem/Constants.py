@@ -11,6 +11,7 @@ INFILE = "infile"
 IN_TEXT = "intxt"
 MOLFILE = "MOLFILE"
 SMILES_FILE = "SMILES"
+SELFIES_FILE = "SELFIES"
 
 DEMO_COMPOUNDS_FILE_NAME = "depict/demo_compounds.txt"
 
