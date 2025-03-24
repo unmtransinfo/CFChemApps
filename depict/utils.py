@@ -56,12 +56,29 @@ def get_mol_supplier(
             )
         else:
             if input_format == SELFIES_FILE:
-                file_data, chemical_name = separate_selfies_name(file_data)
-                try:
-                    file_data = sf.decoder(file_data)
-                    file_data = file_data + " " + chemical_name
-                except sf.DecoderError:
-                    raise ValueError("Unsupported file type: {}".format(input_format)) 
+                sanitized_results = []
+                singleSelfie = ""
+                for line in file_data.split("\n"):
+                    singleSelfie, chemical_name, columns = separate_selfies_name(line, delimiter, smiles_col, names_col)
+                    smiles = sf.decoder(singleSelfie)
+                    if smiles:
+                        try:
+                            result = []
+                            for idx in range(len(columns)):
+                                if idx == names_col:
+                                    result.append(chemical_name)
+                                elif idx == smiles_col:
+                                    result.append(smiles)
+                                else:
+                                    result.append(columns[idx])
+                            sanitized_results.append(delimiter.join(result))
+                        except sf.DecoderError:
+                            raise ValueError("Unsupported file type: {}".format(input_format)) 
+                    else:
+                        raise ValueError(f"Invalid SMILES from SELFIES: {smiles} ({chemical_name})")
+                file_data = ""
+                for line in sanitized_results:
+                    file_data = file_data+ line + "\n"
             suppl = Chem.SmilesMolSupplierFromText(
                 file_data,
                 delimiter=delimiter,
@@ -86,12 +103,19 @@ def get_input_text(type, request):
 
     return input_text
 
-def separate_selfies_name(input_string):
-    parts = input_string.rsplit(" ", 1)
-    selfies = parts[0] 
-    name = parts[1] if len(parts) > 1 else "" 
-
-    return selfies, name
+def separate_selfies_name(input_string, delimeter, selfies_col, name_col):
+    selfies_part=""
+    chemical_name=""
+    try:
+        columns = input_string.split(delimeter)  # Split by tab into a list
+        if len(columns) > max(selfies_col, name_col):  # Ensure there are enough columns
+            chemical_name = columns[name_col]  # Extract chemical name
+            selfies_part = columns[selfies_col]  # Extract SELFIES
+        else:
+            print(f"Skipping line with insufficient columns: {input_string}")
+    except Exception as e:
+        print(f"Error processing {input_string}: {e}")
+    return selfies_part.strip(), chemical_name.strip(), columns
 
 def get_content_from_file(filename):
     f = open(filename)
