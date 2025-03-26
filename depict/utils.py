@@ -60,9 +60,9 @@ def get_mol_supplier(
                 singleSelfie = ""
                 for line in file_data.split("\n"):
                     singleSelfie, chemical_name, columns = separate_selfies_name(line, delimiter, smiles_col, names_col)
-                    smiles = sf.decoder(singleSelfie)
-                    if smiles:
-                        try:
+                    try:
+                        smiles = sf.decoder(singleSelfie)
+                        if smiles:
                             result = []
                             for idx in range(len(columns)):
                                 if idx == names_col:
@@ -72,10 +72,9 @@ def get_mol_supplier(
                                 else:
                                     result.append(columns[idx])
                             sanitized_results.append(delimiter.join(result))
-                        except sf.DecoderError:
-                            raise ValueError("Unsupported file type: {}".format(input_format)) 
-                    else:
-                        raise ValueError(f"Invalid SMILES from SELFIES: {smiles} ({chemical_name})")
+                    except sf.DecoderError as e:
+                        print(sf.DecoderError)
+                        raise ValueError("SELFIES decoding error", e) 
                 file_data = ""
                 for line in sanitized_results:
                     file_data = file_data+ line + "\n"
@@ -112,9 +111,9 @@ def separate_selfies_name(input_string, delimeter, selfies_col, name_col):
             chemical_name = columns[name_col]  # Extract chemical name
             selfies_part = columns[selfies_col]  # Extract SELFIES
         else:
-            print(f"Skipping line with insufficient columns: {input_string}")
+            raise TypeError(f"Skipping line with insufficient columns: {input_string}")
     except Exception as e:
-        print(f"Error processing {input_string}: {e}")
+        raise TypeError(f"Error processing {input_string}: {e}")
     return selfies_part.strip(), chemical_name.strip(), columns
 
 def get_content_from_file(filename):
@@ -293,6 +292,7 @@ def get_svgs_from_mol_supplier(
             logging.warning(msg)
             sio = sys.stderr = StringIO()  # reset the error logger
             continue
+        
         name = NO_COMPOUND_NAME
         if mol.HasProp("_Name"):
             name = mol.GetProp("_Name")

@@ -51,7 +51,7 @@ def get_mols(request, request_type):
     screen_width = request.GET.get('screen_width', 1000)  # Default width
     selected_rows = request.GET.get('selected_rows', 6)   # Default rows
     image_width = int(screen_width) // int(selected_rows)  # Calculate width
-
+    output, failures = [], []
     if request.method == "POST":
         if INFILE in request.FILES:
             filename = save_file(request)
@@ -70,8 +70,10 @@ def get_mols(request, request_type):
                 )
                 input_text = get_content_from_file(filename)
             except Exception as e:
-                msg = f"Error reading file: {str(e)}"
-                messages.error(request, str(e))
+                    msg = f"Error reading file: {str(e)}"
+                    if input_format != SELFIES_FILE:
+                        messages.error(request, msg)
+                    failures.append(msg)
             if input_text and input_text[0] == "\n":
                 # this covers an edge case, middleware removes "\n" otherwise
                 # which leads to error in processing certain SDF/MOL files
@@ -96,17 +98,21 @@ def get_mols(request, request_type):
                     )
                 except Exception as e:
                     msg = f"Error reading data: {str(e)}"
-                    messages.error(request, msg)
-    output, failures = [], []
-    output, failures = get_svgs_from_mol_supplier(
-        mol_supplier,
-        image_format,
-        size,
-        smarts,
-        align_smarts,
-        start_idx,
-        max_mols,
-        kekulize_mols,
+                    if input_format != SELFIES_FILE:
+                        messages.error(request, msg)
+                    failures.append(msg)
+
+
+    if failures==[]:
+        output, failures = get_svgs_from_mol_supplier(
+                mol_supplier,
+                image_format,
+                size,
+                smarts,
+                align_smarts,
+                start_idx,
+                max_mols,
+                kekulize_mols,
     )
     context = {
         IMAGES: output,
@@ -115,6 +121,7 @@ def get_mols(request, request_type):
         FAILURES: failures,
         'image_width': image_width,
     }
+
     prev_image_paths = request.session.get(IMAGE_PATHS, [])
     # o[0] = image path
     request.session[IMAGE_PATHS] = prev_image_paths + [o[0] for o in output]
