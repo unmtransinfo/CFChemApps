@@ -71,8 +71,6 @@ def get_mols(request, request_type):
                 input_text = get_content_from_file(filename)
             except Exception as e:
                     msg = f"Error reading file: {str(e)}"
-                    if input_format != SELFIES_FILE:
-                        messages.error(request, msg)
                     failures.append(msg)
             if input_text and input_text[0] == "\n":
                 # this covers an edge case, middleware removes "\n" otherwise
@@ -98,8 +96,6 @@ def get_mols(request, request_type):
                     )
                 except Exception as e:
                     msg = f"Error reading data: {str(e)}"
-                    if input_format != SELFIES_FILE:
-                        messages.error(request, msg)
                     failures.append(msg)
 
 
