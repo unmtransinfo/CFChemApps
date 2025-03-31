@@ -1,12 +1,12 @@
+import math
+
 from django.contrib import messages
-from django.shortcuts import render
 from django.http import JsonResponse
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 
 from .enums import FileType
 from .utils import *
-
-import math
 
 ACCEPTED_FILE_TYPES_LIST = [f".{filetype.value}" for filetype in FileType]
 
@@ -67,6 +67,7 @@ def get_mols(request, request_type):
                     names_col=names_col,
                     sanitize_mols=sanitize_mols,
                     delimiter=delimiter,
+                    failures=failures,
                 )
                 input_text = get_content_from_file(filename)
             except Exception as e:
@@ -93,23 +94,24 @@ def get_mols(request, request_type):
                         names_col=names_col,
                         sanitize_mols=sanitize_mols,
                         delimiter=delimiter,
+                        failures=failures
                     )
                 except Exception as e:
                     msg = f"Error reading data: {str(e)}"
                     failures.append(msg)
 
 
-    if failures==[]:
-        output, failures = get_svgs_from_mol_supplier(
-                mol_supplier,
-                image_format,
-                size,
-                smarts,
-                align_smarts,
-                start_idx,
-                max_mols,
-                kekulize_mols,
+    output, svg_failures = get_svgs_from_mol_supplier(
+            mol_supplier,
+            image_format,
+            size,
+            smarts,
+            align_smarts,
+            start_idx,
+            max_mols,
+            kekulize_mols,
     )
+    failures = failures + svg_failures
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text,
