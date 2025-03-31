@@ -46,46 +46,52 @@ def get_mol_supplier(
     elif input_format == SMILES_FILE or input_format == SELFIES_FILE:
         # file is one of tsv, csv, smi, or txt
         if file_path is not None and os.path.exists(file_path):
-            suppl = Chem.SmilesMolSupplier(
-                file_path,
-                delimiter=delimiter,
-                smilesColumn=smiles_col,
-                nameColumn=names_col,
-                titleLine=has_header,
-                sanitize=sanitize_mols,
-            )
-        else:
-            if input_format == SELFIES_FILE:
-                sanitized_results = []
-                singleSelfie = ""
-                for line in file_data.split("\n"):
-                    singleSelfie, chemical_name, columns = separate_selfies_name(line, delimiter, smiles_col, names_col)
-                    try:
-                        smiles = sf.decoder(singleSelfie)
-                        if smiles:
-                            result = []
-                            for idx in range(len(columns)):
-                                if idx == names_col:
-                                    result.append(chemical_name)
-                                elif idx == smiles_col:
-                                    result.append(smiles)
-                                else:
-                                    result.append(columns[idx])
-                            sanitized_results.append(delimiter.join(result))
-                    except sf.DecoderError as e:
-                        print(sf.DecoderError)
-                        raise ValueError("SELFIES decoding error", e) 
-                file_data = ""
-                for line in sanitized_results:
-                    file_data = file_data+ line + "\n"
-            suppl = Chem.SmilesMolSupplierFromText(
-                file_data,
-                delimiter=delimiter,
-                smilesColumn=smiles_col,
-                nameColumn=names_col,
-                titleLine=has_header,
-                sanitize=sanitize_mols,
-            )
+            with open(file_path, 'r', encoding='utf-8') as file:
+                file_data = file.read()
+            # suppl = Chem.SmilesMolSupplier(
+            #     file_path,
+            #     delimiter=delimiter,
+            #     smilesColumn=smiles_col,
+            #     nameColumn=names_col,
+            #     titleLine=has_header,
+            #     sanitize=sanitize_mols,
+            # )
+        if input_format == SELFIES_FILE:
+            file_data = file_data.strip()
+            sanitized_results = []
+            singleSelfie = ""
+            for line in file_data.split("\n"):
+                singleSelfie, chemical_name, columns = separate_selfies_name(line, delimiter, smiles_col, names_col)
+                if len(columns)==1:
+                    singleSelfie = columns[0]
+                try:
+                    smiles = sf.decoder(singleSelfie)
+                    if smiles:
+                        result = []
+                        for idx in range(len(columns)):
+                            if idx == names_col:
+                                result.append(chemical_name)
+                            elif idx == smiles_col:
+                                result.append(smiles)
+                            else:
+                                result.append(columns[idx])
+                        sanitized_results.append(delimiter.join(result))
+                    else:
+                        raise TypeError("Parsing error SELFIES")
+                except sf.DecoderError as e:
+                    print(sf.DecoderError)
+                    raise ValueError("SELFIES decoding error", e) 
+            file_data = ""
+            for line in sanitized_results:
+                file_data = file_data+ line + "\n"
+        suppl = Chem.SmilesMolSupplierFromText(
+            file_data,
+            delimiter=delimiter,
+            smilesColumn=smiles_col,
+            nameColumn=names_col,
+            titleLine=has_header,
+            sanitize=sanitize_mols,
+        )
 
     else:
         raise ValueError("Unsupported file type: {}".format(input_format))
@@ -108,12 +114,10 @@ def separate_selfies_name(input_string, delimeter, selfies_col, name_col):
     try:
         columns = input_string.split(delimeter)  # Split by tab into a list
         if len(columns) > max(selfies_col, name_col):  # Ensure there are enough columns
-            chemical_name = columns[name_col]  # Extract chemical name
             selfies_part = columns[selfies_col]  # Extract SELFIES
-        else:
-            raise TypeError(f"Skipping line with insufficient columns: {input_string}")
+        
     except Exception as e:
-        raise TypeError(f"Error processing {input_string}: {e}")
+        raise TypeError(f"Skipping line with insufficient columns: {input_string}")
     return selfies_part.strip(), chemical_name.strip(), columns
 
 def get_content_from_file(filename):
