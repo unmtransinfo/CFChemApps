@@ -48,24 +48,18 @@ def get_mol_supplier(
         if file_path is not None and os.path.exists(file_path):
             with open(file_path, 'r', encoding='utf-8') as file:
                 file_data = file.read()
-            # suppl = Chem.SmilesMolSupplier(
-            #     file_path,
-            #     delimiter=delimiter,
-            #     smilesColumn=smiles_col,
-            #     nameColumn=names_col,
-            #     titleLine=has_header,
-            #     sanitize=sanitize_mols,
-            # )
         if input_format == SELFIES_FILE:
             file_data = file_data.strip()
             sanitized_results = []
             singleSelfie = ""
             for line in file_data.split("\n"):
                 singleSelfie, chemical_name, columns = separate_selfies_name(line, delimiter, smiles_col, names_col)
+                print(columns)
                 if len(columns)==1:
-                    singleSelfie = columns[0]
+                    singleSelfie = columns[0].replace("\r", "")
                 try:
                     smiles = sf.decoder(singleSelfie)
+                    print(singleSelfie)
                     if smiles:
                         result = []
                         for idx in range(len(columns)):
@@ -115,7 +109,7 @@ def separate_selfies_name(input_string, delimeter, selfies_col, name_col):
         columns = input_string.split(delimeter)  # Split by tab into a list
         if len(columns) > max(selfies_col, name_col):  # Ensure there are enough columns
             selfies_part = columns[selfies_col]  # Extract SELFIES
-        
+            chemical_name = columns[name_col]
     except Exception as e:
         raise TypeError(f"Skipping line with insufficient columns: {input_string}")
     return selfies_part.strip(), chemical_name.strip(), columns
