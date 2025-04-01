@@ -107,7 +107,7 @@ function showHideOptions() {
   var options = document.getElementById("user-options-csv");
 
   function checkMolfmtValue() {
-    if (molfmt.value === "SMILES") {
+    if (molfmt.value === "SMILES" || molfmt.value === "SELFIES") {
       options.style.display = "block";
       sessionStorage.setItem("optionsDisplay", "block");
     } else {

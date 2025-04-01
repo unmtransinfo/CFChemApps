@@ -1,12 +1,12 @@
+import math
+
 from django.contrib import messages
-from django.shortcuts import render
 from django.http import JsonResponse
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 
 from .enums import FileType
 from .utils import *
-
-import math
 
 ACCEPTED_FILE_TYPES_LIST = [f".{filetype.value}" for filetype in FileType]
 
@@ -51,7 +51,7 @@ def get_mols(request, request_type):
     screen_width = request.GET.get('screen_width', 1000)  # Default width
     selected_rows = request.GET.get('selected_rows', 6)   # Default rows
     image_width = int(screen_width) // int(selected_rows)  # Calculate width
-
+    output, failures = [], []
     if request.method == "POST":
         if INFILE in request.FILES:
             filename = save_file(request)
@@ -67,11 +67,12 @@ def get_mols(request, request_type):
                     names_col=names_col,
                     sanitize_mols=sanitize_mols,
                     delimiter=delimiter,
+                    failures=failures,
                 )
                 input_text = get_content_from_file(filename)
             except Exception as e:
-                msg = f"Error reading file: {str(e)}"
-                messages.error(request, str(e))
+                    msg = f"Error reading file: {str(e)}"
+                    failures.append(msg)
             if input_text and input_text[0] == "\n":
                 # this covers an edge case, middleware removes "\n" otherwise
                 # which leads to error in processing certain SDF/MOL files
@@ -93,21 +94,24 @@ def get_mols(request, request_type):
                         names_col=names_col,
                         sanitize_mols=sanitize_mols,
                         delimiter=delimiter,
+                        failures=failures
                     )
                 except Exception as e:
                     msg = f"Error reading data: {str(e)}"
-                    messages.error(request, msg)
-    output, failures = [], []
-    output, failures = get_svgs_from_mol_supplier(
-        mol_supplier,
-        image_format,
-        size,
-        smarts,
-        align_smarts,
-        start_idx,
-        max_mols,
-        kekulize_mols,
+                    failures.append(msg)
+
+
+    output, svg_failures = get_svgs_from_mol_supplier(
+            mol_supplier,
+            image_format,
+            size,
+            smarts,
+            align_smarts,
+            start_idx,
+            max_mols,
+            kekulize_mols,
     )
+    failures = failures + svg_failures
     context = {
         IMAGES: output,
         INPUT_TEXT: input_text,
@@ -115,6 +119,7 @@ def get_mols(request, request_type):
         FAILURES: failures,
         'image_width': image_width,
     }
+
     prev_image_paths = request.session.get(IMAGE_PATHS, [])
     # o[0] = image path
     request.session[IMAGE_PATHS] = prev_image_paths + [o[0] for o in output]

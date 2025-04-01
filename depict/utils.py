@@ -4,6 +4,7 @@ import secrets
 import sys
 from io import StringIO
 
+import selfies as sf
 from django.core.files.storage import FileSystemStorage
 from rdkit import Chem, Geometry, rdBase
 from rdkit.Chem import Draw, rdDepictor
@@ -20,6 +21,30 @@ def generate_random_name():
     return name
 
 
+def get_sanitized_selfies_data(file_data: str, delimiter: str, smiles_col: int, names_col: int, failures: list) -> str:
+    file_data = file_data.strip()
+    sanitized_results = []
+    singleSelfie = ""
+    for line in file_data.split("\n"):
+        singleSelfie, chemical_name = separate_selfies_name(line, delimiter, smiles_col, names_col)
+        if singleSelfie is None or len(singleSelfie) == 0:
+            continue # blank line
+        try:
+            smiles = sf.decoder(singleSelfie)
+            if smiles:
+                result = [smiles, chemical_name]
+                sanitized_results.append(delimiter.join(result))
+            else:
+                failures.append(f"Invalid SELFIES provided: {singleSelfie}\n")
+        except sf.DecoderError as e:
+            failures.append(f"SELFIES decoding error: {e}\n")
+    file_data = ""
+    for line in sanitized_results:
+        file_data = file_data+ line + "\n"
+    return file_data
+
+
+
 def get_mol_supplier(
     input_format: str,
     file_path=None,
@@ -29,6 +54,7 @@ def get_mol_supplier(
     names_col=1,
     sanitize_mols=True,
     delimiter="\t",
+    failures=[], 
 ):
     if file_path is None and file_data is None:
         # must provide at least one
@@ -41,26 +67,26 @@ def get_mol_supplier(
         else:
             suppl = Chem.SDMolSupplier()
             suppl.SetData(file_data, sanitize=sanitize_mols, removeHs=True)
-    elif input_format == SMILES_FILE:
+    elif input_format == SMILES_FILE or input_format == SELFIES_FILE:
         # file is one of tsv, csv, smi, or txt
         if file_path is not None and os.path.exists(file_path):
-            suppl = Chem.SmilesMolSupplier(
-                file_path,
-                delimiter=delimiter,
-                smilesColumn=smiles_col,
-                nameColumn=names_col,
-                titleLine=has_header,
-                sanitize=sanitize_mols,
-            )
-        else:
-            suppl = Chem.SmilesMolSupplierFromText(
-                file_data,
-                delimiter=delimiter,
-                smilesColumn=smiles_col,
-                nameColumn=names_col,
-                titleLine=has_header,
-                sanitize=sanitize_mols,
-            )
+            with open(file_path, 'r', encoding='utf-8') as file:
+                file_data = file.read()
+        if input_format == SELFIES_FILE:
+            file_data = get_sanitized_selfies_data(file_data, delimiter, smiles_col, names_col, failures)
+            # see get_sanitized_selfies_data
+            smiles_col = 0
+            names_col = 1
+            
+        suppl = Chem.SmilesMolSupplierFromText(
+            file_data,
+            delimiter=delimiter,
+            smilesColumn=smiles_col,
+            nameColumn=names_col,
+            titleLine=has_header,
+            sanitize=sanitize_mols,
+        )
+
     else:
         raise ValueError("Unsupported file type: {}".format(input_format))
     return suppl
@@ -76,6 +102,17 @@ def get_input_text(type, request):
 
     return input_text
 
+def separate_selfies_name(input_string, delimeter, selfies_col, name_col):
+    selfies_part = ""
+    chemical_name = NO_COMPOUND_NAME
+    columns = input_string.split(delimeter)  # Split by tab into a list
+    if len(columns) > selfies_col:  # Ensure there are enough columns
+        selfies_part = columns[selfies_col]  # Extract SELFIES
+        if len(columns) == 1:
+            selfies_part = selfies_part.replace("\r", "")
+    if len(columns) > name_col:
+        chemical_name = columns[name_col]
+    return selfies_part.strip(), chemical_name.strip()
 
 def get_content_from_file(filename):
     f = open(filename)
@@ -202,7 +239,7 @@ def create_image(
     else:
         raise ValueError("Unsupported image format: {}".format(format))
     return img_name, first_match_coords
-
+    
 
 def validate_smarts(smarts: str, failures: list, sio: StringIO) -> str:
     """
@@ -253,6 +290,7 @@ def get_svgs_from_mol_supplier(
             logging.warning(msg)
             sio = sys.stderr = StringIO()  # reset the error logger
             continue
+        
         name = NO_COMPOUND_NAME
         if mol.HasProp("_Name"):
             name = mol.GetProp("_Name")

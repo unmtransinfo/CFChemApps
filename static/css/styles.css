@@ -116,7 +116,7 @@ body {
 }
 
 .input-data-outer{
-    height: 387px;
+    height: 347px;
     box-sizing: border-box;
     border-width: 1px;
     border-style: solid;
@@ -128,7 +128,7 @@ body {
     grid-row: 1;
 }
 .input-data-inner1{
-    height: 258px;
+    height: 229px;
     padding: 1.5rem;
     border-style: dashed;
     border-width: 2px;
@@ -261,11 +261,11 @@ body {
 }
 .submition > input{
     display: inline-block;
-    width: 198px;
-    height: 48px;
+    width: 153px;
+    height: 40px;
     background-color: rgb(80, 82, 200);
     color: white;
-    font-size: 1.20rem;
+    font-size: 1.10rem;
     font-weight: 500;
     border-radius: 30px;
     cursor: pointer;
@@ -473,10 +473,6 @@ body {
     .depict-header > h2{
         font-size: 1.475rem;
     }
-    .submition > input{
-        width: 166px;
-        height: 43px;
-    }
     .upload-button{
         width: 105px;
     }
@@ -539,6 +535,19 @@ body {
 @media (max-width: 600px) {
     .smiles{
         justify-content: center;
+    }
+}
+@media (max-width: 331px) {
+    .input-data-outer{
+        height: 356px;
+    }
+    .upload-button{
+        width: 80px;
+        height: 33px;
+        font-size: 8px;
+    }
+    .depict-header > h2{
+        font-size: 1rem;
     }
 }
 
