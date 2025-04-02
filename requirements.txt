@@ -10,7 +10,7 @@ ipython==8.12.2
 jedi==0.18.2
 matplotlib-inline==0.1.6
 numpy==1.24.3
-gunicorn==20.1.0
+gunicorn==23.0.0
 parso==0.8.3
 pexpect==4.8.0
 pickleshare==0.7.5
