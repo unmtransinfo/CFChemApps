@@ -183,5 +183,8 @@ pyrightconfig.json
 media/
 staticfiles/
 # static/
+static/admin
+static/rest_framework
+static/staticfiles.json
 
 **.csv
