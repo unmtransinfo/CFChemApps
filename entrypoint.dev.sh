@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # static file collection not needed in development with whitenoise
+python manage.py collectstatic --noinput
 
 python manage.py makemigrations
 # Apply database migrations
