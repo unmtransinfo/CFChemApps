@@ -18,7 +18,7 @@ Pillow==12.2.0
 prompt-toolkit==3.0.38
 ptyprocess==0.7.0
 pure-eval==0.2.2
-Pygments==2.15.1
+Pygments==2.20.0
 pytz==2023.3
 rdkit==2022.9.5
 selfies==2.2.0
